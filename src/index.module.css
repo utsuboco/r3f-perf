@@ -1,0 +1,59 @@
+.bench {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
+  /* background-color: rgba(244,244,244,.6); */
+  background-color: rgba(11,11,11,.8);
+  /* color: #111;
+  fill: #111; */
+  color: #f1f1f1;
+  fill: #f1f1f1;
+  pointer-events: none;
+  margin: 0;
+  padding: 4px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+.bench i {
+  display: flex;
+  font-style: normal;
+  padding: 6px;
+  line-height: 13px;
+  font-size: 14px;
+  margin-bottom: 3px;
+  width: 120px;
+  position: relative;
+}
+.bench svg {
+  padding: 0;
+  margin-right: 44px;
+}
+.bench i b {
+  font-size: 9px;
+  vertical-align: bottom;
+  position: absolute;
+  bottom: -4px;
+}
+.bench i small {
+  font-size: 9px;
+  margin-top: 1px;
+  display: inline-block;
+}
+
+.toggle {
+  pointer-events: auto;
+  justify-content: center;
+  display: flex;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  background: #fff;
+  color: #111;
+  margin-top: 6px;
+}
+.toggle svg {
+  margin: 0;
+  font-size: 15px;
+}
