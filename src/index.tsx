@@ -83,7 +83,7 @@ const BenchThree = () => {
         <i><RiRhythmLine /><b>Lines</b> {info.render.lines}</i>
         <i><VscActivateBreakpoints /><b>Points</b> {info.render.points}</i>
       </div>}
-      <div className={styles.toggle} onClick={()=> {set(!show) }}>{show ? <RiArrowUpSFill /> : <RiArrowDownSFill />} THREEJS</div>
+      <div className={styles.toggle} onClick={()=> {set(!show) }}>{show ? <span><RiArrowUpSFill /> MINIMIZE </span> : <span><RiArrowDownSFill /> MORE </span>}</div>
     </div>
   )
 }
