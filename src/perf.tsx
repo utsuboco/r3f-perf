@@ -1,16 +1,13 @@
 declare global {
-  interface Window { GLBench: any; }
+  interface Window { GLPerf: any; }
   interface Performance {
     memory: any
   }
 }
 
-window.GLBench = window.GLBench || {};
+window.GLPerf = window.GLPerf || {};
 
-export interface Element2 extends Element {}
-
-
-export default class GLBench {
+export default class GLPerf {
   names: string[] = [''];
   finished: any[] = [];
   gl: any;

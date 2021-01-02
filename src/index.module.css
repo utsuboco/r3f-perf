@@ -1,4 +1,4 @@
-.bench {
+.perf {
   position: fixed;
   top: 0;
   right: 0;
@@ -16,7 +16,7 @@
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
 }
-.bench i {
+.perf i {
   display: flex;
   font-style: normal;
   padding: 6px;
@@ -26,17 +26,17 @@
   width: 120px;
   position: relative;
 }
-.bench svg {
+.perf svg {
   padding: 0;
   margin-right: 44px;
 }
-.bench i b {
+.perf i b {
   font-size: 9px;
   vertical-align: bottom;
   position: absolute;
   bottom: -4px;
 }
-.bench i small {
+.perf i small {
   font-size: 9px;
   margin-top: 1px;
   display: inline-block;

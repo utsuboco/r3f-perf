@@ -13,7 +13,7 @@ import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBr
 import { RiRhythmLine } from '@react-icons/all-files/ri/RiRhythmLine';
 import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowUpSFill } from '@react-icons/all-files/ri/RiArrowUpSFill';
-import GLBench from './bench'
+import GLPerf from './perf'
 import create from 'zustand'
 import { Html } from './html';
 import styles from './index.module.css';
@@ -26,7 +26,7 @@ type State = {
   }
 }
 
-let bench: GLBench | null
+let PerfLib: GLPerf | null
 
 
 type Logger = {
@@ -44,7 +44,7 @@ type Chart = {
   circularId: number,
 }
 
-const useBenchStore = create<State>(_ => ({
+const usePerfStore = create<State>(_ => ({
   log: null,
   chart: '',
   gl: {
@@ -52,9 +52,9 @@ const useBenchStore = create<State>(_ => ({
   }
 }))
 
-const BenchUI = () => {
-  const log = useBenchStore((state) => state.log)
-  const gl = useBenchStore((state) => state.gl)
+const PerfUI = () => {
+  const log = usePerfStore((state) => state.log)
+  const gl = usePerfStore((state) => state.gl)
   // console.log(log)
   return log ? (
     <div>
@@ -63,13 +63,13 @@ const BenchUI = () => {
       <i><FaMemory /><b>Memory</b> {log.mem}<small>mb</small></i>
       <i><VscPulse /><b>FPS</b> {log.fps}</i>
       <i><BiTimer /><b>Time</b> {log.totalTime}<small>ms</small></i>
-      {gl && <BenchThree />}
+      {gl && <PerfThree />}
     </div>
   ) : null
 }
 
-const BenchThree = () => {
-  const { info } = useBenchStore((state) => state.gl)
+const PerfThree = () => {
+  const { info } = usePerfStore((state) => state.gl)
   const [show, set] = React.useState(false)
   // console.log(log)
   return (
@@ -96,11 +96,11 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
 /**
  * A custom Thing component. Neat!
  */
-export const Bench: FC<Props> = () => {
+export const Perf: FC<Props> = () => {
   const { gl } = useThree()
-  useBenchStore.setState({ gl })
-  if (!bench) {
-    bench = new GLBench({
+  usePerfStore.setState({ gl })
+  if (!PerfLib) {
+    PerfLib = new GLPerf({
       trackGPU: true,
       gl: gl.getContext(),
       chartLogger: (chart: Chart) => {
@@ -118,10 +118,10 @@ export const Bench: FC<Props> = () => {
               (45 - (chart.chart[id] * 22) / 60 / 1).toFixed(1)
           }
         }
-        useBenchStore.setState({ chart: points })
+        usePerfStore.setState({ chart: points })
       },
       paramLogger: (logger: Logger) => {
-        useBenchStore.setState({
+        usePerfStore.setState({
           log: {
             cpu: logger.cpu,
             gpu: logger.gpu,
@@ -135,17 +135,17 @@ export const Bench: FC<Props> = () => {
     })
   }
   useEffect(() => {
-    if (bench) {
+    if (PerfLib) {
       const unsub1 = addEffect(() => {
-        if (bench) {
-          bench.begin('bencher')
+        if (PerfLib) {
+          PerfLib.begin('profiler')
         }
         return false
       })
       const unsub2 = addAfterEffect(() => {
-        if (bench) {
-          bench.end('bencher')
-          bench.nextFrame(window.performance.now())
+        if (PerfLib) {
+          PerfLib.end('profiler')
+          PerfLib.nextFrame(window.performance.now())
         }
         return false
       })
@@ -159,7 +159,7 @@ export const Bench: FC<Props> = () => {
   })
 
   return (
-    <Html className={styles.bench}><BenchUI /></Html>
+    <Html className={styles.perf}><PerfUI /></Html>
   )
 };
 

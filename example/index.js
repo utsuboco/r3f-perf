@@ -1,8 +1,8 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Canvas, useFrame, useThree } from 'react-three-fiber'
-import { Bench } from '../dist';
+import { Canvas, useFrame } from 'react-three-fiber'
+import { Perf } from '../dist';
 import './index.css'
 
 function Box(props) {
@@ -30,18 +30,12 @@ function Box(props) {
     </mesh>
   )
 }
-// const RendererInfos = () => {
-//   const {gl} = useThree()
-//   addRendererGL(gl)
-//   return null
-// }
 
 const App = () => {
   return (
     <>
       <Canvas>
-        <Bench />
-        {/* <RendererInfos /> */}
+        <Perf />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
         <Box position={[-1.2, 0, 0]} />
