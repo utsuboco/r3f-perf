@@ -8,7 +8,7 @@ yarn add --dev r3f-perf
 ```
 
 ## Usage
-Simply add the bench component in your app
+Simply add the the profiler component in your app
 ```jsx
 import { Canvas } from 'react-three-fiber'
 import { Perf } from 'r3f-perf'
