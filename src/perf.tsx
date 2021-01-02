@@ -7,8 +7,6 @@ declare global {
   }
 }
 
-window.GLPerf = window.GLPerf || {};
-
 export default class GLPerf {
   names: string[] = [''];
   finished: any[] = [];
@@ -35,8 +33,7 @@ export default class GLPerf {
   t0: number = 0;
 
   constructor(settings: object = {}) {
-    // const canvas = window.document.createElement('canvas') as HTMLCanvasElement;
-    // this.gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    window.GLPerf = window.GLPerf || {};
 
     Object.assign(this, settings);
     this.chart = new Array(this.chartLen);

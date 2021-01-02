@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, useEffect } from 'react';
+import React, { FC, HTMLAttributes, useLayoutEffect } from 'react';
 import { addEffect, addAfterEffect, useThree } from 'react-three-fiber';
 import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
@@ -148,42 +148,43 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 export const Perf: FC<Props> = () => {
   const { gl } = useThree();
   usePerfStore.setState({ gl });
-  if (!PerfLib) {
-    PerfLib = new GLPerf({
-      trackGPU: true,
-      gl: gl.getContext(),
-      chartLogger: (chart: Chart) => {
-        // console.log(chart)
-        let points = '';
-        const len = chart.chart.length;
-        for (let i = 0; i < len; i++) {
-          const id = (chart.circularId + i + 1) % len;
-          if (chart.chart[id] !== undefined) {
-            points =
-              points +
-              ' ' +
-              ((55 * i) / (len - 1)).toFixed(1) +
-              ',' +
-              (45 - (chart.chart[id] * 22) / 60 / 1).toFixed(1);
+
+  useLayoutEffect(() => {
+    if (!PerfLib) {
+      PerfLib = new GLPerf({
+        trackGPU: true,
+        gl: gl.getContext(),
+        chartLogger: (chart: Chart) => {
+          // console.log(chart)
+          let points = '';
+          const len = chart.chart.length;
+          for (let i = 0; i < len; i++) {
+            const id = (chart.circularId + i + 1) % len;
+            if (chart.chart[id] !== undefined) {
+              points =
+                points +
+                ' ' +
+                ((55 * i) / (len - 1)).toFixed(1) +
+                ',' +
+                (45 - (chart.chart[id] * 22) / 60 / 1).toFixed(1);
+            }
           }
-        }
-        usePerfStore.setState({ chart: points });
-      },
-      paramLogger: (logger: Logger) => {
-        usePerfStore.setState({
-          log: {
-            cpu: logger.cpu,
-            gpu: logger.gpu,
-            mem: logger.mem,
-            fps: logger.fps,
-            totalTime: logger.duration,
-            frameCount: logger.frameCount,
-          },
-        });
-      },
-    });
-  }
-  useEffect(() => {
+          usePerfStore.setState({ chart: points });
+        },
+        paramLogger: (logger: Logger) => {
+          usePerfStore.setState({
+            log: {
+              cpu: logger.cpu,
+              gpu: logger.gpu,
+              mem: logger.mem,
+              fps: logger.fps,
+              totalTime: logger.duration,
+              frameCount: logger.frameCount,
+            },
+          });
+        },
+      });
+    }
     if (PerfLib) {
       const unsub1 = addEffect(() => {
         if (PerfLib) {
