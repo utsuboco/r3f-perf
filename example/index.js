@@ -9,9 +9,9 @@ import {Instances, Stars} from './instances';
 const App = () => {
   return (
     <>
-      <Canvas camera={{ position: [0, 0, -50], fov: 45, near: 0.1, far: 1000 }}>
+      <Canvas camera={{ position: [0, 0, -75], fov: 45, near: 0.1, far: 100 }}>
         <Perf />
-        <Instances row={40} />
+        <Instances row={30} />
         <Stars />
       </Canvas>
     </>

@@ -152,7 +152,7 @@ export default class GLPerf {
             cpu,
             gpu,
             mem,
-            fps: Math.round(fps),
+            fps: Math.round(fps * 10) / 10,
             duration: Math.round(duration),
             frameCount,
           });

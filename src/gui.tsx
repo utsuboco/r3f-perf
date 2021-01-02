@@ -59,11 +59,11 @@ const PerfUI = () => {
     <div>
       <i>
         <RiCpuLine />
-        <b>CPU</b> {Math.round(log.cpu * 0.27 * 100) / 100}%
+        <b>CPU</b> {Math.round(log.cpu * 0.27 * 100) / 100 || 0}%
       </i>
       <i>
         <RiCpuFill />
-        <b>GPU</b> {Math.round(log.gpu * 0.27 * 100) / 100}%
+        <b>GPU</b> {Math.round(log.gpu * 0.27 * 100) / 100 || 0}%
       </i>
       <i>
         <FaMemory />
@@ -212,9 +212,5 @@ const Gui: FC<Props> = () => {
     </Html>
   );
 };
-
-export function GuiDummy() {
-  return null;
-}
 
 export default Gui;
