@@ -18,5 +18,9 @@ import { Perf } from 'r3f-perf'
 </Canvas>
 ```
 
+## SSR
+The tool work with any server side rendering framework. You can try with Next and React-Three-Fiber using this starter :
+https://github.com/RenaudRohlinger/r3f-next-starter
+
 ## Development and production build
 R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
