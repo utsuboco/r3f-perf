@@ -30,7 +30,7 @@ const PerfHook = () => {
 }
 
 <Canvas>
-  <Perf />
+  <Perf headless />
   <PerfHook />
 </Canvas>
 ```
