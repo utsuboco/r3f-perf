@@ -18,6 +18,23 @@ import { Perf } from 'r3f-perf'
 </Canvas>
 ```
 
+Usage without interface : headless mode
+```jsx
+import { Canvas } from 'react-three-fiber'
+import { Perf, usePerf } from 'r3f-perf'
+
+const PerfHook = () => {
+  const { gl, log } = usePerf()
+  console.log(gl, log)
+  return null
+}
+
+<Canvas>
+  <Perf />
+  <PerfHook />
+</Canvas>
+```
+
 ## SSR
 The tool work with any server side rendering framework. You can try with Next and React-Three-Fiber using this starter :
 https://github.com/RenaudRohlinger/r3f-next-starter

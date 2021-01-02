@@ -1,5 +1,4 @@
-import React, { FC, HTMLAttributes, useLayoutEffect } from 'react';
-import { addEffect, addAfterEffect, useThree } from 'react-three-fiber';
+import React, { FC, HTMLAttributes } from 'react';
 import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
 import { RiCpuFill } from '@react-icons/all-files/ri/RiCpuFill';
@@ -13,48 +12,13 @@ import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBr
 import { RiRhythmLine } from '@react-icons/all-files/ri/RiRhythmLine';
 import { FaTools } from '@react-icons/all-files/fa/FaTools';
 import { BiLayerMinus } from '@react-icons/all-files/bi/BiLayerMinus';
-import GLPerf from './perf';
-import create from 'zustand';
-import { Html } from './html';
 import styles from './index.module.css';
-
-type State = {
-  log: any;
-  chart: string;
-  gl: {
-    info: any;
-  };
-};
-
-let PerfLib: GLPerf | null;
-
-type Logger = {
-  i: number;
-  cpu: number;
-  gpu: number;
-  mem: number;
-  fps: number;
-  duration: number;
-  frameCount: number;
-};
-
-type Chart = {
-  chart: number[];
-  circularId: number;
-};
-
-const usePerfStore = create<State>(_ => ({
-  log: null,
-  chart: '',
-  gl: {
-    info: null,
-  },
-}));
+import { Html } from './html';
+import { usePerfStore, Headless } from './headless';
 
 const PerfUI = () => {
   const log = usePerfStore(state => state.log);
   const gl = usePerfStore(state => state.gl);
-  // console.log(log)
   return log ? (
     <div>
       <i>
@@ -87,7 +51,6 @@ const PerfUI = () => {
 const PerfThree = () => {
   const { info } = usePerfStore(state => state.gl);
   const [show, set] = React.useState(false);
-  // console.log(log)
   return (
     <span>
       {info && show && (
@@ -144,72 +107,13 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
  * Performance profiler component
  */
 const Gui: FC<Props> = () => {
-  const { gl } = useThree();
-  usePerfStore.setState({ gl });
-
-  useLayoutEffect(() => {
-    if (!PerfLib) {
-      PerfLib = new GLPerf({
-        trackGPU: true,
-        gl: gl.getContext(),
-        chartLogger: (chart: Chart) => {
-          // console.log(chart)
-          let points = '';
-          const len = chart.chart.length;
-          for (let i = 0; i < len; i++) {
-            const id = (chart.circularId + i + 1) % len;
-            if (chart.chart[id] !== undefined) {
-              points =
-                points +
-                ' ' +
-                ((55 * i) / (len - 1)).toFixed(1) +
-                ',' +
-                (45 - (chart.chart[id] * 22) / 60 / 1).toFixed(1);
-            }
-          }
-          usePerfStore.setState({ chart: points });
-        },
-        paramLogger: (logger: Logger) => {
-          usePerfStore.setState({
-            log: {
-              cpu: logger.cpu,
-              gpu: logger.gpu,
-              mem: logger.mem,
-              fps: logger.fps,
-              totalTime: logger.duration,
-              frameCount: logger.frameCount,
-            },
-          });
-        },
-      });
-    }
-    if (PerfLib) {
-      const unsub1 = addEffect(() => {
-        if (PerfLib) {
-          PerfLib.begin('profiler');
-        }
-        return false;
-      });
-      const unsub2 = addAfterEffect(() => {
-        if (PerfLib) {
-          PerfLib.end('profiler');
-          PerfLib.nextFrame(window.performance.now());
-        }
-        return false;
-      });
-      return () => {
-        unsub1();
-        unsub2();
-      };
-    } else {
-      return undefined;
-    }
-  });
-
   return (
-    <Html className={styles.perf}>
-      <PerfUI />
-    </Html>
+    <>
+      <Headless />
+      <Html className={styles.perf}>
+        <PerfUI />
+      </Html>
+    </>
   );
 };
 
