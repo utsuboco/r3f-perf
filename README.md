@@ -29,10 +29,15 @@ const PerfHook = () => {
   return null
 }
 
-<Canvas>
-  <Perf headless />
-  <PerfHook />
-</Canvas>
+export default function App() {
+  return (
+    <Canvas>
+      <Perf headless />
+      <PerfHook />
+    </Canvas>
+  );
+}
+
 ```
 
 ## SSR
