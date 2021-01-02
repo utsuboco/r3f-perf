@@ -6,6 +6,7 @@ module.exports = {
         modules: true,
       })
     );
+    config.treeshake.moduleSideEffects = false;
     return config;
   },
 };

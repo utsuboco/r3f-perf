@@ -12,12 +12,12 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "NODE_ENV=production tsdx build --format cjs",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
+    "prepare": "NODE_ENV=production tsdx build  --format cjs",
+    "size": "NODE_ENV=production size-limit",
+    "analyze": "NODE_ENV=production size-limit --why",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -34,14 +34,13 @@
   },
   "name": "r3f-perf",
   "author": "onirenaud",
-  "module": "dist/r3f-monitor.esm.js",
   "size-limit": [
     {
-      "path": "dist/r3f-monitor.cjs.production.min.js",
+      "path": "dist/r3f-perf.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/r3f-monitor.esm.js",
+      "path": "dist/r3f-perf.esm.js",
       "limit": "10 KB"
     }
   ],
