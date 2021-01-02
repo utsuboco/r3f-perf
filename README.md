@@ -17,3 +17,6 @@ import { Perf } from 'r3f-perf'
   <Perf />
 </Canvas>
 ```
+
+## Development and production build
+R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
