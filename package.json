@@ -32,7 +32,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "r3f-monitor",
+  "name": "r3f-perf",
   "author": "onirenaud",
   "module": "dist/r3f-monitor.esm.js",
   "size-limit": [
@@ -45,6 +45,12 @@
       "limit": "10 KB"
     }
   ],
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "identity-obj-proxy"
+    }
+  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16",
@@ -53,6 +59,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@react-icons/all-files": "^4.1.0",
     "@size-limit/preset-small-lib": "^4.9.1",
     "@storybook/addon-essentials": "^6.1.11",
     "@storybook/addon-info": "^5.3.21",
@@ -63,21 +70,20 @@
     "@types/react-dom": "^17.0.0",
     "babel-loader": "^8.2.2",
     "husky": "^4.3.6",
+    "identity-obj-proxy": "^3.0.0",
+    "postcss": "^8.2.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
+    "react-three-fiber": "^5.3.10",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.9.1",
+    "three": "^0.124.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
     "typescript": "^4.1.3",
     "utility-types": "^3.10.0",
-    "postcss": "^8.2.2",
-    "zustand": "^3.2.0",
-    "three": "^0.124.0",
-    "react-three-fiber": "^5.3.10",
-    "@react-icons/all-files": "^4.1.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "zustand": "^3.2.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
