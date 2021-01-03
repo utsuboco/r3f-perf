@@ -79,7 +79,7 @@ export default class GLPerf {
         );
 
       const addProfiler = (fn: any, self: any, target: any) =>
-        function() {
+        function () {
           const t = self.now();
           fn.apply(target, arguments);
           self.finished.push(glFinish(t, self.activeAccums.slice(0)));
@@ -92,16 +92,16 @@ export default class GLPerf {
         'drawBuffers',
         'drawElementsInstanced',
         'drawRangeElements',
-      ].forEach(fn => {
+      ].forEach((fn) => {
         if (gl[fn]) {
           gl[fn] = addProfiler(gl[fn], this, gl);
         }
       });
       gl.getExtension = ((fn, self) =>
-        function() {
+        function () {
           let ext = fn.apply(gl, arguments);
           if (ext) {
-            ['drawElementsInstancedANGLE', 'drawBuffersWEBGL'].forEach(fn => {
+            ['drawElementsInstancedANGLE', 'drawBuffersWEBGL'].forEach((fn) => {
               if (ext[fn]) ext[fn] = addProfiler(ext[fn], self, ext);
             });
           }

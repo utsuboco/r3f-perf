@@ -17,8 +17,8 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 
 const PerfUI = () => {
-  const log = usePerfStore(state => state.log);
-  const gl = usePerfStore(state => state.gl);
+  const log = usePerfStore((state) => state.log);
+  const gl = usePerfStore((state) => state.gl);
   return log ? (
     <div>
       <i>
@@ -49,7 +49,7 @@ const PerfUI = () => {
 };
 
 const PerfThree = () => {
-  const { info } = usePerfStore(state => state.gl);
+  const { info } = usePerfStore((state) => state.gl);
   const [show, set] = React.useState(false);
   return (
     <span>

@@ -28,7 +28,7 @@ type Chart = {
   circularId: number;
 };
 
-export const usePerfStore = create<State>(_ => ({
+export const usePerfStore = create<State>((_) => ({
   log: null,
   chart: '',
   gl: {
@@ -38,8 +38,8 @@ export const usePerfStore = create<State>(_ => ({
 
 export const usePerfFunc = () => {
   return {
-    log: usePerfStore(state => state.log),
-    gl: usePerfStore(state => state.gl)?.info,
+    log: usePerfStore((state) => state.log),
+    gl: usePerfStore((state) => state.gl)?.info,
   };
 };
 
