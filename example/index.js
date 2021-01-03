@@ -12,7 +12,7 @@ const App = () => {
     <>
       <Canvas camera={{ position: [0, 0, -75], fov: 45, near: 0.1, far: 100 }}>
         <Perf headless={false} />
-        <Instances row={30} />
+        {/* <Instances row={30} /> */}
         <Stars />
       </Canvas>
     </>

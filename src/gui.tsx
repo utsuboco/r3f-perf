@@ -10,8 +10,8 @@ import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import { BsTriangle } from '@react-icons/all-files/bs/BsTriangle';
 import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBreakpoints';
 import { RiRhythmLine } from '@react-icons/all-files/ri/RiRhythmLine';
-import { FaTools } from '@react-icons/all-files/fa/FaTools';
-import { BiLayerMinus } from '@react-icons/all-files/bi/BiLayerMinus';
+import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
+import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
 import styles from './index.module.css';
 import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
@@ -89,11 +89,11 @@ const PerfThree = () => {
       >
         {show ? (
           <span>
-            <BiLayerMinus /> MINIMIZE
+            <RiArrowDownSFill /> Minimize
           </span>
         ) : (
           <span>
-            <FaTools /> MORE
+            <RiArrowRightSFill /> More
           </span>
         )}
       </div>
