@@ -3,7 +3,7 @@ import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
 import { RiCpuFill } from '@react-icons/all-files/ri/RiCpuFill';
 import { VscPulse } from '@react-icons/all-files/vsc/VscPulse';
-import { BiTimer } from '@react-icons/all-files/bi/BiTimer';
+// import { BiTimer } from '@react-icons/all-files/bi/BiTimer';
 import { AiOutlineCodeSandbox } from '@react-icons/all-files/ai/AiOutlineCodeSandbox';
 import { FaRegImages } from '@react-icons/all-files/fa/FaRegImages';
 import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
@@ -128,11 +128,17 @@ const PerfUI: FC<PerfUIProps> = ({ graph }) => {
         <b style={graph ? { color: 'rgba(238,38,110,1)' } : {}}>FPS</b>{' '}
         {log.fps}
       </i>
-      <i>
+      {gl && (
+        <i>
+          <BsTriangle className={styles.sbg} />
+          <b>Triangles</b> {gl.info.render.triangles}
+        </i>
+      )}
+      {/* <i>
         <BiTimer className={styles.sbg} />
         <b>Time</b> {log.totalTime}
         <small>ms</small>
-      </i>
+      </i> */}
       {gl && <PerfThree />}
     </div>
   ) : null;
@@ -156,10 +162,6 @@ const PerfThree = () => {
           <i>
             <FiLayers className={styles.sbg} />
             <b>Calls</b> {info.render.calls}
-          </i>
-          <i>
-            <BsTriangle className={styles.sbg} />
-            <b>Triangles</b> {info.render.triangles}
           </i>
           <i>
             <RiRhythmLine className={styles.sbg} />
