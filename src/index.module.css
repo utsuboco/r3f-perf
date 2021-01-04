@@ -32,7 +32,7 @@
   justify-content: space-evenly;
   font-variant-numeric: tabular-nums;
 }
-.perf svg {
+.perf svg.sbg {
   left: 0;
   padding: 0;
   color: rgba(145,145,145,.12);
@@ -63,6 +63,35 @@
   margin-top: 2px;
   margin-left: -6px;
   display: inline-block;
+}
+.graphc {
+  height: 61px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 310px;
+  margin: 0 auto;
+}
+.graphc svg {
+  bottom: -6px;
+}
+.graph {
+  max-width: 312px;
+  position: absolute;
+  z-index: 1;
+}
+.PatternCpuStroke {
+  stroke-width: 1.5;
+  stroke: rgba(253,151,31,1);
+}
+.PatternGpuStroke {
+  stroke-width: 1.5;
+  stroke:rgba(66,226,46,1);
+}
+.PatternStroke {
+  stroke-width: 1.5;
+  stroke: rgba(238,38,110,1);
 }
 
 .toggle {

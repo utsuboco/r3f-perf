@@ -5,7 +5,14 @@ import create from 'zustand';
 
 export type State = {
   log: any;
-  chart: string;
+  chart: {
+    data: {
+      fps: number[];
+      gpu: number[];
+      cpu: number[];
+    };
+    circularId: number;
+  };
   gl: {
     info: any;
   };
@@ -24,13 +31,25 @@ type Logger = {
 };
 
 type Chart = {
-  chart: number[];
+  data: {
+    fps: number[];
+    gpu: number[];
+    cpu: number[];
+  };
+  id: number;
   circularId: number;
 };
 
-export const usePerfStore = create<State>((_) => ({
+export const usePerfStore = create<State>(() => ({
   log: null,
-  chart: '',
+  chart: {
+    data: {
+      fps: [],
+      gpu: [],
+      cpu: [],
+    },
+    circularId: 0,
+  },
   gl: {
     info: null,
   },
@@ -58,21 +77,7 @@ export const Headless: FC<Props> = () => {
         trackGPU: true,
         gl: gl.getContext(),
         chartLogger: (chart: Chart) => {
-          // console.log(chart)
-          let points = '';
-          const len = chart.chart.length;
-          for (let i = 0; i < len; i++) {
-            const id = (chart.circularId + i + 1) % len;
-            if (chart.chart[id] !== undefined) {
-              points =
-                points +
-                ' ' +
-                ((55 * i) / (len - 1)).toFixed(1) +
-                ',' +
-                (45 - (chart.chart[id] * 22) / 60 / 1).toFixed(1);
-            }
-          }
-          usePerfStore.setState({ chart: points });
+          usePerfStore.setState({ chart });
         },
         paramLogger: (logger: Logger) => {
           usePerfStore.setState({

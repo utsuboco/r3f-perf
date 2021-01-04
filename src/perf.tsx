@@ -15,12 +15,14 @@ export default class GLPerf {
   gpuAccums: number[] = [];
   activeAccums: boolean[] = [];
   chart: number[] = [];
+  gpuChart: number[] = [];
+  cpuChart: number[] = [];
   paramLogger: any = () => {};
   glFinish: any = () => {};
   addProfiler: any = () => {};
   chartLogger: any = () => {};
-  chartLen: number = 20;
-  chartHz: number = 20;
+  chartLen: number = 30;
+  chartHz: number = 5;
   trackGPU: boolean = true;
   chartFrame: number = 0;
   chartTime: number = 0;
@@ -36,7 +38,9 @@ export default class GLPerf {
     window.GLPerf = window.GLPerf || {};
 
     Object.assign(this, settings);
-    this.chart = new Array(this.chartLen);
+    this.chart = new Array(this.chartLen).fill(0);
+    this.gpuChart = new Array(this.chartLen).fill(0);
+    this.cpuChart = new Array(this.chartLen).fill(0);
     this.now = () =>
       window.performance && window.performance.now
         ? window.performance.now()
@@ -73,7 +77,10 @@ export default class GLPerf {
             const dt = this.now() - t;
 
             activeAccums.forEach((active: any, i: any) => {
-              if (active) this.gpuAccums[i] += dt;
+              if (active) {
+                this.gpuAccums[i] += dt;
+                // console.log(this.gpuAccums)
+              }
             });
           }, 0)
         );
@@ -129,19 +136,20 @@ export default class GLPerf {
   nextFrame(now: any) {
     this.frameId++;
     const t = now || this.now();
-
+    const duration = t - this.paramTime;
+    let cpu = 0;
+    let gpu = 0;
     // params
     if (this.frameId <= 1) {
       this.paramFrame = this.frameId;
       this.paramTime = t;
     } else {
-      const duration = t - this.paramTime;
       if (duration >= 1e3) {
         const frameCount = this.frameId - this.paramFrame;
         const fps = (frameCount / duration) * 1e3;
         for (let i = 0; i < this.names.length; i++) {
-          const cpu = Math.round((this.cpuAccums[i] / duration) * 100);
-          const gpu = Math.round((this.gpuAccums[i] / duration) * 100);
+          cpu = Math.round((this.cpuAccums[i] / duration) * 100);
+          gpu = Math.round((this.gpuAccums[i] / duration) * 100);
           const mem = Math.round(
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / (1 << 20)
@@ -156,7 +164,6 @@ export default class GLPerf {
             duration: Math.round(duration),
             frameCount,
           });
-
           this.cpuAccums[i] = 0;
           Promise.all(this.finished).then(() => {
             this.gpuAccums[i] = 0;
@@ -180,10 +187,23 @@ export default class GLPerf {
         const frameCount = this.frameId - this.chartFrame;
         const fps = (frameCount / timespan) * 1e3;
         this.chart[this.circularId % this.chartLen] = fps;
+        const cpuS = Math.round((this.cpuAccums[1] / duration) * 100);
+        const gpuS = Math.round((this.gpuAccums[1] / duration) * 100);
+        if (gpuS > 0) {
+          this.gpuChart[this.circularId % this.chartLen] = gpuS;
+        }
+        if (cpuS > 0) {
+          this.cpuChart[this.circularId % this.chartLen] = cpuS;
+        }
+
         for (let i = 0; i < this.names.length; i++) {
           this.chartLogger({
             i,
-            chart: this.chart,
+            data: {
+              fps: this.chart,
+              gpu: this.gpuChart,
+              cpu: this.cpuChart,
+            },
             circularId: this.circularId,
           });
         }
