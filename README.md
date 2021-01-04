@@ -6,6 +6,12 @@ Easily monitor the performances of your React-Three-Fiber application.
 ```bash
 yarn add --dev r3f-perf
 ```
+## Options
+```jsx
+
+headless?: false, // Without UI. See Headless section
+graph?: true // show the graphs
+```
 
 ## Usage
 Simply add the the profiler component in your app
