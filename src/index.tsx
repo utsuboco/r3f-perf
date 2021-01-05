@@ -7,6 +7,7 @@ export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   graph?: boolean;
   colorBlind?: boolean;
   trackGPU?: boolean;
+  openByDefault?: boolean;
 }
 
 /**
@@ -20,11 +21,17 @@ if (process.env.NODE_ENV === 'development') {
     colorBlind = false,
     graph = true,
     trackGPU = true,
+    openByDefault = false,
   }) => {
     return headless ? (
       <Headless />
     ) : (
-      <Gui colorBlind={colorBlind} graph={graph} trackGPU={trackGPU} />
+      <Gui
+        colorBlind={colorBlind}
+        graph={graph}
+        trackGPU={trackGPU}
+        openByDefault={openByDefault}
+      />
     );
   };
   usePerf = usePerfFunc;

@@ -9,7 +9,8 @@ import { FaRegImages } from '@react-icons/all-files/fa/FaRegImages';
 import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import { BsTriangle } from '@react-icons/all-files/bs/BsTriangle';
 import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBreakpoints';
-import { RiRhythmLine } from '@react-icons/all-files/ri/RiRhythmLine';
+// import { RiRhythmLine } from '@react-icons/all-files/ri/RiRhythmLine';
+import { FaServer } from '@react-icons/all-files/fa/FaServer';
 import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
 import styles from './index.module.css';
@@ -167,13 +168,12 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   );
 };
 
-interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
-  graph?: boolean;
-  trackGPU?: boolean;
-  colorBlind?: boolean;
-}
-
-const PerfUI: FC<PerfUIProps> = ({ graph, trackGPU, colorBlind }) => {
+const PerfUI: FC<PerfProps> = ({
+  graph,
+  trackGPU,
+  colorBlind,
+  openByDefault,
+}) => {
   const log = usePerfStore((state) => state.log);
   const gl = usePerfStore((state) => state.gl);
   return log ? (
@@ -226,34 +226,44 @@ const PerfUI: FC<PerfUIProps> = ({ graph, trackGPU, colorBlind }) => {
         <b>Time</b> {log.totalTime}
         <small>ms</small>
       </i> */}
-      {gl && <PerfThree />}
+      {gl && <PerfThree openByDefault={openByDefault} />}
     </div>
   ) : null;
 };
 
-const PerfThree = () => {
+const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
   const { info } = usePerfStore((state) => state.gl);
-  const [show, set] = React.useState(false);
+  const [show, set] = React.useState(openByDefault);
   return (
     <span>
       {info && show && (
         <div>
           <i>
             <AiOutlineCodeSandbox className={styles.sbg} />
-            <b>Geometries</b> <span>{info.memory.geometries}</span>
+            <b>
+              {info.memory.geometries === 1 ? 'Geometry' : 'Geometries'}
+            </b>{' '}
+            <span>{info.memory.geometries}</span>
           </i>
           <i>
             <FaRegImages className={styles.sbg} />
-            <b>Textures</b> <span>{info.memory.textures}</span>
+            <b>{info.memory.textures === 1 ? 'Texture' : 'Textures'}</b>{' '}
+            <span>{info.memory.textures}</span>
           </i>
           <i>
             <FiLayers className={styles.sbg} />
-            <b>Calls</b> <span>{info.render.calls}</span>
+            <b>{info.render.calls === 1 ? 'call' : 'calls'}</b>{' '}
+            <span>{info.render.calls}</span>
           </i>
           <i>
+            <FaServer className={styles.sbg} />
+            <b>{info.programs.length === 1 ? 'shader' : 'shaders'}</b>{' '}
+            <span>{info.programs.length}</span>
+          </i>
+          {/* <i>
             <RiRhythmLine className={styles.sbg} />
             <b>Lines</b> <span>{info.render.lines}</span>
-          </i>
+          </i> */}
           <i>
             <VscActivateBreakpoints className={styles.sbg} />
             <b>Points</b> <span>{info.render.points}</span>
@@ -283,12 +293,17 @@ const PerfThree = () => {
 /**
  * Performance profiler component
  */
-const Gui: FC<PerfProps> = ({ graph, colorBlind, trackGPU }) => {
+const Gui: FC<PerfProps> = ({ graph, colorBlind, trackGPU, openByDefault }) => {
   return (
     <>
       <Headless />
       <Html className={styles.perf}>
-        <PerfUI colorBlind={colorBlind} graph={graph} trackGPU={trackGPU} />
+        <PerfUI
+          colorBlind={colorBlind}
+          graph={graph}
+          trackGPU={trackGPU}
+          openByDefault={openByDefault}
+        />
         {graph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
       </Html>
     </>

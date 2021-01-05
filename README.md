@@ -20,6 +20,7 @@ headless?: false, // Without UI. See Headless section
 graph?: true // show the graphs
 colorBlind?: false // Color blind colors for accessibility
 trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
+openByDefault?: false // show more informations by default
 ```
 
 ## Usage
@@ -61,3 +62,10 @@ https://github.com/RenaudRohlinger/r3f-next-starter
 
 ## Development and production build
 R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
+
+## Todo
+- Log the numbers of programs(shader) used  in real-time
+- Position parameter
+- Tool full size by default parameter
+- Values and graphs refresh frequency parameter
+- Fix graph SVG position if too low (not visible)
