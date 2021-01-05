@@ -23,6 +23,7 @@ export default class GLPerf {
   chartLogger: any = () => {};
   chartLen: number = 30;
   chartHz: number = 5;
+  factorGPU: number = 1;
   trackGPU: boolean = true;
   chartFrame: number = 0;
   chartTime: number = 0;
@@ -75,7 +76,6 @@ export default class GLPerf {
           setTimeout(() => {
             gl.getError();
             const dt = this.now() - t;
-
             activeAccums.forEach((active: any, i: any) => {
               if (active) {
                 this.gpuAccums[i] += dt;
@@ -149,7 +149,7 @@ export default class GLPerf {
         const fps = (frameCount / duration) * 1e3;
         for (let i = 0; i < this.names.length; i++) {
           cpu = Math.round((this.cpuAccums[i] / duration) * 100);
-          gpu = Math.round((this.gpuAccums[i] / duration) * 100);
+          gpu = this.gpuAccums[i] / duration;
           const mem = Math.round(
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / (1 << 20)
@@ -190,7 +190,8 @@ export default class GLPerf {
         const cpuS = Math.round((this.cpuAccums[1] / duration) * 100);
         const gpuS = Math.round((this.gpuAccums[1] / duration) * 100);
         if (gpuS > 0) {
-          this.gpuChart[this.circularId % this.chartLen] = gpuS;
+          this.gpuChart[this.circularId % this.chartLen] =
+            gpuS * this.factorGPU * 0.5;
         }
         if (cpuS > 0) {
           this.cpuChart[this.circularId % this.chartLen] = cpuS;

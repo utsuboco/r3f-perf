@@ -83,15 +83,12 @@
 }
 .PatternCpuStroke {
   stroke-width: 1.5;
-  stroke: rgba(253,151,31,1);
 }
 .PatternGpuStroke {
   stroke-width: 1.5;
-  stroke:rgba(66,226,46,1);
 }
 .PatternStroke {
   stroke-width: 1.5;
-  stroke: rgba(238,38,110,1);
 }
 
 .toggle {

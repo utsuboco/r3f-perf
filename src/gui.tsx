@@ -18,11 +18,37 @@ import { usePerfStore, Headless } from './headless';
 import PriceChart from './chart';
 import { PerfProps } from '.';
 
-const ChartUI = () => {
+interface colors {
+  [index: string]: string;
+}
+export interface graphData {
+  points: string[][];
+  maxVal: number;
+  element: string;
+}
+
+export const colorsGraph = (colorBlind: boolean | undefined) => {
+  const colors: colors = {
+    fps: colorBlind ? '100, 143, 255' : '238,38,110',
+    cpu: colorBlind ? '254, 254, 98' : '66,226,46',
+    gpu: colorBlind ? '254,254,254' : '253,151,31',
+  };
+  return colors;
+};
+
+interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
+  colorBlind?: boolean;
+  trackGPU?: boolean;
+}
+
+const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   const { circularId, data } = usePerfStore((state) => state.chart);
-  const toPoints = (chart: number[], factor: number = 1) => {
+
+  const toPoints = (element: string, factor: number = 1) => {
     let maxVal = 0;
     let points = [];
+    const chart = data[element];
+
     if (!chart || chart.length === 0) {
       return [0];
     }
@@ -33,13 +59,19 @@ const ChartUI = () => {
         if (chart[id] > maxVal) {
           maxVal = chart[id] * factor;
         }
-        points.push([
+        const val: string[] = [
           ((200 * i) / (len - 1)).toFixed(1),
           (Math.min(100, chart[id]) * factor).toFixed(1),
-        ]);
+        ];
+        points.push(val);
       }
     }
-    return [points, maxVal];
+    const graph: graphData = {
+      points,
+      maxVal,
+      element,
+    };
+    return graph;
   };
 
   return (
@@ -52,71 +84,122 @@ const ChartUI = () => {
         style={{ height: 0 }}
       >
         <defs>
-          <linearGradient id={`Patterngrad`} gradientTransform="rotate(90)">
-            <stop offset="0%" stopColor="rgba(238,38,110,.7)" />
-            <stop offset="20%" stopColor="rgba(238,38,110,.7)" />
+          <linearGradient id={`fpsgrad`} gradientTransform="rotate(90)">
+            <stop
+              offset="0%"
+              stopColor={`rgb(${colorsGraph(colorBlind).fps},.7)`}
+            />
+            <stop
+              offset="20%"
+              stopColor={`rgb(${colorsGraph(colorBlind).fps},.7)`}
+            />
             <stop offset="60%" stopColor="transparent" />
           </linearGradient>
-          <linearGradient id={`PatterngradFade`} gradientTransform="rotate(90)">
-            <stop offset="0%" stopColor="rgba(238,38,110,.2)" />
-            <stop offset="20%" stopColor="rgba(238,38,110,.2)" />
+          <linearGradient id={`fpsgradFade`} gradientTransform="rotate(90)">
+            <stop
+              offset="0%"
+              stopColor={`rgb(${colorsGraph(colorBlind).fps},.2)`}
+            />
+            <stop
+              offset="20%"
+              stopColor={`rgb(${colorsGraph(colorBlind).fps},.2)`}
+            />
             <stop offset="60%" stopColor="transparent" />
           </linearGradient>
 
-          <linearGradient id={`PatternCpugrad`} gradientTransform="rotate(90)">
-            <stop offset="0%" stopColor="rgba(253,151,31,.7)" />
-            <stop offset="60%" stopColor="rgba(253,151,31,.7)" />
+          <linearGradient id={`cpugrad`} gradientTransform="rotate(90)">
+            <stop
+              offset="0%"
+              stopColor={`rgb(${colorsGraph(colorBlind).cpu},.7)`}
+            />
+            <stop
+              offset="60%"
+              stopColor={`rgb(${colorsGraph(colorBlind).cpu},.7)`}
+            />
             <stop offset="90%" stopColor="transparent" />
           </linearGradient>
-          <linearGradient
-            id={`PatternCpugradFade`}
-            gradientTransform="rotate(90)"
-          >
-            <stop offset="0%" stopColor="rgba(253,151,31,.2)" />
-            <stop offset="60%" stopColor="rgba(253,151,31,.2)" />
+          <linearGradient id={`cpugradFade`} gradientTransform="rotate(90)">
+            <stop
+              offset="0%"
+              stopColor={`rgb(${colorsGraph(colorBlind).cpu},.2)`}
+            />
+            <stop
+              offset="60%"
+              stopColor={`rgb(${colorsGraph(colorBlind).cpu},.2)`}
+            />
             <stop offset="90%" stopColor="transparent" />
           </linearGradient>
 
-          <linearGradient id={`PatternGpugrad`} gradientTransform="rotate(90)">
-            <stop offset="0%" stopColor="rgba(66,226,46,.7)" />
-            <stop offset="70%" stopColor="rgba(66,226,46,.7)" />
+          <linearGradient id={`gpugrad`} gradientTransform="rotate(90)">
+            <stop
+              offset="0%"
+              stopColor={`rgb(${colorsGraph(colorBlind).gpu},${
+                colorBlind ? '1' : '.7'
+              })`}
+            />
+            <stop
+              offset="70%"
+              stopColor={`rgb(${colorsGraph(colorBlind).gpu},${
+                colorBlind ? '1' : '.7'
+              })`}
+            />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
-          <linearGradient
-            id={`PatternGpugradFade`}
-            gradientTransform="rotate(90)"
-          >
-            <stop offset="0%" stopColor="rgba(66,226,46,.2)" />
-            <stop offset="70%" stopColor="rgba(66,226,46,.2)" />
+          <linearGradient id={`gpugradFade`} gradientTransform="rotate(90)">
+            <stop
+              offset="0%"
+              stopColor={`rgb(${colorsGraph(colorBlind).gpu},.2)`}
+            />
+            <stop
+              offset="70%"
+              stopColor={`rgb(${colorsGraph(colorBlind).gpu},.2)`}
+            />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
         </defs>
       </svg>
-      <PriceChart points={toPoints(data.fps)} pattern={'Pattern'} />
-      <PriceChart points={toPoints(data.cpu, 0.6)} pattern={'PatternCpu'} />
-      <PriceChart points={toPoints(data.gpu, 0.6)} pattern={'PatternGpu'} />
+      <PriceChart points={toPoints('fps')} colorBlind={colorBlind} />
+      <PriceChart points={toPoints('cpu', 0.6)} colorBlind={colorBlind} />
+      {trackGPU && (
+        <PriceChart points={toPoints('gpu', 0.6)} colorBlind={colorBlind} />
+      )}
     </div>
   );
 };
 
 interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   graph?: boolean;
+  trackGPU?: boolean;
+  colorBlind?: boolean;
 }
 
-const PerfUI: FC<PerfUIProps> = ({ graph }) => {
+const PerfUI: FC<PerfUIProps> = ({ graph, trackGPU, colorBlind }) => {
   const log = usePerfStore((state) => state.log);
   const gl = usePerfStore((state) => state.gl);
   return log ? (
     <div>
       <i>
         <RiCpuLine className={styles.sbg} />
-        <b style={graph ? { color: 'rgba(253,151,31,1)' } : {}}>CPU</b>{' '}
-        {Math.round(log.cpu * 100) / 100 || 0}%
+        <b
+          style={graph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}}
+        >
+          CPU
+        </b>{' '}
+        <span>{(Math.round(log.cpu * 100) / 100).toFixed(2) || 0}%</span>
       </i>
       <i>
         <RiCpuFill className={styles.sbg} />
-        <b style={graph ? { color: 'rgba(166,226,46,1)' } : {}}>GPU</b>{' '}
-        {Math.min(Math.round(log.gpu * 100) / 100, 100) || 0}%
+        <b
+          style={
+            graph && trackGPU
+              ? { color: `rgb(${colorsGraph(colorBlind).gpu})` }
+              : {}
+          }
+        >
+          GPU
+        </b>{' '}
+        <span>{(Math.round(log.gpu * 1000) / 1000).toFixed(2) || 0}</span>
+        <small>ms</small>
       </i>
       <i>
         <FaMemory className={styles.sbg} />
@@ -125,13 +208,17 @@ const PerfUI: FC<PerfUIProps> = ({ graph }) => {
       </i>
       <i>
         <VscPulse className={styles.sbg} />
-        <b style={graph ? { color: 'rgba(238,38,110,1)' } : {}}>FPS</b>{' '}
-        {log.fps}
+        <b
+          style={graph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}}
+        >
+          FPS
+        </b>{' '}
+        <span>{log.fps}</span>
       </i>
       {gl && (
         <i>
           <BsTriangle className={styles.sbg} />
-          <b>Triangles</b> {gl.info.render.triangles}
+          <b>Triangles</b> <span>{gl.info.render.triangles}</span>
         </i>
       )}
       {/* <i>
@@ -153,23 +240,23 @@ const PerfThree = () => {
         <div>
           <i>
             <AiOutlineCodeSandbox className={styles.sbg} />
-            <b>Geometries</b> {info.memory.geometries}
+            <b>Geometries</b> <span>{info.memory.geometries}</span>
           </i>
           <i>
             <FaRegImages className={styles.sbg} />
-            <b>Textures</b> {info.memory.textures}
+            <b>Textures</b> <span>{info.memory.textures}</span>
           </i>
           <i>
             <FiLayers className={styles.sbg} />
-            <b>Calls</b> {info.render.calls}
+            <b>Calls</b> <span>{info.render.calls}</span>
           </i>
           <i>
             <RiRhythmLine className={styles.sbg} />
-            <b>Lines</b> {info.render.lines}
+            <b>Lines</b> <span>{info.render.lines}</span>
           </i>
           <i>
             <VscActivateBreakpoints className={styles.sbg} />
-            <b>Points</b> {info.render.points}
+            <b>Points</b> <span>{info.render.points}</span>
           </i>
         </div>
       )}
@@ -196,13 +283,13 @@ const PerfThree = () => {
 /**
  * Performance profiler component
  */
-const Gui: FC<PerfProps> = ({ graph = true }) => {
+const Gui: FC<PerfProps> = ({ graph, colorBlind, trackGPU }) => {
   return (
     <>
       <Headless />
       <Html className={styles.perf}>
-        <PerfUI graph={graph} />
-        {graph && <ChartUI />}
+        <PerfUI colorBlind={colorBlind} graph={graph} trackGPU={trackGPU} />
+        {graph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
       </Html>
     </>
   );

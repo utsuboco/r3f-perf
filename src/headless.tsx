@@ -7,9 +7,7 @@ export type State = {
   log: any;
   chart: {
     data: {
-      fps: number[];
-      gpu: number[];
-      cpu: number[];
+      [index: string]: number[];
     };
     circularId: number;
   };
@@ -32,9 +30,7 @@ type Logger = {
 
 type Chart = {
   data: {
-    fps: number[];
-    gpu: number[];
-    cpu: number[];
+    [index: string]: number[];
   };
   id: number;
   circularId: number;
@@ -72,6 +68,8 @@ export const Headless: FC<Props> = () => {
   usePerfStore.setState({ gl });
 
   useLayoutEffect(() => {
+    gl.info.autoReset = false;
+    console.log(gl.info);
     if (!PerfLib) {
       PerfLib = new GLPerf({
         trackGPU: true,
@@ -80,6 +78,9 @@ export const Headless: FC<Props> = () => {
           usePerfStore.setState({ chart });
         },
         paramLogger: (logger: Logger) => {
+          if (PerfLib) {
+            PerfLib.factorGPU = 1 / gl.info.render.calls;
+          }
           usePerfStore.setState({
             log: {
               cpu: logger.cpu,
@@ -96,6 +97,7 @@ export const Headless: FC<Props> = () => {
     if (PerfLib) {
       const unsub1 = addEffect(() => {
         if (PerfLib) {
+          gl.info.reset();
           PerfLib.begin('profiler');
         }
         return false;

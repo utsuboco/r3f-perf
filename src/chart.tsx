@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { FC, HTMLAttributes } from 'react';
 import styles from './index.module.css';
+import { colorsGraph } from './gui';
 
 const smoothing = 0.15;
 const h = 63;
@@ -60,11 +61,18 @@ const bezierCommand = (controlPoint: any) => (
   return `C ${cps[0]},${cps[1]} ${cpe[0]},${cpe[1]} ${point[0]},${point[1]}${close}`;
 };
 
-const SvgPath = (props: any) => {
-  if (!props.points || props.points.length === 0) {
+interface SvgPathProps extends HTMLAttributes<HTMLDivElement> {
+  points: string[][];
+  element: string;
+  colorBlind: boolean | undefined;
+}
+
+const SvgPath: FC<SvgPathProps> = ({ element, points, colorBlind }) => {
+  if (!points || points.length === 0) {
     return null;
   }
-  const pointsPositions = pointsPositionsCalc(props.points, w, h, options);
+  const colors = colorsGraph(colorBlind);
+  const pointsPositions = pointsPositionsCalc(points, w, h, options);
   const bezierCommandCalc = bezierCommand(controlPoint(line, smoothing));
 
   const d = pointsPositions.reduce(
@@ -78,14 +86,20 @@ const SvgPath = (props: any) => {
   return (
     <path
       d={d}
-      className={styles[`${props.pattern}Stroke`]}
-      fill={`url(#${props.pattern})`}
+      fill={`url(#graph${element})`}
+      stroke={`rgb(${colors[element]})`}
     />
   );
 };
 
-export const PriceChart = (props: any) => {
-  if (!props.points[0] || props.points[0].length === 0) {
+interface ChartProps extends HTMLAttributes<HTMLDivElement> {
+  points: any;
+  colorBlind: boolean | undefined;
+}
+
+export const PriceChart: FC<ChartProps> = ({ points, colorBlind }) => {
+  const element = points.element;
+  if (!points.points || points.points.length === 0) {
     return null;
   }
   return (
@@ -97,7 +111,7 @@ export const PriceChart = (props: any) => {
       viewBox="0 0 320 65"
     >
       <pattern
-        id={props.pattern}
+        id={`graph${element}`}
         x="0"
         y="0"
         width="8"
@@ -109,17 +123,15 @@ export const PriceChart = (props: any) => {
           y="0"
           width="4"
           height="60"
-          fill={`url(#${props.pattern}gradFade)`}
+          fill={`url(#${element}gradFade)`}
         />
-        <rect
-          x="0"
-          y="0"
-          width="4"
-          height="60"
-          fill={`url(#${props.pattern}grad)`}
-        />
+        <rect x="0" y="0" width="4" height="60" fill={`url(#${element}grad)`} />
       </pattern>
-      <SvgPath points={props.points[0]} pattern={`${props.pattern}`} />
+      <SvgPath
+        points={points.points}
+        element={points.element}
+        colorBlind={colorBlind}
+      />
     </svg>
   );
 };
