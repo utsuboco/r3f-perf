@@ -2,15 +2,24 @@
 
 Easily monitor the performances of your React-Three-Fiber application.
 
+```jsx
+r3f-perf.cjs.production.min.js
+Size:       34 B  with all dependencies, minified and gzipped
+
+r3f-perf.esm.js
+Size:       6.23 KB with all dependencies, minified and gzipped
+```
+
 ## Installation
 ```bash
 yarn add --dev r3f-perf
 ```
 ## Options
 ```jsx
-
 headless?: false, // Without UI. See Headless section
 graph?: true // show the graphs
+colorBlind?: false // Color blind colors for accessibility
+trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
 ```
 
 ## Usage
