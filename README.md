@@ -72,3 +72,7 @@ import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js'
 - Position parameter
 - Values and graphs refresh frequency parameter
 - Fix graph SVG position if too low (not visible)
+
+
+
+For more tools, tips and examples you can follow me on twitter [@onirenaud](https://twitter.com/onirenaud)
