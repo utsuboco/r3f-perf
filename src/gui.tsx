@@ -185,7 +185,7 @@ const PerfUI: FC<PerfProps> = ({
         >
           CPU
         </b>{' '}
-        <span>{(Math.round(log.cpu * 100) / 100).toFixed(2) || 0}%</span>
+        <span>{(Math.round(log.cpu * 100) / 100 || 0).toFixed(2)}%</span>
       </i>
       <i>
         <RiCpuFill className={styles.sbg} />
@@ -198,7 +198,7 @@ const PerfUI: FC<PerfProps> = ({
         >
           GPU
         </b>{' '}
-        <span>{(Math.round(log.gpu * 1000) / 1000).toFixed(2) || 0}</span>
+        <span>{(Math.round(log.gpu * 1000) / 1000 || 0).toFixed(2)}</span>
         <small>ms</small>
       </i>
       <i>
