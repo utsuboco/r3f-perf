@@ -4,7 +4,7 @@ import { Headless, usePerfFunc } from './headless';
 
 export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   headless?: boolean;
-  graph?: boolean;
+  showGraph?: boolean;
   colorBlind?: boolean;
   trackGPU?: boolean;
   openByDefault?: boolean;
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
   Perf = ({
     headless = false,
     colorBlind = false,
-    graph = true,
+    showGraph = true,
     trackGPU = true,
     openByDefault = false,
   }) => {
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'development') {
     ) : (
       <Gui
         colorBlind={colorBlind}
-        graph={graph}
+        showGraph={showGraph}
         trackGPU={trackGPU}
         openByDefault={openByDefault}
       />

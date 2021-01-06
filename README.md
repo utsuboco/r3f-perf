@@ -12,7 +12,7 @@ yarn add --dev r3f-perf
 ## Options
 ```jsx
 headless?: false, // Without UI. See Headless section
-graph?: true // show the graphs
+showGraph?: true // show the graphs
 colorBlind?: false // Color blind colors for accessibility
 trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
 openByDefault?: false // show more informations by default

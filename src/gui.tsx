@@ -169,7 +169,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
 };
 
 const PerfUI: FC<PerfProps> = ({
-  graph,
+  showGraph,
   trackGPU,
   colorBlind,
   openByDefault,
@@ -181,7 +181,9 @@ const PerfUI: FC<PerfProps> = ({
       <i>
         <RiCpuLine className={styles.sbg} />
         <b
-          style={graph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}}
+          style={
+            showGraph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}
+          }
         >
           CPU
         </b>{' '}
@@ -191,7 +193,7 @@ const PerfUI: FC<PerfProps> = ({
         <RiCpuFill className={styles.sbg} />
         <b
           style={
-            graph && trackGPU
+            showGraph && trackGPU
               ? { color: `rgb(${colorsGraph(colorBlind).gpu})` }
               : {}
           }
@@ -209,7 +211,9 @@ const PerfUI: FC<PerfProps> = ({
       <i>
         <VscPulse className={styles.sbg} />
         <b
-          style={graph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}}
+          style={
+            showGraph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}
+          }
         >
           FPS
         </b>{' '}
@@ -293,18 +297,24 @@ const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
 /**
  * Performance profiler component
  */
-const Gui: FC<PerfProps> = ({ graph, colorBlind, trackGPU, openByDefault }) => {
+const Gui: FC<PerfProps> = ({
+  showGraph,
+  colorBlind,
+  trackGPU,
+  openByDefault,
+}) => {
+  console.log(showGraph);
   return (
     <>
       <Headless />
       <Html className={styles.perf}>
         <PerfUI
           colorBlind={colorBlind}
-          graph={graph}
+          showGraph={showGraph}
           trackGPU={trackGPU}
           openByDefault={openByDefault}
         />
-        {graph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
+        {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
       </Html>
     </>
   );

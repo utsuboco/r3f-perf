@@ -79,7 +79,6 @@ export default class GLPerf {
             activeAccums.forEach((active: any, i: any) => {
               if (active) {
                 this.gpuAccums[i] += dt;
-                // console.log(this.gpuAccums)
               }
             });
           }, 0)

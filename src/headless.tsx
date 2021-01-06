@@ -69,7 +69,6 @@ export const Headless: FC<Props> = () => {
 
   useLayoutEffect(() => {
     gl.info.autoReset = false;
-    console.log(gl.info);
     if (!PerfLib) {
       PerfLib = new GLPerf({
         trackGPU: true,
