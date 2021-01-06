@@ -63,6 +63,12 @@ https://github.com/RenaudRohlinger/r3f-next-starter
 ## Development and production build
 R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
 
+To render R3F-Perf even in production :
+```jsx
+import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js'
+```
+
+
 ## Todo
 - Log the numbers of programs(shader) used  in real-time
 - Position parameter
