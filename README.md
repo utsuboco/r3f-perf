@@ -1,14 +1,9 @@
-# R3F-Perf
+[![dependencies Status](https://status.david-dm.org/gh/RenaudROHLINGER/r3f-perf.svg)](https://david-dm.org/RenaudROHLINGER/r3f-perf) [![devDependencies Status](https://status.david-dm.org/gh/RenaudROHLINGER/r3f-perf.svg?type=dev)](https://david-dm.org/RenaudROHLINGER/r3f-perf?type=dev) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/r3f-perf) ![npm](https://img.shields.io/npm/dw/r3f-perf)
+# R3F-Perf 
 
 Easily monitor the performances of your React-Three-Fiber application.
+r3f-perf.js is 6.23 KB and automatically removed in production. See [Dev and production build](#dev-and-production-build)
 
-```jsx
-r3f-perf.cjs.production.min.js
-Size:       34 B  with all dependencies, minified and gzipped
-
-r3f-perf.esm.js
-Size:       6.23 KB with all dependencies, minified and gzipped
-```
 
 ## Installation
 ```bash
@@ -60,7 +55,7 @@ export default function App() {
 The tool work with any server side rendering framework. You can try with Next and React-Three-Fiber using this starter :
 https://github.com/RenaudRohlinger/r3f-next-starter
 
-## Development and production build
+## Dev and production build
 R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
 
 To render R3F-Perf even in production :
@@ -70,8 +65,10 @@ import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js'
 
 
 ## Todo
-- Log the numbers of programs(shader) used  in real-time
+- ~~Fix NaN number on init~~
+- ~~Improved readme~~
+- ~~Log the numbers of programs(shader) used  in real-time~~
+- ~~Tool in full size by default parameter~~
 - Position parameter
-- Tool full size by default parameter
 - Values and graphs refresh frequency parameter
 - Fix graph SVG position if too low (not visible)
