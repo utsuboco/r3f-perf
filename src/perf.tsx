@@ -11,6 +11,7 @@ export default class GLPerf {
   names: string[] = [''];
   finished: any[] = [];
   gl: any;
+  paused: boolean = false;
   cpuAccums: number[] = [];
   gpuAccums: number[] = [];
   activeAccums: boolean[] = [];

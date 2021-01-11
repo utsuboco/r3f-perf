@@ -303,7 +303,6 @@ const Gui: FC<PerfProps> = ({
   trackGPU,
   openByDefault,
 }) => {
-  console.log(showGraph);
   return (
     <>
       <Headless />

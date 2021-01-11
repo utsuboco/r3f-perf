@@ -74,7 +74,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
-    "react-three-fiber": "^5.3.10",
+    "react-three-fiber": "^5.3.12",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.9.1",
     "three": "^0.124.0",

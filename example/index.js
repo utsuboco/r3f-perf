@@ -10,6 +10,7 @@ import { EffectComposer, SSAO } from 'react-postprocessing'
 import { Canvas, extend, useFrame, useThree } from 'react-three-fiber'
 import { RoundedBoxBufferGeometry } from 'three/examples/jsm/geometries/RoundedBoxBufferGeometry'
 import perlin3 from './perlin'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 extend({ RoundedBoxBufferGeometry })
 
@@ -83,10 +84,21 @@ function Cubes({ scale: s = 1, ...props }) {
   )
 }
 
+extend({ OrbitControls })
+
+const Controls = () => {
+  const { camera, gl, invalidate } = useThree()
+  const ref = useRef()
+  useFrame(() => ref.current.update())
+  useEffect(() => void ref.current.addEventListener('change', invalidate), [])
+  return <orbitControls ref={ref} enableDamping args={[camera, gl.domElement]} />
+}
+
 
 export default function App() {
   return (
-    <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
+    <Canvas invalidateFrameloop={true} concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
+      <Controls />
       <ambientLight intensity={1} />
       <pointLight position={[-10, 0, 0]} intensity={1000} />
       <pointLight position={[10, 10, 10]} intensity={2} castShadow />
@@ -98,7 +110,7 @@ export default function App() {
         <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         {/* <Cubes position={[0, 0, 0]} rotation={[0, 0, 0]} scale={0.25} /> */}
       </Suspense>
-      <Perf trackGPU={true} openByDefault={true} showGraph={false} />
+      <Perf trackGPU={true} openByDefault={true} showGraph={true} />
     </Canvas>
   )
 }

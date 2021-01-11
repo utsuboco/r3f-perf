@@ -1,5 +1,5 @@
-import { FC, HTMLAttributes, useLayoutEffect } from 'react';
-import { addEffect, addAfterEffect, useThree } from 'react-three-fiber';
+import { FC, HTMLAttributes, useEffect } from 'react';
+import { addEffect, addAfterEffect, useThree, addTail } from 'react-three-fiber';
 import GLPerf from './perf';
 import create from 'zustand';
 
@@ -67,7 +67,7 @@ export const Headless: FC<Props> = () => {
   const { gl } = useThree();
   usePerfStore.setState({ gl });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     gl.info.autoReset = false;
     if (!PerfLib) {
       PerfLib = new GLPerf({
@@ -108,9 +108,27 @@ export const Headless: FC<Props> = () => {
         }
         return false;
       });
+      const unsub3 = addTail(() => {
+        if (PerfLib) {
+          PerfLib.paused = true
+          usePerfStore.setState({
+            log: {
+              cpu: 0,
+              gpu: 0,
+              mem: 0,
+              fps: 0,
+              totalTime: 0,
+              frameCount: 0,
+            },
+          });
+        }
+        return false
+      })
+
       return () => {
         unsub1();
         unsub2();
+        unsub3();
       };
     } else {
       return undefined;
