@@ -1,5 +1,10 @@
 import { FC, HTMLAttributes, useEffect } from 'react';
-import { addEffect, addAfterEffect, useThree, addTail } from 'react-three-fiber';
+import {
+  addEffect,
+  addAfterEffect,
+  useThree,
+  addTail,
+} from 'react-three-fiber';
 import GLPerf from './perf';
 import create from 'zustand';
 
@@ -110,7 +115,7 @@ export const Headless: FC<Props> = () => {
       });
       const unsub3 = addTail(() => {
         if (PerfLib) {
-          PerfLib.paused = true
+          PerfLib.paused = true;
           usePerfStore.setState({
             log: {
               cpu: 0,
@@ -122,8 +127,8 @@ export const Headless: FC<Props> = () => {
             },
           });
         }
-        return false
-      })
+        return false;
+      });
 
       return () => {
         unsub1();
