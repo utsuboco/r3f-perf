@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, useLayoutEffect, useRef } from 'react';
+import { FC, HTMLAttributes, useEffect, useRef } from 'react';
 import {
   addEffect,
   addAfterEffect,
@@ -76,7 +76,7 @@ export const Headless: FC<Props> = () => {
 
   usePerfStore.setState({ gl });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     gl.info.autoReset = false;
     if (!PerfLib) {
       PerfLib = new GLPerf({
@@ -129,7 +129,7 @@ export const Headless: FC<Props> = () => {
       return undefined;
     }
   });
-  useLayoutEffect(() => {
+  useEffect(() => {
     const unsub = addTail(() => {
       console.log(mounted.current);
       if (PerfLib && mounted.current) {
