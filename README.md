@@ -74,10 +74,6 @@ import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js';
 
 ## Todo
 
-- ~~Fix NaN number on init~~
-- ~~Improved readme~~
-- ~~Log the numbers of programs(shader) used in real-time~~
-- ~~Tool in full size by default parameter~~
 - Position parameter
 - Values and graphs refresh frequency parameter
 - Fix graph SVG position if too low (not visible)
