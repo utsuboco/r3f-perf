@@ -58,6 +58,9 @@
   font-weight: 500;
   right: 0;
 }
+.perf span {
+  
+}
 .perf i small {
   font-size: 9px;
   margin-top: 2px;
@@ -72,6 +75,25 @@
   justify-content: center;
   width: 310px;
   margin: 0 auto;
+}
+.graphp {
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  color: #f1f1f1;
+  padding: 7px;
+  width: 100%;
+  background-color: rgba(36, 36, 37, 0.8);
+  z-index: 1;
+}
+.graphp svg {
+  font-size: 10px;
+  margin-right: 4px;
 }
 .graphc svg {
   bottom: -6px;

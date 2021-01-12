@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, useEffect } from 'react';
+import { FC, HTMLAttributes, useLayoutEffect, useRef } from 'react';
 import {
   addEffect,
   addAfterEffect,
@@ -10,6 +10,7 @@ import create from 'zustand';
 
 export type State = {
   log: any;
+  paused: boolean;
   chart: {
     data: {
       [index: string]: number[];
@@ -43,6 +44,7 @@ type Chart = {
 
 export const usePerfStore = create<State>(() => ({
   log: null,
+  paused: false,
   chart: {
     data: {
       fps: [],
@@ -70,9 +72,11 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
  */
 export const Headless: FC<Props> = () => {
   const { gl } = useThree();
+  const mounted = useRef(false);
+
   usePerfStore.setState({ gl });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gl.info.autoReset = false;
     if (!PerfLib) {
       PerfLib = new GLPerf({
@@ -100,6 +104,9 @@ export const Headless: FC<Props> = () => {
     }
     if (PerfLib) {
       const unsub1 = addEffect(() => {
+        if (usePerfStore.getState().paused) {
+          usePerfStore.setState({ paused: false });
+        }
         if (PerfLib) {
           gl.info.reset();
           PerfLib.begin('profiler');
@@ -113,31 +120,40 @@ export const Headless: FC<Props> = () => {
         }
         return false;
       });
-      const unsub3 = addTail(() => {
-        if (PerfLib) {
-          PerfLib.paused = true;
-          usePerfStore.setState({
-            log: {
-              cpu: 0,
-              gpu: 0,
-              mem: 0,
-              fps: 0,
-              totalTime: 0,
-              frameCount: 0,
-            },
-          });
-        }
-        return false;
-      });
 
       return () => {
         unsub1();
         unsub2();
-        unsub3();
       };
     } else {
       return undefined;
     }
   });
+  useLayoutEffect(() => {
+    const unsub = addTail(() => {
+      console.log(mounted.current);
+      if (PerfLib && mounted.current) {
+        PerfLib.paused = true;
+        usePerfStore.setState({
+          paused: true,
+          log: {
+            cpu: 0,
+            gpu: 0,
+            mem: 0,
+            fps: 0,
+            totalTime: 0,
+            frameCount: 0,
+          },
+        });
+      }
+      mounted.current = true;
+
+      return false;
+    });
+
+    return () => {
+      unsub();
+    };
+  }, [mounted]);
   return null;
 };

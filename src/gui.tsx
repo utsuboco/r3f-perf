@@ -13,6 +13,7 @@ import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBr
 import { FaServer } from '@react-icons/all-files/fa/FaServer';
 import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
+import { GiPauseButton } from '@react-icons/all-files/gi/GiPauseButton';
 import styles from './index.module.css';
 import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
@@ -44,7 +45,6 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
 
 const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   const { circularId, data } = usePerfStore((state) => state.chart);
-
   const toPoints = (element: string, factor: number = 1) => {
     let maxVal = 0;
     let points = [];
@@ -75,6 +75,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
     return graph;
   };
 
+  const paused = usePerfStore((state) => state.paused);
   return (
     <div className={styles.graphc}>
       <svg
@@ -163,6 +164,11 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
       <PriceChart points={toPoints('cpu', 0.6)} colorBlind={colorBlind} />
       {trackGPU && (
         <PriceChart points={toPoints('gpu', 0.6)} colorBlind={colorBlind} />
+      )}
+      {paused && (
+        <div className={styles.graphp}>
+          <GiPauseButton /> PAUSED
+        </div>
       )}
     </div>
   );

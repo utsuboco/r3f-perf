@@ -99,9 +99,11 @@ interface ChartProps extends HTMLAttributes<HTMLDivElement> {
 
 export const PriceChart: FC<ChartProps> = ({ points, colorBlind }) => {
   const element = points.element;
+
   if (!points.points || points.points.length === 0) {
     return null;
   }
+
   return (
     <svg
       className={styles.graph}
