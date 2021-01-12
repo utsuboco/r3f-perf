@@ -97,7 +97,7 @@ const Controls = () => {
 export default function App() {
   return (
     //invalidateFrameloop={true} 
-    <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
+    <Canvas invalidateFrameloop={true} concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
       <Controls />
       <ambientLight intensity={1} />
       <pointLight position={[-10, 0, 0]} intensity={1000} />
