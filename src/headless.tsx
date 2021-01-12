@@ -128,10 +128,9 @@ export const Headless: FC<Props> = () => {
     } else {
       return undefined;
     }
-  });
+  }, [gl]);
   useEffect(() => {
     const unsub = addTail(() => {
-      console.log(mounted.current);
       if (PerfLib && mounted.current) {
         PerfLib.paused = true;
         usePerfStore.setState({
