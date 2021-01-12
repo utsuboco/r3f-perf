@@ -8,6 +8,7 @@ export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   colorBlind?: boolean;
   trackGPU?: boolean;
   openByDefault?: boolean;
+  className?: any;
 }
 
 /**
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
     showGraph = true,
     trackGPU = true,
     openByDefault = false,
+    className,
   }) => {
     return headless ? (
       <Headless />
@@ -31,6 +33,7 @@ if (process.env.NODE_ENV === 'development') {
         showGraph={showGraph}
         trackGPU={trackGPU}
         openByDefault={openByDefault}
+        className={className}
       />
     );
   };

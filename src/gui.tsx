@@ -308,11 +308,16 @@ const Gui: FC<PerfProps> = ({
   colorBlind,
   trackGPU,
   openByDefault,
+  className,
 }) => {
   return (
     <>
       <Headless />
-      <Html className={styles.perf}>
+      <Html
+        className={
+          className ? (styles.perf + ' ').concat(className) : styles.perf
+        }
+      >
         <PerfUI
           colorBlind={colorBlind}
           showGraph={showGraph}
