@@ -309,13 +309,15 @@ const Gui: FC<PerfProps> = ({
   trackGPU,
   openByDefault,
   className,
+  position,
 }) => {
   return (
     <>
       <Headless />
       <Html
         className={
-          className ? (styles.perf + ' ').concat(className) : styles.perf
+          (className ? (styles.perf + ' ').concat(className) : styles.perf) +
+          ` ${position ? styles[position] : ''}`
         }
       >
         <PerfUI

@@ -20,6 +20,7 @@ colorBlind?: false // Color blind colors for accessibility
 trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
 openByDefault?: false // show more informations by default
 className?: false // override CSS class
+position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // override position, default is top-right
 ```
 
 ## Usage

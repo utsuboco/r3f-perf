@@ -9,6 +9,7 @@ export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   trackGPU?: boolean;
   openByDefault?: boolean;
   className?: any;
+  position?: string;
 }
 
 /**
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV === 'development') {
     showGraph = true,
     trackGPU = true,
     openByDefault = false,
+    position = 'top-right',
     className,
   }) => {
     return headless ? (
@@ -34,6 +36,7 @@ if (process.env.NODE_ENV === 'development') {
         trackGPU={trackGPU}
         openByDefault={openByDefault}
         className={className}
+        position={position}
       />
     );
   };

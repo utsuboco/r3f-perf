@@ -16,6 +16,21 @@
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
 }
+.perf.top-left {
+  right: initial;
+  left: 0;
+}
+.perf.bottom-left {
+  right: initial;
+  top: initial;
+  bottom: 0;
+  left: 0;
+}
+.perf.bottom-right {
+  top: initial;
+  bottom: 0;
+}
+
 .perf i {
   display: inline-flex;
   font-style: normal;
@@ -131,6 +146,16 @@
   bottom: -17px;
   padding: 4px 11px;
 }
+
+.perf.bottom-left .toggle{
+  top: -17px;
+  bottom: initial;
+}
+.perf.bottom-right .toggle{
+  top: -17px;
+  bottom: initial;
+}
+
 .toggle svg {
   font-size: 19px;
   position: relative;
