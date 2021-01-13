@@ -61,7 +61,7 @@ export default function App() {
 ## SSR
 
 The tool work with any server side rendering framework. You can try with Next and React-Three-Fiber using this starter :
-https://github.com/RenaudRohlinger/r3f-next-starter
+https://github.com/pmndrs/react-three-next
 
 ## Dev and production build
 
