@@ -110,7 +110,7 @@ export default function App() {
         <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         {/* <Cubes position={[0, 0, 0]} rotation={[0, 0, 0]} scale={0.25} /> */}
       </Suspense>
-      <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} corner={'bottom-left'} />
+      <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
     </Canvas>
   )
 }
