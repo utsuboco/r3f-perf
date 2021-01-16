@@ -75,9 +75,9 @@ import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js';
 
 ## Todo
 
-- Position parameter
+- Use performance.measureUserAgentSpecificMemory() with chrome 89. See https://github.com/RenaudRohlinger/r3f-perf/issues/7
 - Values and graphs refresh frequency parameter
-- Fix graph SVG position if too low (not visible)
+- Improve graph SVG position
 
 ### Maintainers :
 
