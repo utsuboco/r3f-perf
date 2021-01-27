@@ -73,6 +73,8 @@ To render R3F-Perf even in production :
 import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js';
 ```
 
+You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD`
+
 ## Todo
 
 - Use performance.measureUserAgentSpecificMemory() with chrome 89. See https://github.com/RenaudRohlinger/r3f-perf/issues/7
