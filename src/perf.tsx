@@ -72,18 +72,19 @@ export default class GLPerf {
   isGL() {
     const gl = this.gl;
     if (gl) {
+      const resolved = (t: any, activeAccums: any) => {
+        setTimeout(() => {
+          gl.getError();
+          const dt = this.now() - t;
+          activeAccums.forEach((active: any, i: any) => {
+            if (active) {
+              this.gpuAccums[i] += dt;
+            }
+          });
+        });
+      };
       const glFinish = async (t: any, activeAccums: any) =>
-        Promise.resolve(
-          setTimeout(() => {
-            gl.getError();
-            const dt = this.now() - t;
-            activeAccums.forEach((active: any, i: any) => {
-              if (active) {
-                this.gpuAccums[i] += dt;
-              }
-            });
-          }, 0)
-        );
+        await Promise.resolve(resolved(t, activeAccums));
 
       const addProfiler = (fn: any, self: any, target: any) =>
         function () {

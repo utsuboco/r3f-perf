@@ -5,11 +5,11 @@ import { Perf } from '../dist';
 import './index.css'
 import * as THREE from 'three'
 import { Environment } from '@react-three/drei'
-import { EffectComposer, SSAO } from 'react-postprocessing'
 import { Canvas, extend, useFrame, useThree } from 'react-three-fiber'
 import { RoundedBoxBufferGeometry } from 'three/examples/jsm/geometries/RoundedBoxBufferGeometry'
 import perlin3 from './perlin'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { useTweaks } from 'use-tweaks';
 
 extend({ RoundedBoxBufferGeometry })
 
@@ -95,23 +95,31 @@ const Controls = () => {
 
 
 export default function App() {
+  const { showCanvas } = useTweaks('Test', {
+    showCanvas: true
+  });
+
   return (
     //invalidateFrameloop={true} 
-    <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
-      <Controls />
-      <ambientLight intensity={1} />
-      <pointLight position={[-10, 0, 0]} intensity={1000} />
-      <pointLight position={[10, 10, 10]} intensity={2} castShadow />
-      <Suspense fallback={null}>
-        <Environment preset="studio" />
-        <EffectComposer multisampling={0}>
-          <SSAO samples={31} radius={10} intensity={20} luminanceInfluence={0.1} color="#155083" />
-        </EffectComposer>
-        <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
-        {/* <Cubes position={[0, 0, 0]} rotation={[0, 0, 0]} scale={0.25} /> */}
-      </Suspense>
-      <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
-    </Canvas>
+    <>
+      {showCanvas && (
+      <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
+        <Controls />
+        <ambientLight intensity={1} />
+        <pointLight position={[-10, 0, 0]} intensity={1000} />
+        <pointLight position={[10, 10, 10]} intensity={2} castShadow />
+        <Suspense fallback={null}>
+          <Environment preset="studio" />
+          {/* <EffectComposer multisampling={0}>
+            <SSAO samples={31} radius={10} intensity={20} luminanceInfluence={0.1} color="#155083" />
+          </EffectComposer> */}
+          <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
+        </Suspense>
+        <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
+      </Canvas>
+      )}
+      {!showCanvas && <div>Canvas OFF</div>}
+    </>
   )
 }
 ReactDOM.render(<App />, document.getElementById('root'));

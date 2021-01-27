@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "@react-three/drei": "^2.2.14",
+    "react": ">= 16.8.0",
     "react-app-polyfill": "^1.0.0",
-    "react-postprocessing": "^1.4.0"
+    "react-postprocessing": "^1.4.0",
+    "tweakpane": "^1.5.6",
+    "use-tweaks": "^0.3.1"
   },
   "alias": {
     "react": "../node_modules/react",
-    "react-dom": "../node_modules/react-dom/profiling",
-    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
+    "react-dom": "../node_modules/react-dom/profiling"
   },
   "devDependencies": {
     "@types/react": "^16.9.11",

@@ -17,7 +17,10 @@ export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
  */
 export let Perf: VFC<PerfProps> = () => null;
 export let usePerf: any;
-if (process.env.NODE_ENV === 'development') {
+if (
+  process.env.NODE_ENV === 'development' ||
+  process.env.R3F_PERF_SHOW_IN_PROD
+) {
   Perf = ({
     headless = false,
     colorBlind = false,

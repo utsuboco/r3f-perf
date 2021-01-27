@@ -78,7 +78,7 @@ export const Headless: FC<Props> = () => {
 
   useEffect(() => {
     gl.info.autoReset = false;
-    if (!PerfLib) {
+    if (!PerfLib && gl.info) {
       PerfLib = new GLPerf({
         trackGPU: true,
         gl: gl.getContext(),
@@ -86,7 +86,7 @@ export const Headless: FC<Props> = () => {
           usePerfStore.setState({ chart });
         },
         paramLogger: (logger: Logger) => {
-          if (PerfLib) {
+          if (PerfLib && gl.info) {
             PerfLib.factorGPU = 1 / gl.info.render.calls;
           }
           usePerfStore.setState({
@@ -102,12 +102,12 @@ export const Headless: FC<Props> = () => {
         },
       });
     }
-    if (PerfLib) {
+    if (PerfLib && gl.info) {
       const unsub1 = addEffect(() => {
         if (usePerfStore.getState().paused) {
           usePerfStore.setState({ paused: false });
         }
-        if (PerfLib) {
+        if (PerfLib && gl.info) {
           gl.info.reset();
           PerfLib.begin('profiler');
         }
