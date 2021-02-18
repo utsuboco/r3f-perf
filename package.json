@@ -60,7 +60,7 @@
     "@size-limit/preset-small-lib": "^4.9.1",
     "@storybook/addon-essentials": "^6.1.11",
     "@storybook/addon-info": "^5.3.21",
-    "@storybook/addon-links": "^6.1.11",
+    "@storybook/addon-links": "^6.1.18",
     "@storybook/addons": "^6.1.11",
     "@storybook/react": "^6.1.18",
     "@types/react": "^17.0.0",
