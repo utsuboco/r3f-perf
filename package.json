@@ -86,6 +86,6 @@
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
     "lerp": "^1.0.3",
-    "zustand": "^3.2.0"
+    "zustand": "^3.3.2"
   }
 }
