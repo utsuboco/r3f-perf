@@ -73,7 +73,7 @@ To render R3F-Perf even in production :
 import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js';
 ```
 
-You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD`
+You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD === 'SHOW'`
 
 ## Todo
 

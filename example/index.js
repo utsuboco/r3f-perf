@@ -6,12 +6,12 @@ import './index.css'
 import * as THREE from 'three'
 import { Environment } from '@react-three/drei'
 import { Canvas, extend, useFrame, useThree } from 'react-three-fiber'
-import { RoundedBoxBufferGeometry } from 'three/examples/jsm/geometries/RoundedBoxBufferGeometry'
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry'
 import perlin3 from './perlin'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { useTweaks } from 'use-tweaks';
 
-extend({ RoundedBoxBufferGeometry })
+extend({ RoundedBoxGeometry })
 
 const NUM = 5
 const TOT = NUM * NUM * NUM
