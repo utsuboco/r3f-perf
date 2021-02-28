@@ -17,9 +17,7 @@
     "lint": "tsdx lint",
     "prepare": "NODE_ENV=production tsdx build  --format cjs",
     "size": "NODE_ENV=production size-limit",
-    "analyze": "NODE_ENV=production size-limit --why",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "analyze": "NODE_ENV=production size-limit --why"
   },
   "husky": {
     "hooks": {
@@ -58,11 +56,6 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@size-limit/preset-small-lib": "^4.9.2",
-    "@storybook/addon-essentials": "^6.1.18",
-    "@storybook/addon-info": "^5.3.21",
-    "@storybook/addon-links": "^6.1.18",
-    "@storybook/addons": "^6.1.11",
-    "@storybook/react": "^6.1.18",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "babel-loader": "^8.2.2",
@@ -86,6 +79,6 @@
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
     "lerp": "^1.0.3",
-    "zustand": "^3.3.2"
+    "zustand": "^3.3.3"
   }
 }
