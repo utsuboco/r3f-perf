@@ -4,16 +4,15 @@ import * as ReactDOM from 'react-dom';
 import { Perf } from '../dist';
 import './index.css'
 import * as THREE from 'three'
-import { Environment } from '@react-three/drei'
 import { Canvas, extend, useFrame, useThree } from 'react-three-fiber'
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry'
+import { RoundedBoxGeometry } from 'three-stdlib'
 import perlin3 from './perlin'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three-stdlib'
 import { useTweaks } from 'use-tweaks';
 
 extend({ RoundedBoxGeometry })
 
-const NUM = 5
+const NUM = 3
 const TOT = NUM * NUM * NUM
 function Cubes({ scale: s = 1, ...props }) {
   const ref = useRef()
@@ -76,8 +75,8 @@ function Cubes({ scale: s = 1, ...props }) {
   return (
     <group {...props} rotation={[Math.PI / 4, Math.PI / 4, 0]} position={[1, 0, 0]}>
       <instancedMesh receiveShadow castShadow ref={ref} args={[null, null, TOT]}>
-        <roundedBoxBufferGeometry args={[1 * s, 1 * s, 1 * s, 1, 0.075 * s]} />
-        <meshStandardMaterial roughness={0} metalness={0} />
+        <roundedBoxGeometry args={[1 * s, 1 * s, 1 * s, 1, 0.075 * s]} />
+        <meshNormalMaterial roughness={0} metalness={0} />
       </instancedMesh>
     </group>
   )
@@ -105,16 +104,7 @@ export default function App() {
       {showCanvas && (
       <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
         <Controls />
-        <ambientLight intensity={1} />
-        <pointLight position={[-10, 0, 0]} intensity={1000} />
-        <pointLight position={[10, 10, 10]} intensity={2} castShadow />
-        <Suspense fallback={null}>
-          <Environment preset="studio" />
-          {/* <EffectComposer multisampling={0}>
-            <SSAO samples={31} radius={10} intensity={20} luminanceInfluence={0.1} color="#155083" />
-          </EffectComposer> */}
-          <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
-        </Suspense>
+        <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
       </Canvas>
       )}
