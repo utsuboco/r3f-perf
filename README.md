@@ -2,6 +2,8 @@
 
 # R3F-Perf
 
+![image](https://user-images.githubusercontent.com/15867665/108375920-c34f5c00-7245-11eb-87ba-22cba3de0cb5.png)
+
 Easily monitor the performances of your React-Three-Fiber application.
 r3f-perf.js is 6.23 KB and automatically removed in production. See [Dev and production build](#dev-and-production-build)
 
@@ -78,6 +80,7 @@ You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD === 
 ## Todo
 
 - Use performance.measureUserAgentSpecificMemory() with chrome 89. See https://github.com/RenaudRohlinger/r3f-perf/issues/7
+- Potential change of the GPU analyzer with settimout that is not clamped anymore in Chrome 90 (14 april) https://www.chromestatus.com/feature/4889002157015040
 - Values and graphs refresh frequency parameter
 - Improve graph SVG position
 
