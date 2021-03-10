@@ -78,7 +78,7 @@
   },
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
-    "@types/three": "^0.125.3",
+    "@types/three": "^0.126.0",
     "lerp": "^1.0.3",
     "zustand": "^3.3.3"
   }
