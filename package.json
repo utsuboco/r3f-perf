@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
-    "@react-three/drei": "^3.11.2",
+    "@react-three/drei": "^4.0.0-beta.7",
     "@size-limit/preset-small-lib": "^4.9.2",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
