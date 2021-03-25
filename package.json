@@ -1,14 +1,10 @@
 {
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.4",
   "license": "MIT",
   "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "main": "index.cjs.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "sideEffects": false,
   "engines": {
     "node": ">=10"
