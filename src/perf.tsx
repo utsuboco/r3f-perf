@@ -65,8 +65,9 @@ export default class GLPerf {
 
         if (this.extension === null) {
           console.warn(
-            'GPUStatsPanel: disjoint_time_query extension not available.'
+            'Disjoint_time_query extension not available.'
           );
+          this.isGL()
         }
       } else {
         this.isGL()
@@ -175,7 +176,7 @@ export default class GLPerf {
         const fps = (frameCount / duration) * 1e3;
         for (let i = 0; i < this.names.length; i++) {
           cpu = Math.round((this.cpuAccums[i] / duration) * 100);
-          gpu = this.isWebGL2 ? this.gpuAccums[i] : Math.round((this.gpuAccums[1] / duration) * 100);
+          gpu = this.isWebGL2 ? this.gpuAccums[i] : this.gpuAccums[i] / duration;
           const mem = Math.round(
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / (1 << 20)
@@ -191,7 +192,14 @@ export default class GLPerf {
             frameCount,
           });
           this.cpuAccums[i] = 0;
-          this.gpuAccums[i] = 0;
+          if (this.isWebGL2) {
+            this.gpuAccums[i] = 0;
+          } else {
+            Promise.all(this.finished).then(() => {
+              this.gpuAccums[i] = 0;
+              this.finished = [];
+            });
+          }
         }
         this.paramFrame = this.frameId;
         this.paramTime = t;
@@ -264,7 +272,7 @@ export default class GLPerf {
     this.activeQueries++;
 
     const checkQuery = () => {
-      if (!query) {
+      if (!query || !this.isWebGL2) {
         return;
       }
       // check if the query is available and valid
