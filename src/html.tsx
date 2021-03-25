@@ -1,11 +1,24 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 // @ts-ignore
-import _objectWithoutPropertiesLoose from '@babel/runtime/helpers/esm/objectWithoutPropertiesLoose';
-// @ts-ignore
 import _extends from '@babel/runtime/helpers/esm/extends';
 import { useThree } from '@react-three/fiber';
 
+
+function _objectWithoutPropertiesLoose(source: any, excluded: any) {
+  if (source == null) return {};
+  var target: any = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
 
 const Html = /*#__PURE__*/React.forwardRef((_ref, ref) => {
   var _portal$current;
