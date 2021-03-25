@@ -75,6 +75,7 @@
     "utility-types": "^3.10.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.13.10",
     "@react-icons/all-files": "^4.1.0",
     "@react-three/fiber": "^6.0.0-alpha.14",
     "@types/three": "^0.126.2",
