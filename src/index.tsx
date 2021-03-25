@@ -3,9 +3,9 @@ import Gui from './gui';
 import { Headless, usePerfFunc } from './headless';
 
 type chart = {
-  length: number,
-  hz: number
-}
+  length: number;
+  hz: number;
+};
 
 export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   headless?: boolean;
@@ -23,7 +23,10 @@ export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
  */
 export let Perf: VFC<PerfProps> = () => null;
 export let usePerf: any;
-if (process.env.NODE_ENV === 'production' && process.env.R3F_PERF_SHOW_IN_PROD !== 'SHOW') {
+if (
+  process.env.NODE_ENV === 'production' &&
+  process.env.R3F_PERF_SHOW_IN_PROD !== 'SHOW'
+) {
 } else {
   Perf = ({
     headless = false,
@@ -34,7 +37,7 @@ if (process.env.NODE_ENV === 'production' && process.env.R3F_PERF_SHOW_IN_PROD !
     position = 'top-right',
     chart = {
       length: 30,
-      hz: 10
+      hz: 10,
     },
     className,
   }) => {

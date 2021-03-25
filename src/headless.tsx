@@ -71,10 +71,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({
-  trackGPU,
-  chart,
-}) => {
+export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
   const { gl } = useThree();
   const mounted = useRef(false);
 
@@ -134,7 +131,7 @@ export const Headless: FC<PerfProps> = ({
     } else {
       return undefined;
     }
-  }, [gl]);
+  }, [gl, trackGPU, chart]);
   useEffect(() => {
     const unsub = addTail(() => {
       if (PerfLib && mounted.current) {
