@@ -45,7 +45,6 @@
     }
   },
   "peerDependencies": {
-    "@react-three/drei": "*",
     "@react-three/fiber": "*",
     "react": ">=16",
     "react-dom": ">=16",
@@ -53,7 +52,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
-    "@react-three/drei": "^4.0.0-beta.7",
     "@size-limit/preset-small-lib": "^4.9.2",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",

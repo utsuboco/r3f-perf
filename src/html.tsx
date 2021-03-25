@@ -2,25 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useThree } from '@react-three/fiber';
 
-function _extends() {
-  let _extends =
-    Object.assign ||
-    function (target: any) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
-      }
-
-      return target;
-    };
-
-  // @ts-ignore
-  return _extends.apply(this, arguments);
+function _extends(props:any, args:any) {
+  return Object.assign(props, args);
 }
 
 function _objectWithoutPropertiesLoose(source: any, excluded: any) {
@@ -90,8 +73,7 @@ const Html = /*#__PURE__*/ React.forwardRef((_ref, ref) => {
   });
   return /*#__PURE__*/ React.createElement(
     'group',
-    // @ts-ignore
-    _extends({}, props, {
+    _extends(props, {
       ref: group,
     })
   );
