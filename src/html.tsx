@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useThree } from '@react-three/fiber';
 
 function _extends(props:any, args:any) {
   return Object.assign(props, args);
@@ -37,16 +36,13 @@ const Html = /*#__PURE__*/ React.forwardRef((_ref, ref) => {
       'className',
     ]);
 
-  const { gl } = useThree(({ gl }) => ({
-    gl,
-  }));
 
   const [el] = React.useState(() => document.createElement('div'));
   const group = React.useRef(null);
   const target =
     (_portal$current = portal == null ? void 0 : portal.current) != null
       ? _portal$current
-      : gl.domElement.parentNode;
+      : document.body;
 
   React.useEffect(() => {
     if (group.current) {
