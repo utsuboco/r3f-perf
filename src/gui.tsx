@@ -15,7 +15,7 @@ import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
 import { GiPauseButton } from '@react-icons/all-files/gi/GiPauseButton';
 import styles from './index.module.css';
-import { Html } from './html';
+import { Html } from '@react-three/drei';
 import { usePerfStore, Headless } from './headless';
 import PriceChart from './chart';
 import { PerfProps } from '.';
