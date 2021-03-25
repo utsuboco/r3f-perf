@@ -18,6 +18,10 @@ yarn add --dev r3f-perf
 ```jsx
 headless?: false, // Without UI. See Headless section
 showGraph?: true // show the graphs
+chart?: {
+  hz: 10, // graphs refresh frequency parameter
+  length: 30, // number of values shown on the monitor
+}
 colorBlind?: false // Color blind colors for accessibility
 trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
 openByDefault?: false // show more informations by default
@@ -79,10 +83,7 @@ You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD === 
 
 ## Todo
 
-- Use performance.measureUserAgentSpecificMemory() with chrome 89. See https://github.com/RenaudRohlinger/r3f-perf/issues/7
 - Potential change of the GPU analyzer with settimout that is not clamped anymore in Chrome 90 (14 april) https://www.chromestatus.com/feature/4889002157015040
-- Values and graphs refresh frequency parameter
-- Improve graph SVG position
 
 ### Maintainers :
 

@@ -76,7 +76,7 @@ function Cubes({ scale: s = 1, ...props }) {
     <group {...props} rotation={[Math.PI / 4, Math.PI / 4, 0]} position={[1, 0, 0]}>
       <instancedMesh receiveShadow castShadow ref={ref} args={[null, null, TOT]}>
         <roundedBoxGeometry args={[1 * s, 1 * s, 1 * s, 1, 0.075 * s]} />
-        <meshNormalMaterial roughness={0} metalness={0} />
+        <meshPhysicalMaterial roughness={0} metalness={0} />
       </instancedMesh>
     </group>
   )
@@ -104,6 +104,7 @@ export default function App() {
       {showCanvas && (
       <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
         <Controls />
+        <ambientLight />
         <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
       </Canvas>

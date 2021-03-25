@@ -1,5 +1,5 @@
 {
-  "version": "0.83.1",
+  "version": "0.9.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -78,7 +78,7 @@
   },
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
-    "@types/three": "^0.126.0",
+    "@types/three": "^0.126.2",
     "lerp": "^1.0.3",
     "zustand": "^3.3.3"
   }

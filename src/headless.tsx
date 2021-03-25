@@ -7,6 +7,7 @@ import {
 } from 'react-three-fiber';
 import GLPerf from './perf';
 import create from 'zustand';
+import { PerfProps } from '.';
 
 export type State = {
   log: any;
@@ -70,7 +71,10 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<Props> = () => {
+export const Headless: FC<PerfProps> = ({
+  trackGPU,
+  chart,
+}) => {
   const { gl } = useThree();
   const mounted = useRef(false);
 
@@ -80,7 +84,9 @@ export const Headless: FC<Props> = () => {
     gl.info.autoReset = false;
     if (!PerfLib && gl.info) {
       PerfLib = new GLPerf({
-        trackGPU: true,
+        trackGPU: trackGPU,
+        chartLen: chart ? chart.length : 30,
+        chartHz: chart ? chart.hz : 10,
         gl: gl.getContext(),
         chartLogger: (chart: Chart) => {
           usePerfStore.setState({ chart });

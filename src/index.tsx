@@ -2,6 +2,11 @@ import React, { VFC, HTMLAttributes } from 'react';
 import Gui from './gui';
 import { Headless, usePerfFunc } from './headless';
 
+type chart = {
+  length: number,
+  hz: number
+}
+
 export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   headless?: boolean;
   showGraph?: boolean;
@@ -10,6 +15,7 @@ export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
   openByDefault?: boolean;
   className?: any;
   position?: string;
+  chart?: chart;
 }
 
 /**
@@ -26,10 +32,14 @@ if (process.env.NODE_ENV === 'production' && process.env.R3F_PERF_SHOW_IN_PROD !
     trackGPU = true,
     openByDefault = false,
     position = 'top-right',
+    chart = {
+      length: 30,
+      hz: 10
+    },
     className,
   }) => {
     return headless ? (
-      <Headless />
+      <Headless chart={chart} />
     ) : (
       <Gui
         colorBlind={colorBlind}
@@ -38,6 +48,7 @@ if (process.env.NODE_ENV === 'production' && process.env.R3F_PERF_SHOW_IN_PROD !
         openByDefault={openByDefault}
         className={className}
         position={position}
+        chart={chart}
       />
     );
   };

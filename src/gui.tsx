@@ -310,10 +310,11 @@ const Gui: FC<PerfProps> = ({
   openByDefault,
   className,
   position,
+  chart,
 }) => {
   return (
     <>
-      <Headless />
+      <Headless trackGPU={trackGPU} chart={chart} />
       <Html
         className={
           (className ? (styles.perf + ' ').concat(className) : styles.perf) +
