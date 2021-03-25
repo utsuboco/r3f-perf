@@ -65,12 +65,66 @@ export default class GLPerf {
 
         if (this.extension === null) {
           console.warn(
-            'GPUStatsPanel: disjoint_time_query extension not available.'
+            'Disjoint_time_query extension not available.'
           );
+          this.isGL()
         }
+      } else {
+        this.isGL()
       }
     }
   }
+
+
+  isGL() {
+    const gl = this.gl;
+    if (gl) {
+      const resolved = (t: any, activeAccums: any) => {
+        setTimeout(() => {
+          gl.getError();
+          const dt = this.now() - t;
+          activeAccums.forEach((active: any, i: any) => {
+            if (active) {
+              this.gpuAccums[i] += dt;
+            }
+          });
+        });
+      };
+      const glFinish = async (t: any, activeAccums: any) =>
+        await Promise.resolve(resolved(t, activeAccums));
+
+      const addProfiler = (fn: any, self: any, target: any) =>
+        function () {
+          const t = self.now();
+          fn.apply(target, arguments);
+          self.finished.push(glFinish(t, self.activeAccums.slice(0)));
+        };
+
+      [
+        'drawArrays',
+        'drawElements',
+        'drawArraysInstanced',
+        'drawBuffers',
+        'drawElementsInstanced',
+        'drawRangeElements',
+      ].forEach((fn) => {
+        if (gl[fn]) {
+          gl[fn] = addProfiler(gl[fn], this, gl);
+        }
+      });
+      gl.getExtension = ((fn, self) =>
+        function () {
+          let ext = fn.apply(gl, arguments);
+          if (ext) {
+            ['drawElementsInstancedANGLE', 'drawBuffersWEBGL'].forEach((fn) => {
+              if (ext[fn]) ext[fn] = addProfiler(ext[fn], self, ext);
+            });
+          }
+          return ext;
+        })(gl.getExtension, this);
+    }
+  }
+
   /**
    * 120hz device detection
    */
@@ -122,7 +176,7 @@ export default class GLPerf {
         const fps = (frameCount / duration) * 1e3;
         for (let i = 0; i < this.names.length; i++) {
           cpu = Math.round((this.cpuAccums[i] / duration) * 100);
-          gpu = this.gpuAccums[i];
+          gpu = this.isWebGL2 ? this.gpuAccums[i] : this.gpuAccums[i] / duration;
           const mem = Math.round(
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / (1 << 20)
@@ -138,7 +192,14 @@ export default class GLPerf {
             frameCount,
           });
           this.cpuAccums[i] = 0;
-          this.gpuAccums[i] = 0;
+          if (this.isWebGL2) {
+            this.gpuAccums[i] = 0;
+          } else {
+            Promise.all(this.finished).then(() => {
+              this.gpuAccums[i] = 0;
+              this.finished = [];
+            });
+          }
         }
         this.paramFrame = this.frameId;
         this.paramTime = t;
@@ -158,7 +219,7 @@ export default class GLPerf {
         const fps = (frameCount / timespan) * 1e3;
         this.chart[this.circularId % this.chartLen] = fps;
         const cpuS = Math.round((this.cpuAccums[1] / duration) * 100) + 5;
-        const gpuS = this.gpuAccums[1] * 2 + 10;
+        const gpuS = (this.isWebGL2 ? this.gpuAccums[1] * 2 : Math.round((this.gpuAccums[1] / duration) * 100)) + 10;
         if (gpuS > 0) {
           this.gpuChart[this.circularId % this.chartLen] = gpuS;
         }
@@ -187,20 +248,33 @@ export default class GLPerf {
   startGpu() {
     const gl = this.gl;
     const ext = this.extension;
-
+    
     // create the query object
     let query: any;
     if (this.isWebGL2) {
       query = gl.createQuery();
-      gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+      if (query instanceof WebGLQuery) {
+        gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+      }
     } else {
-      query = ext.createQueryEXT();
-      ext.beginQueryEXT(ext.TIME_ELAPSED_EXT, query);
+      return
+    }
+    // else {
+    //   query = ext.createQueryEXT();
+    //   if (query instanceof WebGLQuery) {
+    //     ext.beginQueryEXT(ext.TIME_ELAPSED_EXT, query);
+    //   }
+    // }
+    if (!query) {
+      return;
     }
 
     this.activeQueries++;
 
     const checkQuery = () => {
+      if (!query || !this.isWebGL2) {
+        return;
+      }
       // check if the query is available and valid
       let available, disjoint, ns;
       if (this.isWebGL2) {
@@ -240,13 +314,13 @@ export default class GLPerf {
     const ext = this.extension;
     const gl = this.gl;
 
-    if (ext === null) {
+    if (ext === null || !this.isWebGL2) {
       return;
     }
 
-    if (this.isWebGL2) {
+    if (this.isWebGL2 && ext.TIME_ELAPSED_EXT) {
       gl.endQuery(ext.TIME_ELAPSED_EXT);
-    } else {
+    } else if (ext.TIME_ELAPSED_EXT) {
       ext.endQueryEXT(ext.TIME_ELAPSED_EXT);
     }
   }
