@@ -88,9 +88,9 @@ const Html = /*#__PURE__*/ React.forwardRef((_ref, ref) => {
       el
     );
   });
-  // @ts-ignore
   return /*#__PURE__*/ React.createElement(
     'group',
+    // @ts-ignore
     _extends({}, props, {
       ref: group,
     })
