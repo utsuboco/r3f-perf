@@ -1,10 +1,10 @@
 import 'react-app-polyfill/ie11';
-import React, { useState, useRef, Suspense, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import * as ReactDOM from 'react-dom';
 import { Perf } from '../dist';
 import './index.css'
 import * as THREE from 'three'
-import { Canvas, extend, useFrame, useThree } from 'react-three-fiber'
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
 import { RoundedBoxGeometry } from 'three-stdlib'
 import perlin3 from './perlin'
 import { OrbitControls } from 'three-stdlib'

@@ -4,7 +4,7 @@ import {
   addAfterEffect,
   useThree,
   addTail,
-} from 'react-three-fiber';
+} from '@react-three/fiber';
 import GLPerf from './perf';
 import create from 'zustand';
 import { PerfProps } from '.';

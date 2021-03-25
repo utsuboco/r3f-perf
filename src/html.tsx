@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Group } from 'three';
 import { Assign } from 'utility-types';
-import { ReactThreeFiber, useThree } from 'react-three-fiber';
+import { ReactThreeFiber, useThree } from '@react-three/fiber';
 
 export interface HtmlProps
   extends Omit<

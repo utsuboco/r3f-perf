@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useFrame } from "react-three-fiber";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three"
 
 const tempObject = new THREE.Object3D()

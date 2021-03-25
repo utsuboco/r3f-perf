@@ -48,9 +48,9 @@
     }
   },
   "peerDependencies": {
+    "@react-three/fiber": "*",
     "react": ">=16",
     "react-dom": ">=16",
-    "react-three-fiber": "*",
     "three": "*"
   },
   "devDependencies": {
@@ -67,7 +67,6 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
-    "react-three-fiber": "^5.3.18",
     "rollup-plugin-postcss": "^4.0.0",
     "size-limit": "^4.9.2",
     "three": "^0.126.0",
@@ -78,6 +77,7 @@
   },
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
+    "@react-three/fiber": "^6.0.0-alpha.14",
     "@types/three": "^0.126.2",
     "lerp": "^1.0.3",
     "zustand": "^3.3.3"
