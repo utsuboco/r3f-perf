@@ -106,7 +106,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
       });
     }
     if (PerfLib && gl.info) {
-      PerfLib.gl = gl.getContext()
+      PerfLib.gl = gl.getContext();
       const unsub1 = addEffect(() => {
         if (usePerfStore.getState().paused) {
           usePerfStore.setState({ paused: false });

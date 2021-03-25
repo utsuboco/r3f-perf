@@ -7,7 +7,7 @@ type chart = {
   hz: number;
 };
 
-export interface PerfProps  {
+export interface PerfProps {
   headless?: boolean;
   showGraph?: boolean;
   colorBlind?: boolean;

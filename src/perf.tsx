@@ -202,14 +202,14 @@ export default class GLPerf {
       }
     }
     if (!query) {
-      return
+      return;
     }
 
     this.activeQueries++;
 
     const checkQuery = () => {
       if (!query) {
-        return
+        return;
       }
       // check if the query is available and valid
       let available, disjoint, ns;

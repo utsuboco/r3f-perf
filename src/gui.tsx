@@ -316,22 +316,22 @@ const Gui: FC<PerfProps> = ({
     <>
       <Headless trackGPU={trackGPU} chart={chart} />
       <mesh>
-      {/* @ts-ignore */}
-      <Html
-        transform={false}
-        className={
-          (className ? (styles.perf + ' ').concat(className) : styles.perf) +
-          ` ${position ? styles[position] : ''}`
-        }
-      >
-        <PerfUI
-          colorBlind={colorBlind}
-          showGraph={showGraph}
-          trackGPU={trackGPU}
-          openByDefault={openByDefault}
-        />
-        {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
-      </Html>
+        {/* @ts-ignore */}
+        <Html
+          transform={false}
+          className={
+            (className ? (styles.perf + ' ').concat(className) : styles.perf) +
+            ` ${position ? styles[position] : ''}`
+          }
+        >
+          <PerfUI
+            colorBlind={colorBlind}
+            showGraph={showGraph}
+            trackGPU={trackGPU}
+            openByDefault={openByDefault}
+          />
+          {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
+        </Html>
       </mesh>
     </>
   );
