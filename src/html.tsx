@@ -1,29 +1,34 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Group } from 'three';
-import { Assign } from 'utility-types';
-import { ReactThreeFiber, useThree } from '@react-three/fiber';
+// @ts-ignore
+import _objectWithoutPropertiesLoose from '@babel/runtime/helpers/esm/objectWithoutPropertiesLoose';
+// @ts-ignore
+import _extends from '@babel/runtime/helpers/esm/extends';
+import { useThree } from '@react-three/fiber';
 
-export interface HtmlProps
-  extends Omit<
-    Assign<
-      React.HTMLAttributes<HTMLDivElement>,
-      ReactThreeFiber.Object3DNode<Group, typeof Group>
-    >,
-    'ref'
-  > {
-  portal?: React.MutableRefObject<HTMLElement>;
-}
 
-export const Html = React.forwardRef(
-  (
-    { children, style, className, portal, ...props }: HtmlProps,
-    ref: React.Ref<HTMLDivElement>
-  ) => {
-    const { gl } = useThree();
+const Html = /*#__PURE__*/React.forwardRef((_ref, ref) => {
+  var _portal$current;
+
+  let {
+    // @ts-ignore
+    portal,
+    // @ts-ignore
+    className,
+    children,
+  } = _ref,
+      props = _objectWithoutPropertiesLoose(_ref, ["portal", "children", "className"]);
+
+
+    const { gl } = useThree(({
+      gl,
+    }) => ({
+      gl,
+    }));
+
     const [el] = React.useState(() => document.createElement('div'));
-    const group = React.useRef<Group>(null);
-    const target = portal?.current ?? gl.domElement.parentNode;
+    const group = React.useRef(null);
+    const target = (_portal$current = portal == null ? void 0 : portal.current) != null ? _portal$current : gl.domElement.parentNode;
 
     React.useEffect(() => {
       if (group.current) {
@@ -38,14 +43,18 @@ export const Html = React.forwardRef(
       return undefined;
     }, [target, el]);
 
-    React.useEffect(
-      () =>
-        void ReactDOM.render(
-          <div ref={ref} className={className} children={children} />,
-          el
-        )
-    );
+    React.useLayoutEffect(() => {
+      ReactDOM.render( /*#__PURE__*/React.createElement("div", {
+        ref: ref,
+        className: className,
+        children: children
+      }), el);
+    });
 
-    return <group {...props} ref={group} />;
+    return /*#__PURE__*/React.createElement("group", _extends({}, props, {
+      ref: group
+    }));
   }
 );
+
+export { Html };

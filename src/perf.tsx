@@ -192,15 +192,25 @@ export default class GLPerf {
     let query: any;
     if (this.isWebGL2) {
       query = gl.createQuery();
-      gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+      if (query instanceof WebGLQuery) {
+        gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+      }
     } else {
       query = ext.createQueryEXT();
-      ext.beginQueryEXT(ext.TIME_ELAPSED_EXT, query);
+      if (query instanceof WebGLQuery) {
+        ext.beginQueryEXT(ext.TIME_ELAPSED_EXT, query);
+      }
+    }
+    if (!query) {
+      return
     }
 
     this.activeQueries++;
 
     const checkQuery = () => {
+      if (!query) {
+        return
+      }
       // check if the query is available and valid
       let available, disjoint, ns;
       if (this.isWebGL2) {
@@ -244,9 +254,9 @@ export default class GLPerf {
       return;
     }
 
-    if (this.isWebGL2) {
+    if (this.isWebGL2 && ext.TIME_ELAPSED_EXT) {
       gl.endQuery(ext.TIME_ELAPSED_EXT);
-    } else {
+    } else if (ext.TIME_ELAPSED_EXT) {
       ext.endQueryEXT(ext.TIME_ELAPSED_EXT);
     }
   }

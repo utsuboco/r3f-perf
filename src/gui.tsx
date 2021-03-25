@@ -315,6 +315,7 @@ const Gui: FC<PerfProps> = ({
   return (
     <>
       <Headless trackGPU={trackGPU} chart={chart} />
+      {/* @ts-ignore */}
       <Html
         className={
           (className ? (styles.perf + ' ').concat(className) : styles.perf) +
