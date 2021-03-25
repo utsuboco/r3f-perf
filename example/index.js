@@ -99,7 +99,6 @@ export default function App() {
   });
 
   return (
-    //invalidateFrameloop={true} 
     <>
       {showCanvas && (
       <Canvas concurrent shadowMap orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>

@@ -1,4 +1,4 @@
-import React, { VFC, HTMLAttributes } from 'react';
+import React, { VFC } from 'react';
 import Gui from './gui';
 import { Headless, usePerfFunc } from './headless';
 
@@ -7,7 +7,7 @@ type chart = {
   hz: number;
 };
 
-export interface PerfProps extends HTMLAttributes<HTMLDivElement> {
+export interface PerfProps  {
   headless?: boolean;
   showGraph?: boolean;
   colorBlind?: boolean;

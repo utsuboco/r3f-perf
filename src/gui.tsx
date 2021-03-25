@@ -315,8 +315,10 @@ const Gui: FC<PerfProps> = ({
   return (
     <>
       <Headless trackGPU={trackGPU} chart={chart} />
+      <mesh>
       {/* @ts-ignore */}
       <Html
+        transform={false}
         className={
           (className ? (styles.perf + ' ').concat(className) : styles.perf) +
           ` ${position ? styles[position] : ''}`
@@ -330,6 +332,7 @@ const Gui: FC<PerfProps> = ({
         />
         {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
       </Html>
+      </mesh>
     </>
   );
 };
