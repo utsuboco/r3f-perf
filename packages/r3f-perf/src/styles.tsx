@@ -17,6 +17,31 @@ export const PerfS = styled.div`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+
+  &.top-left {
+    right: initial;
+    left: 0;
+  }
+  &.bottom-left {
+    right: initial;
+    top: initial;
+    bottom: 0;
+    left: 0;
+    .__perf_toggle {
+      top: -17px;
+      bottom: initial;
+    }
+  }
+  &.bottom-right {
+    top: initial;
+    bottom: 0;
+    .__perf_toggle {
+      top: -17px;
+      bottom: initial;
+    }
+  }
+
+  
 `
 /* .perf.top-left {
   right: initial;
@@ -48,6 +73,18 @@ export const PerfI = styled.i`
   white-space: nowrap;
   justify-content: space-evenly;
   font-variant-numeric: tabular-nums;
+  svg {
+    left: 0;
+    padding: 0;
+    color: rgba(145,145,145,.12);
+    font-size: 22px;
+    position: absolute;
+    z-index: -1;
+    max-height: 21px;
+    left: 50%;
+    margin-left: -27px;
+    top: 4px;
+  }
   `
   export const PerfSvg = styled.svg`
   left: 0;
@@ -91,9 +128,8 @@ export const PerfI = styled.i`
     width: 310px;
     margin: 0 auto;
     max-width: 312px;
-    position: absolute;
-    z-index: 1;
   `
+
   export const Graphpc = styled.div`
   text-align: center;
   font-weight: 700;
@@ -110,11 +146,16 @@ export const PerfI = styled.i`
   z-index: 1;
   `
   export const GraphpSvg = styled.svg`
-  font-size: 10px;
-  margin-right: 4px;
+    bottom: -6px;
+    max-width: 312px;
+    position: absolute;
+    z-index: 1;
   `
   export const GraphcSvg = styled.svg`
-  bottom: -6px;
+    bottom: -6px;
+    max-width: 312px;
+    position: absolute;
+    z-index: 1;
   `
 
 

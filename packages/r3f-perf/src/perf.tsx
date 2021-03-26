@@ -216,7 +216,7 @@ export default class GLPerf {
       let hz = (this.chartHz * timespan) / 1e3;
       while (--hz > 0 && this.detected) {
         const frameCount = this.frameId - this.chartFrame;
-        const fps = (frameCount / timespan) * 1e3;
+        const fps = Math.min(60, (frameCount / timespan) * 1e3);
         this.chart[this.circularId % this.chartLen] = fps;
         const cpuS = Math.round((this.cpuAccums[1] / duration) * 100) + 5;
         const gpuS = (this.isWebGL2 ? this.gpuAccums[1] * 2 : Math.round((this.gpuAccums[1] / duration) * 100)) + 10;

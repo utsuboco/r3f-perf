@@ -18,7 +18,7 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 import PriceChart from './chart';
 import { PerfProps } from '.';
-import {GraphcSvg, Graphpc, Toggle} from './styles'
+import {GraphcSvg, Graphpc, Toggle, PerfS, PerfI, PerfB, Graph} from './styles'
 
 interface colors {
   [index: string]: string;
@@ -77,7 +77,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
 
   const paused = usePerfStore((state) => state.paused);
   return (
-    <Graphpc>
+    <Graph>
       <GraphcSvg
         height="0"
         width="0"
@@ -170,7 +170,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
           <GiPauseButton /> PAUSED
         </Graphpc>
       )}
-    </Graphpc>
+    </Graph>
   );
 };
 
@@ -184,20 +184,20 @@ const PerfUI: FC<PerfProps> = ({
   const gl = usePerfStore((state) => state.gl);
   return log ? (
     <div>
-      <i>
+      <PerfI>
         <RiCpuLine/>
-        <b
+        <PerfB
           style={
             showGraph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}
           }
         >
           CPU
-        </b>{' '}
+        </PerfB>{' '}
         <span>{(Math.round(log.cpu * 100) / 100 || 0).toFixed(2)}%</span>
-      </i>
-      <i>
+      </PerfI>
+      <PerfI>
         <RiCpuFill/>
-        <b
+        <PerfB
           style={
             showGraph && trackGPU
               ? { color: `rgb(${colorsGraph(colorBlind).gpu})` }
@@ -205,37 +205,37 @@ const PerfUI: FC<PerfProps> = ({
           }
         >
           GPU
-        </b>{' '}
+        </PerfB>{' '}
         <span>{(Math.round(log.gpu * 1000) / 1000 || 0).toFixed(2)}</span>
         <small>ms</small>
-      </i>
-      <i>
+      </PerfI>
+      <PerfI>
         <FaMemory/>
-        <b>Memory</b> {log.mem}
+        <PerfB>Memory</PerfB> {log.mem}
         <small>mb</small>
-      </i>
-      <i>
+      </PerfI>
+      <PerfI>
         <VscPulse/>
-        <b
+        <PerfB
           style={
             showGraph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}
           }
         >
           FPS
-        </b>{' '}
+        </PerfB>{' '}
         <span>{log.fps}</span>
-      </i>
+      </PerfI>
       {gl && (
-        <i>
+        <PerfI>
           <BsTriangle/>
-          <b>Triangles</b> <span>{gl.info.render.triangles}</span>
-        </i>
+          <PerfB>Triangles</PerfB> <span>{gl.info.render.triangles}</span>
+        </PerfI>
       )}
-      {/* <i>
+      {/* <PerfI>
         <BiTimer/>
-        <b>Time</b> {log.totalTime}
+        <PerfB>Time</PerfB> {log.totalTime}
         <small>ms</small>
-      </i> */}
+      </PerfI> */}
       {gl && <PerfThree openByDefault={openByDefault} />}
     </div>
   ) : null;
@@ -244,43 +244,46 @@ const PerfUI: FC<PerfProps> = ({
 const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
   const { info } = usePerfStore((state) => state.gl);
   const [show, set] = React.useState(openByDefault);
+  // const initialDpr = useThree((state) => state.viewport.initialDpr)
+
   return (
     <span>
       {info && show && (
         <div>
-          <i>
+          <PerfI>
             <AiOutlineCodeSandbox/>
-            <b>
+            <PerfB>
               {info.memory.geometries === 1 ? 'Geometry' : 'Geometries'}
-            </b>{' '}
+            </PerfB>{' '}
             <span>{info.memory.geometries}</span>
-          </i>
-          <i>
+          </PerfI>
+          <PerfI>
             <FaRegImages/>
-            <b>{info.memory.textures === 1 ? 'Texture' : 'Textures'}</b>{' '}
+            <PerfB>{info.memory.textures === 1 ? 'Texture' : 'Textures'}</PerfB>{' '}
             <span>{info.memory.textures}</span>
-          </i>
-          <i>
+          </PerfI>
+          <PerfI>
             <FiLayers/>
-            <b>{info.render.calls === 1 ? 'call' : 'calls'}</b>{' '}
+            <PerfB>{info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
             <span>{info.render.calls}</span>
-          </i>
-          <i>
+          </PerfI>
+          <PerfI>
             <FaServer/>
-            <b>{info.programs.length === 1 ? 'shader' : 'shaders'}</b>{' '}
+            <PerfB>{info.programs.length === 1 ? 'shader' : 'shaders'}</PerfB>{' '}
             <span>{info.programs.length}</span>
-          </i>
-          {/* <i>
+          </PerfI>
+          {/* <PerfI>
             <RiRhythmLine/>
-            <b>Lines</b> <span>{info.render.lines}</span>
-          </i> */}
-          <i>
+            <PerfB>Lines</PerfB> <span>{info.render.lines}</span>
+          </PerfI> */}
+          <PerfI>
             <VscActivateBreakpoints/>
-            <b>Points</b> <span>{info.render.points}</span>
-          </i>
+            <PerfB>Points</PerfB> <span>{info.render.points}</span>
+          </PerfI>
         </div>
       )}
       <Toggle
+        className={'__perf_toggle'}
         onClick={() => {
           set(!show);
         }}
@@ -314,20 +317,24 @@ const Gui: FC<PerfProps> = ({
   return (
     <>
       <Headless trackGPU={trackGPU} chart={chart} />
-      <mesh>
         {/* @ts-ignore */}
         <Html
           transform={false}
+         
         >
-          <PerfUI
-            colorBlind={colorBlind}
-            showGraph={showGraph}
-            trackGPU={trackGPU}
-            openByDefault={openByDefault}
-          />
-          {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
+          <PerfS className={
+            (className ? (' ').concat(className) : ' ') +
+            ` ${position ? position : ''}`
+          }>
+            <PerfUI
+              colorBlind={colorBlind}
+              showGraph={showGraph}
+              trackGPU={trackGPU}
+              openByDefault={openByDefault}
+            />
+            {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
+          </PerfS>
         </Html>
-      </mesh>
     </>
   );
 };
