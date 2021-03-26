@@ -13,7 +13,6 @@
     ]
   },
   "scripts": {
-    "symlink": "yarn workspace r3f-perf yalc publish && yarn workspace demo yalc link r3f-perf",
     "postinstall": "patch-package && preconstruct dev",
     "build": "preconstruct build",
     "watch": "preconstruct watch",
