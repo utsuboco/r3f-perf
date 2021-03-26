@@ -1,0 +1,38 @@
+{
+  "name": "r3f-perf",
+  "version": "1.1.0-beta",
+  "main": "dist/r3f-perf.cjs.js",
+  "module": "dist/r3f-perf.esm.js",
+  "types": "dist/r3f-perf.cjs.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RenaudRohlinger/r3f-perf.git",
+    "directory": "packages/r3f-perf"
+  },
+  "bugs": "https://github.com/RenaudRohlinger/r3f-perf/issues",
+  "preconstruct": {
+    "entrypoints": [
+      "index.tsx"
+    ]
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "dependencies": {
+    "@radix-ui/react-portal": "^0.0.6",
+    "@radix-ui/react-tooltip": "0.0.9",
+    "@stitches/react": "^0.1.0",
+    "@welldone-software/why-did-you-render": "^6.1.1",
+    "clipboard-polyfill": "^3.0.2",
+    "dequal": "^2.0.2",
+    "merge-value": "^1.0.0",
+    "react-colorful": "^5.0.1",
+    "react-dropzone": "^11.3.1",
+    "react-use-gesture": "^9.1.3",
+    "tinycolor2": "^1.4.2",
+    "v8n": "^1.3.3",
+    "zustand": "^3.3.3"
+  }
+}
