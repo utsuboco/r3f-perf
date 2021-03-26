@@ -17,12 +17,15 @@
     ]
   },
   "peerDependencies": {
+    "@react-three/fiber": "*",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
     "@radix-ui/react-portal": "^0.0.6",
     "@radix-ui/react-tooltip": "0.0.9",
+    "@react-icons/all-files": "^4.1.0",
+    "@react-three/fiber": "6.0.0-alpha.13",
     "@stitches/react": "^0.1.0",
     "@welldone-software/why-did-you-render": "^6.1.1",
     "clipboard-polyfill": "^3.0.2",

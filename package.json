@@ -43,9 +43,9 @@
   },
   "bugs": "https://github.com/RenaudRohlinger/r3f-perf/issues",
   "peerDependencies": {
+    "@react-three/fiber": "*",
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "@react-three/fiber": "*"
+    "react-dom": ">=16.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -55,7 +55,7 @@
     "@changesets/cli": "^2.14.1",
     "@preconstruct/cli": "^2.0.6",
     "@radix-ui/react-icons": "^1.0.2",
-    "@react-three/fiber": "alpha",
+    "@react-three/fiber": "6.0.0-alpha.13",
     "@size-limit/preset-big-lib": "^4.10.1",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@storybook/addon-actions": "^6.1.21",
