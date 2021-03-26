@@ -16,18 +16,18 @@ export default function App() {
 
   return (
     <>
+    {/* frameloop={'demand'}  */}
       {showCanvas && (
-      <Canvas concurrent shadows dpr={[1, 2]} performance={{min: 0.2}} frameloop={'demand'}  orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
+      <Canvas concurrent shadows dpr={[1, 2]} performance={{min: 0.2}}  orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
         <ambientLight />
         <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         <group>
-        <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
 
         </group>
         <Orbit />
         <AdaptiveDpr pixelated />
         <AdaptiveEvents />
-        <Perf />
+        <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
       </Canvas>
       )}
       {!showCanvas && <div>Canvas OFF</div>}

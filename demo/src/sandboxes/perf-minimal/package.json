@@ -4,8 +4,8 @@
   "main": "src/index.jsx",
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.2",
-    "r3f-perf": "*",
     "react": "^17.0.1",
+    "r3f-perf": "1.0.0",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3"
   },
