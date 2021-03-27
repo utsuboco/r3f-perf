@@ -10,13 +10,7 @@
   "preconstruct": {
     "packages": [
       "packages/*"
-    ],
-    "globals": {
-      "react": "React",
-      "react-dom": "ReactDom",
-      "react-is": "ReactIs",
-      "@react-three/fiber": "ReactThreeFiber"
-    }
+    ]
   },
   "scripts": {
     "postinstall": "patch-package && preconstruct dev",
@@ -26,7 +20,6 @@
     "release": "yarn build && yarn changeset publish",
     "validate": "preconstruct validate",
     "tsc": "tsc --noEmit",
-    "size": "yarn size-limit",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook --quiet",
     "cypress:open": "cypress open",
@@ -36,13 +29,6 @@
     "demo:serve": "yarn workspace demo serve",
     "ci:test": "yarn demo:build && start-server-and-test demo:serve http-get://localhost:5000 cypress:run"
   },
-  "size-limit": [
-    {
-      "name": "Perf",
-      "limit": "3s",
-      "path": "packages/r3f-perf/dist/r3f-perf.umd.min.js"
-    }
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/RenaudRohlinger/r3f-perf.git"
@@ -109,6 +95,6 @@
   },
   "resolutions": {
     "@r3f-perf/root": "portal:/Users/yakuno/Projects/r3f-perf",
-    "demo": "portal:/Users/yakuno/Projects/r3f-perf/demo"
+    "demo": "portal:demo"
   }
 }

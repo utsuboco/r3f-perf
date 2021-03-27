@@ -4,7 +4,6 @@
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
-  "umd:main": "dist/r3f-perf.umd.min.js",
   "license": "MIT",
   "keywords": [
     "three",
@@ -23,16 +22,15 @@
   },
   "bugs": "https://github.com/RenaudRohlinger/r3f-perf/issues",
   "preconstruct": {
-    "umdName": "r3f-perf",
     "entrypoints": [
       "index.tsx"
     ]
   },
   "peerDependencies": {
     "@react-three/fiber": "*",
-    "three": "*",
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "three": "*"
   },
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
