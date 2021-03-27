@@ -2289,6 +2289,7 @@ __metadata:
     "@react-three/fiber": "*"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
+    three: "*"
   languageName: unknown
   linkType: soft
 
@@ -15021,7 +15022,9 @@ fsevents@^1.2.7:
     "@react-three/fiber": ^6.0.0-alpha.14
     "@types/three": ^0.126.2
     lerp: ^1.0.3
+    react-is: ^17.0.2
     styled-components: ^5.2.1
+    three: ^0.126.1
     yalc: ^1.0.0-pre.50
     zustand: ^3.3.3
   peerDependencies:
@@ -15327,7 +15330,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.1":
+"react-is@npm:^17.0.1, react-is@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 3eff23f410d40ab9bc5177f147a92c7f42c356a21ecea340e0554566956d67e5e1ba56f26cc7fa22339ac3c7151744177bd6305eaa26d3cbf15f354358c9d9b6

@@ -4,7 +4,18 @@
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
+  "umd:main": "dist/r3f-perf.umd.min.js",
   "license": "MIT",
+  "keywords": [
+    "three",
+    "react",
+    "fiber",
+    "react-three-fiber",
+    "perf",
+    "monitor",
+    "analyze",
+    "audit"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/RenaudRohlinger/r3f-perf.git",
@@ -12,12 +23,14 @@
   },
   "bugs": "https://github.com/RenaudRohlinger/r3f-perf/issues",
   "preconstruct": {
+    "umdName": "r3f-perf",
     "entrypoints": [
       "index.tsx"
     ]
   },
   "peerDependencies": {
     "@react-three/fiber": "*",
+    "three": "*",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
@@ -26,7 +39,9 @@
     "@react-three/fiber": "^6.0.0-alpha.14",
     "@types/three": "^0.126.2",
     "lerp": "^1.0.3",
+    "react-is": "^17.0.2",
     "styled-components": "^5.2.1",
+    "three": "^0.126.1",
     "zustand": "^3.3.3"
   },
   "devDependencies": {

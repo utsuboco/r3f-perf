@@ -5,7 +5,7 @@
 ![image](https://user-images.githubusercontent.com/15867665/108375920-c34f5c00-7245-11eb-87ba-22cba3de0cb5.png)
 
 Easily monitor the performances of your @react-three/fiber application.
-r3f-perf.js is 6.23 KB and automatically removed in production. See [Dev and production build](#dev-and-production-build)
+r3f-perf.js is 6.23 KB.
 
 ## Installation
 

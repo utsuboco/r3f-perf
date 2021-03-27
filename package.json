@@ -10,7 +10,13 @@
   "preconstruct": {
     "packages": [
       "packages/*"
-    ]
+    ],
+    "globals": {
+      "react": "React",
+      "react-dom": "ReactDom",
+      "react-is": "ReactIs",
+      "@react-three/fiber": "ReactThreeFiber"
+    }
   },
   "scripts": {
     "postinstall": "patch-package && preconstruct dev",
@@ -34,7 +40,7 @@
     {
       "name": "Perf",
       "limit": "3s",
-      "path": "packages/r3f-perf/dist/r3f-perf.*.js"
+      "path": "packages/r3f-perf/dist/r3f-perf.umd.min.js"
     }
   ],
   "repository": {
@@ -45,7 +51,8 @@
   "peerDependencies": {
     "@react-three/fiber": "*",
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "three": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -101,7 +108,7 @@
     "printWidth": 120
   },
   "resolutions": {
-    "@r3f-perf/root": "portal:/Users/yakuno/Projects/leva",
-    "demo": "portal:/Users/yakuno/Projects/leva/demo"
+    "@r3f-perf/root": "portal:/Users/yakuno/Projects/r3f-perf",
+    "demo": "portal:/Users/yakuno/Projects/r3f-perf/demo"
   }
 }
