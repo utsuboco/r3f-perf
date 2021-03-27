@@ -69,18 +69,6 @@ export default function App() {
 The tool work with any server side rendering framework. You can try with Next and @react-three/fiber using this starter :
 https://github.com/pmndrs/react-three-next
 
-## Dev and production build
-
-R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
-
-To render R3F-Perf even in production :
-
-```jsx
-import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js';
-```
-
-You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD === 'SHOW'`
-
 ## Todo
 
 - Potential change of the GPU analyzer with settimout that is not clamped anymore in Chrome 90 (14 april) https://www.chromestatus.com/feature/4889002157015040

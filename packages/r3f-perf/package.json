@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "1.1.0-beta",
+  "version": "1.1.1-beta",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
