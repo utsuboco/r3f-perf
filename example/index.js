@@ -101,7 +101,7 @@ export default function App() {
   return (
     <>
       {showCanvas && (
-      <Canvas concurrent shadowMap invalidate orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
+      <Canvas concurrent shadowMap frameloop={'demand'} orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
         <Controls />
         <ambientLight />
         <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />

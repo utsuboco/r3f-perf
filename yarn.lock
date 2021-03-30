@@ -7703,7 +7703,7 @@ __metadata:
     "@vitejs/plugin-react-refresh": ^1.3.1
     leva: ^0.8.1
     noisejs: ^2.1.0
-    r3f-perf: "*"
+    r3f-perf: "workspace:packages/r3f-perf"
     react: ^17.0.2
     react-dom: ^17.0.2
     three: ^0.126.1
@@ -14994,23 +14994,6 @@ fsevents@^1.2.7:
   version: 5.1.1
   resolution: "quick-lru@npm:5.1.1"
   checksum: fafb2b2fa1a948d6f2e88d4a60571be70b316d9b0be857d24fba0ac28fc31acebf535b643fe968473d689f8c655bcb2a0e4da67912f571059a4e4eb15740b021
-  languageName: node
-  linkType: hard
-
-"r3f-perf@npm:*":
-  version: 1.2.0
-  resolution: "r3f-perf@npm:1.2.0"
-  dependencies:
-    "@react-icons/all-files": ^4.1.0
-    "@types/three": ^0.126.2
-    lerp: ^1.0.3
-    zustand: ^3.3.3
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-    react-three-fiber: "*"
-    three: "*"
-  checksum: 3bebefacbb318a8540fffa73905bf7bf6f5a5af7e934b7ddefe1b0547debf0ee8039911e8150e17fe1c725f0299ad60cd41cce0995aa8e50dd6fefe4fa35b351
   languageName: node
   linkType: hard
 
