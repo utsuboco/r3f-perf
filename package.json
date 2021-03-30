@@ -1,6 +1,6 @@
 {
   "name": "@r3f-perf/root",
-  "version": "0.0.1",
+  "version": "0.0.0-semantic-released",
   "license": "MIT",
   "private": true,
   "workspaces": [

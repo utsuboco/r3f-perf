@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - '**/package.json'
       - '.changeset/**'
