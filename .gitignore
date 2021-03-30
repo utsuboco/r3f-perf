@@ -8,6 +8,8 @@ node_modules/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+demo/.yarn
+example/.yarn
 
 # testing
 /coverage
