@@ -8,7 +8,7 @@ declare global {
 }
 
 export default class GLPerf {
-  names: string[] = [''];
+  names: string[] = [];
   finished: any[] = [];
   gl: any;
   extension: any;
