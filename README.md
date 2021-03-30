@@ -8,7 +8,7 @@ Easily monitor the performances of your @react-three/fiber application.
 r3f-perf.js is 6.23 KB.
 
 ## IMPORTANT
-FOR R3F < v6 USE r3f-perf@1.2.0 AND FOR VERSION R3F >= v6 USE >= r3f-perf@2.4.0
+FOR R3F < v6 USE r3f-perf@1.2.0 AND FOR VERSION R3F >= v6 USE >= r3f-perf@2.0.4
 ## Installation
 
 ```bash
