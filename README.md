@@ -4,8 +4,8 @@
 
 ![image](https://user-images.githubusercontent.com/15867665/108375920-c34f5c00-7245-11eb-87ba-22cba3de0cb5.png)
 
-Easily monitor the performances of your React-Three-Fiber application.
-r3f-perf.js is 6.23 KB and automatically removed in production. See [Dev and production build](#dev-and-production-build)
+Easily monitor the performances of your @react-three/fiber application.
+r3f-perf.js is 6.23 KB.
 
 ## Installation
 
@@ -34,7 +34,7 @@ position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // override posit
 Simply add the the profiler component in your app
 
 ```jsx
-import { Canvas } from 'react-three-fiber';
+import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
 
 <Canvas>
@@ -45,7 +45,7 @@ import { Perf } from 'r3f-perf';
 Usage without interface : headless mode
 
 ```jsx
-import { Canvas } from 'react-three-fiber';
+import { Canvas } from '@react-three/fiber';
 import { Perf, usePerf } from 'r3f-perf';
 
 const PerfHook = () => {
@@ -66,20 +66,8 @@ export default function App() {
 
 ## SSR
 
-The tool work with any server side rendering framework. You can try with Next and React-Three-Fiber using this starter :
+The tool work with any server side rendering framework. You can try with Next and @react-three/fiber using this starter :
 https://github.com/pmndrs/react-three-next
-
-## Dev and production build
-
-R3F-Perf is automatically removed from the production build based on the `process.env.NODE_ENV`.
-
-To render R3F-Perf even in production :
-
-```jsx
-import { Perf } from 'r3f-perf/dist/r3f-perf.cjs.development.js';
-```
-
-You can also set the custom env variable `process.env.R3F_PERF_SHOW_IN_PROD === 'SHOW'`
 
 ## Todo
 

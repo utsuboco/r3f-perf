@@ -1,4 +1,6 @@
-.perf {
+import styled from 'styled-components'
+
+export const PerfS = styled.div`
   position: fixed;
   top: 0;
   right: 0;
@@ -15,8 +17,33 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
-}
-.perf.top-left {
+
+  &.top-left {
+    right: initial;
+    left: 0;
+  }
+  &.bottom-left {
+    right: initial;
+    top: initial;
+    bottom: 0;
+    left: 0;
+    .__perf_toggle {
+      top: -17px;
+      bottom: initial;
+    }
+  }
+  &.bottom-right {
+    top: initial;
+    bottom: 0;
+    .__perf_toggle {
+      top: -17px;
+      bottom: initial;
+    }
+  }
+
+  
+`
+/* .perf.top-left {
   right: initial;
   left: 0;
 }
@@ -29,9 +56,9 @@
 .perf.bottom-right {
   top: initial;
   bottom: 0;
-}
+} */
 
-.perf i {
+export const PerfI = styled.i`
   display: inline-flex;
   font-style: normal;
   padding: 0;
@@ -46,8 +73,20 @@
   white-space: nowrap;
   justify-content: space-evenly;
   font-variant-numeric: tabular-nums;
-}
-.perf svg.sbg {
+  svg {
+    left: 0;
+    padding: 0;
+    color: rgba(145,145,145,.12);
+    font-size: 22px;
+    position: absolute;
+    z-index: -1;
+    max-height: 21px;
+    left: 50%;
+    margin-left: -27px;
+    top: 4px;
+  }
+  `
+  export const PerfSvg = styled.svg`
   left: 0;
   padding: 0;
   color: rgba(145,145,145,.12);
@@ -58,9 +97,9 @@
   left: 50%;
   margin-left: -27px;
   top: 4px;
-}
+  `
 
-.perf i b {
+  export const PerfB = styled.b`
   vertical-align: bottom;
   position: absolute;
   bottom: 5px;
@@ -72,26 +111,26 @@
   font-size: 8px;
   font-weight: 500;
   right: 0;
-}
-.perf span {
-  
-}
-.perf i small {
+  `
+
+  export const PerfSm = styled.small`
   font-size: 9px;
   margin-top: 2px;
   margin-left: -6px;
   display: inline-block;
-}
-.graphc {
-  height: 61px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 310px;
-  margin: 0 auto;
-}
-.graphp {
+  `
+  export const Graph = styled.div`
+    height: 61px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 310px;
+    margin: 0 auto;
+    max-width: 312px;
+  `
+
+  export const Graphpc = styled.div`
   text-align: center;
   font-weight: 700;
   font-size: 12px;
@@ -105,30 +144,22 @@
   width: 100%;
   background-color: rgba(36, 36, 37, 0.8);
   z-index: 1;
-}
-.graphp svg {
-  font-size: 10px;
-  margin-right: 4px;
-}
-.graphc svg {
-  bottom: -6px;
-}
-.graph {
-  max-width: 312px;
-  position: absolute;
-  z-index: 1;
-}
-.PatternCpuStroke {
-  stroke-width: 1.5;
-}
-.PatternGpuStroke {
-  stroke-width: 1.5;
-}
-.PatternStroke {
-  stroke-width: 1.5;
-}
+  `
+  export const GraphpSvg = styled.svg`
+    bottom: -6px;
+    max-width: 312px;
+    position: absolute;
+    z-index: 1;
+  `
+  export const GraphcSvg = styled.svg`
+    bottom: -6px;
+    max-width: 312px;
+    position: absolute;
+    z-index: 1;
+  `
 
-.toggle {
+
+  export const Toggle = styled.div`
   pointer-events: auto;
   justify-content: center;
   display: block;
@@ -145,18 +176,18 @@
   right: 0;
   bottom: -17px;
   padding: 4px 11px;
-}
+  `
 
-.perf.bottom-left .toggle{
-  top: -17px;
-  bottom: initial;
-}
-.perf.bottom-right .toggle{
-  top: -17px;
-  bottom: initial;
-}
+// .perf.bottom-left .toggle{
+//   top: -17px;
+//   bottom: initial;
+// }
+// .perf.bottom-right .toggle{
+//   top: -17px;
+//   bottom: initial;
+// }
 
-.toggle svg {
+export const ToggleSvg = styled.div`
   font-size: 19px;
   position: relative;
   z-index: 0;
@@ -168,11 +199,13 @@
   margin: -6px -6px -6px -6px;
   display: inline-block;
   margin-top: -7px;
-}
-.toggle:hover {
-  background-color: rgb(32,32,32);
-  color: rgb(203,203,203);
-}
-.toggle:hover svg {
-  color: rgb(203,203,203);
-}
+  `
+
+// .toggle:hover {
+//   background-color: rgb(32,32,32);
+//   color: rgb(203,203,203);
+// }
+// .toggle:hover svg {
+//   color: rgb(203,203,203);
+// }
+

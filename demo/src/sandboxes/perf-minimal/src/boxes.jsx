@@ -1,20 +1,13 @@
-import 'react-app-polyfill/ie11';
-import React, { useState, useRef, useEffect, useCallback } from 'react'
-import * as ReactDOM from 'react-dom';
-import { Perf } from '../dist';
-import './index.css'
-import * as THREE from 'three'
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import React, {useRef, useState, useEffect, useCallback} from 'react'
 import { RoundedBoxGeometry } from 'three-stdlib'
+import * as THREE from 'three'
 import perlin3 from './perlin'
-import { OrbitControls } from 'three-stdlib'
-import { useTweaks } from 'use-tweaks';
-
+import { extend, useFrame, useThree } from '@react-three/fiber'
 extend({ RoundedBoxGeometry })
 
 const NUM = 3
 const TOT = NUM * NUM * NUM
-function Cubes({ scale: s = 1, ...props }) {
+const Boxes = ({ scale: s = 1, ...props }) => {
   const ref = useRef()
   const { clock } = useThree()
   const [objects] = useState(() => [...new Array(TOT)].map(() => new THREE.Object3D()))
@@ -82,34 +75,4 @@ function Cubes({ scale: s = 1, ...props }) {
   )
 }
 
-extend({ OrbitControls })
-
-const Controls = () => {
-  const { camera, gl, invalidate } = useThree()
-  const ref = useRef()
-  useFrame(() => ref.current.update())
-  useEffect(() => void ref.current.addEventListener('change', invalidate), [])
-  return <orbitControls ref={ref} enableDamping args={[camera, gl.domElement]} />
-}
-
-
-export default function App() {
-  const { showCanvas } = useTweaks('Test', {
-    showCanvas: true
-  });
-
-  return (
-    <>
-      {showCanvas && (
-      <Canvas concurrent shadowMap frameloop={'demand'} orthographic pixelRatio={[1, 2]} camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
-        <Controls />
-        <ambientLight />
-        <Cubes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
-        <Perf className={'override'} trackGPU={true} openByDefault={true} showGraph={true} position={'bottom-left'} />
-      </Canvas>
-      )}
-      {!showCanvas && <div>Canvas OFF</div>}
-    </>
-  )
-}
-ReactDOM.render(<App />, document.getElementById('root'));
+export default Boxes

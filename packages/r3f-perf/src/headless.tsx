@@ -4,7 +4,7 @@ import {
   addAfterEffect,
   useThree,
   addTail,
-} from 'react-three-fiber';
+} from '@react-three/fiber';
 import GLPerf from './perf';
 import create from 'zustand';
 import { PerfProps } from '.';
@@ -106,6 +106,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
       });
     }
     if (PerfLib && gl.info) {
+      PerfLib.gl = gl.getContext();
       const unsub1 = addEffect(() => {
         if (usePerfStore.getState().paused) {
           usePerfStore.setState({ paused: false });

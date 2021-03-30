@@ -1,5 +1,5 @@
 import React, { FC, HTMLAttributes } from 'react';
-import styles from './index.module.css';
+import { GraphpSvg } from './styles';
 import { colorsGraph } from './gui';
 
 const smoothing = 0.15;
@@ -105,8 +105,7 @@ export const PriceChart: FC<ChartProps> = ({ points, colorBlind }) => {
   }
 
   return (
-    <svg
-      className={styles.graph}
+    <GraphpSvg
       height="65"
       width="320"
       xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +133,7 @@ export const PriceChart: FC<ChartProps> = ({ points, colorBlind }) => {
         element={points.element}
         colorBlind={colorBlind}
       />
-    </svg>
+    </GraphpSvg>
   );
 };
 

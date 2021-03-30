@@ -1,0 +1,6 @@
+{
+  "packages": ["packages/*"],
+  "sandboxes": [
+    "/demo/src/sandboxes/perf-minimal"
+  ]
+}
