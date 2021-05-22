@@ -1,4 +1,5 @@
 name: Release
+
 on:
   push:
     branches:
@@ -6,9 +7,7 @@ on:
     paths:
       - '**/package.json'
       - '.changeset/**'
-env:
-  CI: true
-  PNPM_CACHE_FOLDER: .pnpm-store
+
 jobs:
   release:
     name: Release
@@ -25,14 +24,20 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install pnpm
-        run: npm i pnpm@latest -g
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
-      - name: Setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: pnpm install
+        run: yarn install --silent
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
