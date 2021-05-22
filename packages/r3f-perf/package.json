@@ -38,10 +38,11 @@
     "lerp": "^1.0.3",
     "react-is": "^17.0.2",
     "styled-components": "^5.2.1",
-    "three": "^0.126.1",
+    "three": "*",
     "zustand": "^3.3.3"
   },
   "devDependencies": {
+    "@types/styled-components": "^5.1.9",
     "yalc": "^1.0.0-pre.50"
   }
 }

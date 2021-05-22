@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const PerfS = styled.div`
   position: fixed;
@@ -6,9 +6,9 @@ export const PerfS = styled.div`
   right: 0;
   z-index: 9999;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
-  background-color: rgba(36,36,36,1);
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: rgba(36, 36, 36, 1);
   color: #fff;
 
   pointer-events: none;
@@ -28,7 +28,7 @@ export const PerfS = styled.div`
     bottom: 0;
     left: 0;
     .__perf_toggle {
-      top: -17px;
+      top: -21px;
       bottom: initial;
     }
   }
@@ -36,13 +36,11 @@ export const PerfS = styled.div`
     top: initial;
     bottom: 0;
     .__perf_toggle {
-      top: -17px;
+      top: -21px;
       bottom: initial;
     }
   }
-
-  
-`
+`;
 /* .perf.top-left {
   right: initial;
   left: 0;
@@ -76,7 +74,7 @@ export const PerfI = styled.i`
   svg {
     left: 0;
     padding: 0;
-    color: rgba(145,145,145,.12);
+    color: rgba(145, 145, 145, 0.12);
     font-size: 22px;
     position: absolute;
     z-index: -1;
@@ -85,11 +83,11 @@ export const PerfI = styled.i`
     margin-left: -27px;
     top: 4px;
   }
-  `
-  export const PerfSvg = styled.svg`
+`;
+export const PerfSvg = styled.svg`
   left: 0;
   padding: 0;
-  color: rgba(145,145,145,.12);
+  color: rgba(145, 145, 145, 0.12);
   font-size: 22px;
   position: absolute;
   z-index: -1;
@@ -97,13 +95,13 @@ export const PerfI = styled.i`
   left: 50%;
   margin-left: -27px;
   top: 4px;
-  `
+`;
 
-  export const PerfB = styled.b`
+export const PerfB = styled.b`
   vertical-align: bottom;
   position: absolute;
   bottom: 5px;
-  color: rgba(101,197,188, 1);
+  color: rgba(101, 197, 188, 1);
   text-align: revert;
   right: 0;
   letter-spacing: 0;
@@ -111,26 +109,26 @@ export const PerfI = styled.i`
   font-size: 8px;
   font-weight: 500;
   right: 0;
-  `
+`;
 
-  export const PerfSm = styled.small`
+export const PerfSm = styled.small`
   font-size: 9px;
   margin-top: 2px;
   margin-left: -6px;
   display: inline-block;
-  `
-  export const Graph = styled.div`
-    height: 61px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    width: 310px;
-    margin: 0 auto;
-    max-width: 312px;
-  `
+`;
+export const Graph = styled.div`
+  height: 61px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 310px;
+  margin: 0 auto;
+  max-width: 312px;
+`;
 
-  export const Graphpc = styled.div`
+export const Graphpc = styled.div`
   text-align: center;
   font-weight: 700;
   font-size: 12px;
@@ -144,22 +142,21 @@ export const PerfI = styled.i`
   width: 100%;
   background-color: rgba(36, 36, 37, 0.8);
   z-index: 1;
-  `
-  export const GraphpSvg = styled.svg`
-    bottom: -6px;
-    max-width: 312px;
-    position: absolute;
-    z-index: 1;
-  `
-  export const GraphcSvg = styled.svg`
-    bottom: -6px;
-    max-width: 312px;
-    position: absolute;
-    z-index: 1;
-  `
+`;
+export const GraphpSvg = styled.svg`
+  bottom: 0px;
+  max-width: 312px;
+  position: absolute;
+  z-index: 1;
+`;
+export const GraphcSvg = styled.svg`
+  bottom: -6px;
+  max-width: 312px;
+  position: absolute;
+  z-index: 1;
+`;
 
-
-  export const Toggle = styled.div`
+export const Toggle = styled.div`
   pointer-events: auto;
   justify-content: center;
   display: block;
@@ -169,23 +166,14 @@ export const PerfI = styled.i`
   margin-top: 6px;
   width: auto;
   margin: 0 auto;
-  color: rgba(145,145,145,1);
+  color: rgba(145, 145, 145, 1);
 
   text-align: center;
   position: absolute;
   right: 0;
-  bottom: -17px;
+  bottom: -21px;
   padding: 4px 11px;
-  `
-
-// .perf.bottom-left .toggle{
-//   top: -17px;
-//   bottom: initial;
-// }
-// .perf.bottom-right .toggle{
-//   top: -17px;
-//   bottom: initial;
-// }
+`;
 
 export const ToggleSvg = styled.div`
   font-size: 19px;
@@ -195,17 +183,8 @@ export const ToggleSvg = styled.div`
   padding: 0;
   left: initial;
   top: initial;
-  color: rgba(145,145,145,1);
+  color: rgba(145, 145, 145, 1);
   margin: -6px -6px -6px -6px;
   display: inline-block;
   margin-top: -7px;
-  `
-
-// .toggle:hover {
-//   background-color: rgb(32,32,32);
-//   color: rgb(203,203,203);
-// }
-// .toggle:hover svg {
-//   color: rgb(203,203,203);
-// }
-
+`;

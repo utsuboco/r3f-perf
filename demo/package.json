@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.2",
-    "@react-three/drei": "^4.0.1",
-    "@react-three/fiber": "^6.0.1",
+    "@react-three/drei": "^5.1.6",
+    "@react-three/fiber": "^6.2.0",
     "@stitches/react": "^0.1.0",
     "leva": "^0.8.1",
     "noisejs": "^2.1.0",
