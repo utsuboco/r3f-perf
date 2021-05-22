@@ -34,8 +34,8 @@ export default function App() {
           <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
           <group></group>
           <Orbit />
-          <AdaptiveDpr pixelated />
-          <AdaptiveEvents />
+          {/* <AdaptiveDpr pixelated />
+          <AdaptiveEvents /> */}
           <Perf
             className={'override'}
             trackGPU={true}
