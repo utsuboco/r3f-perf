@@ -38,11 +38,11 @@
     "react-is": "^17.0.2",
     "styled-components": "^5.2.1",
     "three": "*",
-    "zustand": "^3.3.3"
+    "zustand": "^3.5.1"
   },
   "devDependencies": {
-    "@types/three": "latest",
     "@types/styled-components": "^5.1.9",
+    "@types/three": "latest",
     "yalc": "^1.0.0-pre.50"
   }
 }

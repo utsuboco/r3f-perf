@@ -40,7 +40,6 @@
     "@changesets/cli": "^2.16.0",
     "@preconstruct/cli": "^2.1.0",
     "@radix-ui/react-icons": "^1.0.2",
-    "@react-three/fiber": "^6.2.0",
     "@size-limit/preset-big-lib": "^4.10.1",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@storybook/addon-actions": "^6.1.21",
@@ -51,6 +50,7 @@
     "@types/node": "^15.0.2",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "@types/styled-components": "^5.1.9",
     "@types/tinycolor2": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
@@ -84,9 +84,5 @@
   "resolutions": {
     "@r3f-perf/root": "portal:/Users/yakuno/Projects/r3f-perf",
     "demo": "portal:demo"
-  },
-  "dependencies": {
-    "@react-three/drei": "^5.1.6",
-    "@types/styled-components": "^5.1.9"
   }
 }
