@@ -2494,7 +2494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-icons/all-files@npm:^4.1.0":
+"@react-icons/all-files@npm:latest":
   version: 4.1.0
   resolution: "@react-icons/all-files@npm:4.1.0"
   peerDependencies:
@@ -3865,10 +3865,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.126.2":
-  version: 0.126.2
-  resolution: "@types/three@npm:0.126.2"
-  checksum: 88709dadee01517efad33eac0ee4a4995b989bcb97dacf46a58bfee8ceb589ebec60ddeb9698bf495d889b3d7b2c45f917d2e110032f50eba87c22e88337abaa
+"@types/three@npm:latest":
+  version: 0.128.0
+  resolution: "@types/three@npm:0.128.0"
+  checksum: 866e16b55a60941560df629a20fe005034058b25d41fa03a0c4363ef94f580768bae6d6065573ac6b3a5326d0c349ff5920d095f0ed66303a0785f56e88d5bfa
   languageName: node
   linkType: hard
 
@@ -14243,12 +14243,13 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "r3f-perf@workspace:packages/r3f-perf"
   dependencies:
-    "@react-icons/all-files": ^4.1.0
-    "@types/three": ^0.126.2
+    "@react-icons/all-files": latest
+    "@types/styled-components": ^5.1.9
+    "@types/three": latest
     lerp: ^1.0.3
     react-is: ^17.0.2
     styled-components: ^5.2.1
-    three: ^0.126.1
+    three: "*"
     yalc: ^1.0.0-pre.50
     zustand: ^3.3.3
   peerDependencies:
@@ -16650,6 +16651,13 @@ resolve@^2.0.0-next.3:
   peerDependencies:
     three: ">=0.128.0"
   checksum: 5da0170c2eeea2ff7a347be538b017a47cbe9fc1c6a50027d3fd6f34a1b56d7972a3a973ee669d2ddde76a7d753169d630a5de5b3526e78aa73756ec979d7dcf
+  languageName: node
+  linkType: hard
+
+"three@npm:*":
+  version: 0.128.0
+  resolution: "three@npm:0.128.0"
+  checksum: a15d9cef8fc203e537d4f031d6c70cb2a93a3969524a052b533ebd6d556255fd0e0a3c161772847ee7985522fe866f60cb8beb8fe7962d960a1d45276208560d
   languageName: node
   linkType: hard
 

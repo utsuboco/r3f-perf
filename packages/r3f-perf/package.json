@@ -33,8 +33,7 @@
     "three": "*"
   },
   "dependencies": {
-    "@react-icons/all-files": "^4.1.0",
-    "@types/three": "^0.126.2",
+    "@react-icons/all-files": "latest",
     "lerp": "^1.0.3",
     "react-is": "^17.0.2",
     "styled-components": "^5.2.1",
@@ -42,6 +41,7 @@
     "zustand": "^3.3.3"
   },
   "devDependencies": {
+    "@types/three": "latest",
     "@types/styled-components": "^5.1.9",
     "yalc": "^1.0.0-pre.50"
   }
