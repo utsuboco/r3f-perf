@@ -1,4 +1,12 @@
-import React, { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  HTMLAttributes,
+  useEffect,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+} from 'react';
 import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
 import { RiCpuFill } from '@react-icons/all-files/ri/RiCpuFill';
@@ -16,7 +24,7 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 import { PerfProps } from '.';
 import { Toggle, PerfS, PerfI, PerfB, Graphpc, Graph } from './styles';
-import { CandyGraph } from 'candygraph';
+// import { CandyGraph } from 'candygraph';
 
 interface colors {
   [index: string]: string;
@@ -40,6 +48,7 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
 interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   colorBlind?: boolean;
   trackGPU?: boolean;
+  candyGraph?: any;
 }
 const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
   // Create a viewport. Units are in pixels.
@@ -129,48 +138,41 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
     cg.copyTo(viewport, canvas.current);
   }, [circularId]);
 
-  // console.log('render');
-
-  // };
   return null;
 };
-const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
+const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU, candyGraph }) => {
   const canvas = useRef<any>(undefined);
   const [cg, setcg]: any = useState(null);
   useEffect(() => {
     if (canvas.current) {
-      const cg = new CandyGraph();
-
+      const cg = new candyGraph(canvas.current);
       cg.canvas.width = 310;
       cg.canvas.height = 100;
       setcg(cg);
-      // cg.copyTo(viewport, canvas.current);
     }
-  }, [canvas.current]);
+  }, [candyGraph, canvas.current]);
 
   const paused = usePerfStore((state) => state.paused);
   return (
     <Graph>
-      {cg && (
-        <canvas
-          ref={canvas}
-          style={{
-            width: `${cg.canvas.width}px`,
-            height: `${cg.canvas.height}px`,
-            marginBottom: `-42px`,
-            position: 'relative',
-          }}
-        >
-          {!paused && (
-            <ChartCurve
-              colorBlind={colorBlind}
-              trackGPU={trackGPU}
-              cg={cg}
-              canvas={canvas}
-            />
-          )}
-        </canvas>
-      )}
+      <canvas
+        ref={canvas}
+        style={{
+          width: `${cg ? cg.canvas.width : 0}px`,
+          height: `${cg ? cg.canvas.height : 0}px`,
+          marginBottom: `-42px`,
+          position: 'relative',
+        }}
+      >
+        {!paused && cg && (
+          <ChartCurve
+            colorBlind={colorBlind}
+            trackGPU={trackGPU}
+            cg={cg}
+            canvas={canvas}
+          />
+        )}
+      </canvas>
       {paused && (
         <Graphpc>
           <GiPauseButton /> PAUSED
@@ -312,6 +314,18 @@ const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
   );
 };
 
+const LoadGraphOnWindowDefined: FC<PerfProps> = ({ colorBlind, trackGPU }) => {
+  const [graphLoaded, setGraphLoaded] = useState<any>(undefined);
+  import(`candygraph`).then((module) => setGraphLoaded(module.default));
+  // if (module)
+  return graphLoaded !== undefined ? (
+    <ChartUI
+      colorBlind={colorBlind}
+      trackGPU={trackGPU}
+      candyGraph={graphLoaded.CandyGraph}
+    />
+  ) : null;
+};
 /**
  * Performance profiler component
  */
@@ -324,6 +338,10 @@ const Gui: FC<PerfProps> = ({
   position,
   chart,
 }) => {
+  const [isServer, setIsServer] = useState(typeof window === 'undefined');
+  useEffect(() => {
+    setIsServer(typeof window === 'undefined');
+  }, [typeof window === 'undefined']);
   return (
     <>
       <Headless trackGPU={trackGPU} chart={chart} />
@@ -341,7 +359,13 @@ const Gui: FC<PerfProps> = ({
             trackGPU={trackGPU}
             openByDefault={openByDefault}
           />
-          {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
+
+          {showGraph && !isServer && (
+            <LoadGraphOnWindowDefined
+              colorBlind={colorBlind}
+              trackGPU={trackGPU}
+            />
+          )}
         </PerfS>
       </Html>
     </>
