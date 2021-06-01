@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, useEffect, useRef } from 'react';
+import React, { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
 import { RiCpuFill } from '@react-icons/all-files/ri/RiCpuFill';
@@ -41,14 +41,19 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   colorBlind?: boolean;
   trackGPU?: boolean;
 }
-const ChartCurve = ({
-  cg,
-  viewport,
-  coords,
-  canvas,
-  colorBlind,
-  trackGPU,
-}: any) => {
+const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
+  // Create a viewport. Units are in pixels.
+  const viewport = {
+    x: 0,
+    y: 0,
+    width: cg.canvas.width,
+    height: cg.canvas.height,
+  };
+  const coords = cg.coordinate.cartesian(
+    cg.scale.linear([0, 1], [0, viewport.width - 4]),
+    cg.scale.linear([0, 1], [10, viewport.height - 4])
+  );
+
   const { circularId, data } = usePerfStore((state) => state.chart);
   const toPoints = (element: string, factor: number = 1) => {
     let maxVal = 0;
@@ -131,51 +136,41 @@ const ChartCurve = ({
 };
 const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   const canvas = useRef<any>(undefined);
-  const cg = new CandyGraph();
-
-  cg.canvas.width = 310;
-  cg.canvas.height = 100;
-  // Create a viewport. Units are in pixels.
-  const viewport = {
-    x: 0,
-    y: 0,
-    width: cg.canvas.width,
-    height: cg.canvas.height,
-  };
-  const coords = cg.coordinate.cartesian(
-    cg.scale.linear([0, 1], [0, viewport.width - 4]),
-    cg.scale.linear([0, 1], [10, viewport.height - 4])
-  );
-
+  const [cg, setcg]: any = useState(null);
   useEffect(() => {
     if (canvas.current) {
-      cg.copyTo(viewport, canvas.current);
+      const cg = new CandyGraph();
+
+      cg.canvas.width = 310;
+      cg.canvas.height = 100;
+      setcg(cg);
+      // cg.copyTo(viewport, canvas.current);
     }
   }, [canvas.current]);
 
   const paused = usePerfStore((state) => state.paused);
   return (
     <Graph>
-      <canvas
-        ref={canvas}
-        style={{
-          width: `${cg.canvas.width}px`,
-          height: `${cg.canvas.height}px`,
-          marginBottom: `-42px`,
-          position: 'relative',
-        }}
-      >
-        {!paused && (
-          <ChartCurve
-            colorBlind={colorBlind}
-            trackGPU={trackGPU}
-            cg={cg}
-            canvas={canvas}
-            viewport={viewport}
-            coords={coords}
-          />
-        )}
-      </canvas>
+      {cg && (
+        <canvas
+          ref={canvas}
+          style={{
+            width: `${cg.canvas.width}px`,
+            height: `${cg.canvas.height}px`,
+            marginBottom: `-42px`,
+            position: 'relative',
+          }}
+        >
+          {!paused && (
+            <ChartCurve
+              colorBlind={colorBlind}
+              trackGPU={trackGPU}
+              cg={cg}
+              canvas={canvas}
+            />
+          )}
+        </canvas>
+      )}
       {paused && (
         <Graphpc>
           <GiPauseButton /> PAUSED
@@ -183,16 +178,6 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
       )}
     </Graph>
   );
-  //     {trackGPU && (
-  //       <PriceChart points={toPoints('gpu', 0.6)} colorBlind={colorBlind} />
-  //     )}
-  //     {paused && (
-  //       <Graphpc>
-  //         <GiPauseButton /> PAUSED
-  //       </Graphpc>
-  //     )}
-  //   </Graph>
-  // );
 };
 
 const PerfUI: FC<PerfProps> = ({
