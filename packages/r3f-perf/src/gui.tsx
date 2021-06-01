@@ -338,10 +338,6 @@ const Gui: FC<PerfProps> = ({
   position,
   chart,
 }) => {
-  const [isServer, setIsServer] = useState(typeof window === 'undefined');
-  useEffect(() => {
-    setIsServer(typeof window === 'undefined');
-  }, [typeof window === 'undefined']);
   return (
     <>
       <Headless trackGPU={trackGPU} chart={chart} />
@@ -360,7 +356,7 @@ const Gui: FC<PerfProps> = ({
             openByDefault={openByDefault}
           />
 
-          {showGraph && !isServer && (
+          {showGraph && (
             <LoadGraphOnWindowDefined
               colorBlind={colorBlind}
               trackGPU={trackGPU}
