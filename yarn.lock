@@ -5964,6 +5964,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"candygraph@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "candygraph@npm:0.3.0"
+  dependencies:
+    gl-matrix: ^3.3.0
+    regl: ^1.7.0
+  checksum: 1992ad48b39a99860f0a03a88c28820e5f3afc263be9d069f4c2811475f58900cd70abd3a24e08db79df71b8873770f03a7e67849c3723ce6ec576c556bb6035
+  languageName: node
+  linkType: hard
+
 "caniuse-api@npm:^3.0.0":
   version: 3.0.0
   resolution: "caniuse-api@npm:3.0.0"
@@ -9238,6 +9248,13 @@ fsevents@^1.2.7:
   dependencies:
     emoji-regex: ">=6.0.0 <=6.1.1"
   checksum: 1f5961777b75d2ce2df5ae8d16a1eba49145a9896c5808341ca4100894631a4182ab010dea260a8a22855ea89d383f61412507dd34977a67b3a641168af19e10
+  languageName: node
+  linkType: hard
+
+"gl-matrix@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "gl-matrix@npm:3.3.0"
+  checksum: d75bac9b6b40d6a97c8fd507e76129dae91d84685d5eaf622600ddc811f31fe89d917bb5ddbf8575ce19cf7a993a10bcd5db138ba9bdf2630cf53ec43dc7afa0
   languageName: node
   linkType: hard
 
@@ -14244,6 +14261,7 @@ fsevents@^1.2.7:
     "@react-icons/all-files": latest
     "@types/styled-components": ^5.1.9
     "@types/three": latest
+    candygraph: ^0.3.0
     lerp: ^1.0.3
     react-is: ^17.0.2
     styled-components: ^5.2.1
@@ -14959,6 +14977,13 @@ fsevents@^1.2.7:
   bin:
     regjsparser: bin/parser
   checksum: 604898ed9936c8781348573e0b19d6dcd729a25bc9f9241fa05e7e5303ab266f6b50f29a53295b2c8d3d52ecdcb5b220d4847ac82ecd1ea8de91678a94eae7eb
+  languageName: node
+  linkType: hard
+
+"regl@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "regl@npm:1.7.0"
+  checksum: 31f8bb1b17b9f312200175af736efa67240761538da037499db280eb9e948e62cfde9e61a14dc9c37bcda106699ce57db5286d2339a24ef80e6112c1466faa6f
   languageName: node
   linkType: hard
 
