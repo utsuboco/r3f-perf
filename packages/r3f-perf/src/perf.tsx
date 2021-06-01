@@ -8,7 +8,7 @@ declare global {
 }
 
 export default class GLPerf {
-  names: string[] = [];
+  names: string[] = [''];
   finished: any[] = [];
   gl: any;
   extension: any;
@@ -64,17 +64,14 @@ export default class GLPerf {
         this.extension = this.gl.getExtension('EXT_disjoint_timer_query');
 
         if (this.extension === null) {
-          console.warn(
-            'Disjoint_time_query extension not available.'
-          );
-          this.isGL()
+          console.warn('Disjoint_time_query extension not available.');
+          this.isGL();
         }
       } else {
-        this.isGL()
+        this.isGL();
       }
     }
   }
-
 
   isGL() {
     const gl = this.gl;
@@ -175,8 +172,10 @@ export default class GLPerf {
         const frameCount = this.frameId - this.paramFrame;
         const fps = (frameCount / duration) * 1e3;
         for (let i = 0; i < this.names.length; i++) {
-          cpu = Math.round((this.cpuAccums[i] / duration) * 100);
-          gpu = this.isWebGL2 ? this.gpuAccums[i] : this.gpuAccums[i] / duration;
+          cpu = this.cpuAccums[i] / duration;
+          gpu = this.isWebGL2
+            ? this.gpuAccums[i]
+            : this.gpuAccums[i] / duration;
           const mem = Math.round(
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / (1 << 20)
@@ -216,17 +215,19 @@ export default class GLPerf {
       let hz = (this.chartHz * timespan) / 1e3;
       while (--hz > 0 && this.detected) {
         const frameCount = this.frameId - this.chartFrame;
-        const fps = Math.min(60, (frameCount / timespan) * 1e3);
+        const fps = (frameCount / timespan) * 1e3;
         this.chart[this.circularId % this.chartLen] = fps;
-        const cpuS = Math.round((this.cpuAccums[1] / duration) * 100) + 5;
-        const gpuS = (this.isWebGL2 ? this.gpuAccums[1] * 2 : Math.round((this.gpuAccums[1] / duration) * 100)) + 10;
+        const cpuS = this.cpuAccums[1] / duration + 0.1;
+        const gpuS =
+          (this.isWebGL2
+            ? this.gpuAccums[1] * 2
+            : Math.round((this.gpuAccums[1] / duration) * 100)) + 4;
         if (gpuS > 0) {
           this.gpuChart[this.circularId % this.chartLen] = gpuS;
         }
         if (cpuS > 0) {
           this.cpuChart[this.circularId % this.chartLen] = cpuS;
         }
-
         for (let i = 0; i < this.names.length; i++) {
           this.chartLogger({
             i,
@@ -248,7 +249,7 @@ export default class GLPerf {
   startGpu() {
     const gl = this.gl;
     const ext = this.extension;
-    
+
     // create the query object
     let query: any;
     if (this.isWebGL2) {
@@ -257,7 +258,7 @@ export default class GLPerf {
         gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
       }
     } else {
-      return
+      return;
     }
     // else {
     //   query = ext.createQueryEXT();

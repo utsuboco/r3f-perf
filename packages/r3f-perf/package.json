@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "2.0.4",
+  "version": "3.0.0",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@react-icons/all-files": "latest",
+    "candygraph": "^0.3.0",
     "lerp": "^1.0.3",
     "react-is": "^17.0.2",
     "styled-components": "^5.2.1",

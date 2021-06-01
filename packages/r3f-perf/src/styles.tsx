@@ -142,6 +142,8 @@ export const Graphpc = styled.div`
   width: 100%;
   background-color: rgba(36, 36, 37, 0.8);
   z-index: 1;
+  position: absolute;
+  height: 100%;
 `;
 export const GraphpSvg = styled.svg`
   bottom: 0px;
