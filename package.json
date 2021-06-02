@@ -83,6 +83,7 @@
   },
   "resolutions": {
     "@r3f-perf/root": "portal:/Users/yakuno/Projects/r3f-perf",
-    "demo": "portal:demo"
+    "demo": "portal:demo",
+    "react-three-next": "portal:/Users/yakuno/Projects/react-three-next"
   }
 }

@@ -316,8 +316,11 @@ const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
 
 const LoadGraphOnWindowDefined: FC<PerfProps> = ({ colorBlind, trackGPU }) => {
   const [graphLoaded, setGraphLoaded] = useState<any>(undefined);
-  import(`candygraph`).then((module) => setGraphLoaded(module.default));
-  // if (module)
+
+  useEffect(() => {
+    import(`candygraph`).then((module) => setGraphLoaded(module.default));
+  }, []);
+
   return graphLoaded !== undefined ? (
     <ChartUI
       colorBlind={colorBlind}
