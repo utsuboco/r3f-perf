@@ -1,62 +1,47 @@
-import React from 'react'
-import { Link, Route } from 'wouter'
-import { createCss } from '@stitches/react'
+import React from 'react';
+import { Perf } from 'r3f-perf';
+import './index.css';
+import { Canvas } from '@react-three/fiber';
+import { Orbit } from './sandboxes/perf-minimal/src/orbit';
 
-import styles from './styles.module.css'
+import { useControls } from 'leva';
+import Boxes from './sandboxes/perf-minimal/src/boxes';
 
-import Minimal from './sandboxes/perf-minimal/src/App'
+export function App() {
+  const { showCanvas } = useControls('Test', {
+    showCanvas: true,
+  });
 
-const { styled } = createCss({
-  theme: {
-    colors: { pageBackground: '#f7f7f7' },
-    sizes: { maxWidth: '720px' },
-  },
-})
-
-const Page = styled('div', {
-  margin: '0 auto',
-  maxWidth: '$maxWidth',
-  padding: '20vh 16px 0',
-  background: '$pageBackground',
-  minHeight: '100vh',
-})
-
-const links = {
-  'perf-minimal': Minimal
-}
-
-const Example = ({ link }) => {
-  const Component = links[link]
-
-  return (
-    <div>
-      <Link href="/">
-        {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <a className={styles.back}>← Back</a>
-      </Link>
-      <Component />
-    </div>
-  )
-}
-
-export default function App() {
   return (
     <>
-      <Route path="/">
-        <Page>
-          <h1>Leva demos</h1>
-          <h2>Sandboxes</h2>
-          <div className={styles.linkList}>
-            {Object.keys(links).map((link) => (
-              <Link key={link} href={`/${link}`}>
-                {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a className={styles.link}>{link}</a>
-              </Link>
-            ))}
-          </div>
-        </Page>
-      </Route>
-      <Route path="/:link">{(params) => <Example link={params.link} />}</Route>
+      {/* frameloop={'demand'}  */}
+      {showCanvas && (
+        <Canvas
+          concurrent
+          shadows
+          dpr={[1, 2]}
+          performance={{ min: 0.2 }}
+          orthographic
+          pixelRatio={[1, 2]}
+          camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
+        >
+          <ambientLight />
+          <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
+          <group></group>
+          <Orbit />
+          {/* <AdaptiveDpr pixelated />
+          <AdaptiveEvents /> */}
+          <Perf
+            className={'override'}
+            trackGPU={true}
+            openByDefault={true}
+            showGraph={true}
+            position={'bottom-left'}
+          />
+        </Canvas>
+      )}
+      {!showCanvas && <div>Canvas OFF</div>}
     </>
-  )
+  );
 }
+// ReactDOM.render(<App />, document.getElementById('root'));

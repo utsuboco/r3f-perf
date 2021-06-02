@@ -1,12 +1,4 @@
-import React, {
-  FC,
-  HTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-  lazy,
-  Suspense,
-} from 'react';
+import React, { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
 import { RiCpuFill } from '@react-icons/all-files/ri/RiCpuFill';
@@ -24,7 +16,6 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 import { PerfProps } from '.';
 import { Toggle, PerfS, PerfI, PerfB, Graphpc, Graph } from './styles';
-// import { CandyGraph } from 'candygraph';
 
 interface colors {
   [index: string]: string;
@@ -150,7 +141,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU, candyGraph }) => {
       cg.canvas.height = 100;
       setcg(cg);
     }
-  }, [candyGraph, canvas.current]);
+  }, [canvas.current]);
 
   const paused = usePerfStore((state) => state.paused);
   return (
@@ -158,8 +149,8 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU, candyGraph }) => {
       <canvas
         ref={canvas}
         style={{
-          width: `${cg ? cg.canvas.width : 0}px`,
-          height: `${cg ? cg.canvas.height : 0}px`,
+          width: `${310}px`,
+          height: `${100}px`,
           marginBottom: `-42px`,
           position: 'relative',
         }}
