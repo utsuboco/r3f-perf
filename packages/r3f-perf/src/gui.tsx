@@ -16,7 +16,7 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 import { PerfProps } from '.';
 import { Toggle, PerfS, PerfI, PerfB, Graphpc, Graph } from './styles';
-import { CandyGraph } from 'candygraph';
+// import { CandyGraph } from 'candygraph';
 
 interface colors {
   [index: string]: string;
@@ -139,11 +139,16 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   const [cg, setcg]: any = useState(null);
   useEffect(() => {
     if (canvas.current) {
-      const cg = new CandyGraph(canvas.current);
+      import('candygraph').then((module) => {
+        // Do something with the module.
+        const CandyGraph = module.default.CandyGraph;
+        const cg = new CandyGraph(canvas.current);
 
-      cg.canvas.width = 310;
-      cg.canvas.height = 100;
-      setcg(cg);
+        cg.canvas.width = 310;
+        cg.canvas.height = 100;
+        setcg(cg);
+      });
+
       // cg.copyTo(viewport, canvas.current);
     }
   }, [canvas.current]);
@@ -151,25 +156,22 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   const paused = usePerfStore((state) => state.paused);
   return (
     <Graph>
-      {cg && (
-        <canvas
-          ref={canvas}
-          style={{
-            width: `${cg.canvas.width}px`,
-            height: `${cg.canvas.height}px`,
-            marginBottom: `-42px`,
-            position: 'relative',
-          }}
-        >
-          {!paused && (
-            <ChartCurve
-              colorBlind={colorBlind}
-              trackGPU={trackGPU}
-              cg={cg}
-              canvas={canvas}
-            />
-          )}
-        </canvas>
+      <canvas
+        ref={canvas}
+        style={{
+          width: `${cg ? cg.canvas.width : 0}px`,
+          height: `${cg ? cg.canvas.height : 0}px`,
+          marginBottom: `-42px`,
+          position: 'relative',
+        }}
+      />
+      {!paused && cg && (
+        <ChartCurve
+          colorBlind={colorBlind}
+          trackGPU={trackGPU}
+          cg={cg}
+          canvas={canvas}
+        />
       )}
       {paused && (
         <Graphpc>
