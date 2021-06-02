@@ -141,7 +141,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
     if (canvas.current) {
       import('candygraph').then((module) => {
         // Do something with the module.
-        const CandyGraph = module.default.CandyGraph;
+        const CandyGraph = module.CandyGraph;
         const cg = new CandyGraph(canvas.current);
 
         cg.canvas.width = 310;

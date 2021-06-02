@@ -1,192 +1,128 @@
-import styled from 'styled-components';
+import { styled } from '@stitches/react';
 
-export const PerfS = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 9999;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+export const PerfS = styled('div', {
+  position: 'fixed',
+  top: 0,
+  right: 0,
+  zIndex: 9999,
+  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  background-color: rgba(36, 36, 36, 1);
-  color: #fff;
+    sans-serif`,
+  backgroundColor: 'rgba(36, 36, 36, 1)',
+  color: '#fff',
+  pointerEvents: 'none',
+  margin: 0,
+  padding: '4px 6px',
+  '-webkit-font-smoothing': 'antialiased',
+  '-moz-osx-font-smoothing': 'grayscale',
+  userSelect: 'none',
+  '&.top-left': {
+    right: 'initial',
+    left: 0,
+  },
+  '&.bottom-left': {
+    right: 'initial',
+    top: 'initial',
+    bottom: 0,
+    left: 0,
+    '.__perf_toggle': {
+      top: '-21px',
+      bottom: 'initial',
+    },
+  },
+  '&.bottom-right': {
+    top: 'initial',
+    bottom: 0,
+    '.__perf_toggle': {
+      top: '-21px',
+      bottom: 'initial',
+    },
+  },
+});
 
-  pointer-events: none;
-  margin: 0;
-  padding: 4px 6px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  user-select: none;
+export const PerfI = styled('i', {
+  display: 'inline-flex',
+  fontStyle: 'normal',
+  padding: 0,
+  lineHeight: '13px',
+  fontSize: '14px',
+  width: '62px',
+  position: 'relative',
+  fontWeight: 500,
+  letterSpacing: '0px',
+  textAlign: 'left',
+  height: '29px',
+  whiteSpace: 'nowrap',
+  justifyContent: 'space-evenly',
+  fontVariantNumeric: 'tabular-nums',
+  svg: {
+    padding: 0,
+    color: 'rgba(145, 145, 145, 0.12)',
+    fontSize: '22px',
+    position: 'absolute',
+    zIndex: 1,
+    maxHeight: '21px',
+    left: ' 50%',
+    marginLeft: '-23px',
+    top: '4px',
+  },
+});
 
-  &.top-left {
-    right: initial;
-    left: 0;
-  }
-  &.bottom-left {
-    right: initial;
-    top: initial;
-    bottom: 0;
-    left: 0;
-    .__perf_toggle {
-      top: -21px;
-      bottom: initial;
-    }
-  }
-  &.bottom-right {
-    top: initial;
-    bottom: 0;
-    .__perf_toggle {
-      top: -21px;
-      bottom: initial;
-    }
-  }
-`;
-/* .perf.top-left {
-  right: initial;
-  left: 0;
-}
-.perf.bottom-left {
-  right: initial;
-  top: initial;
-  bottom: 0;
-  left: 0;
-}
-.perf.bottom-right {
-  top: initial;
-  bottom: 0;
-} */
+export const PerfB = styled('span', {
+  verticalAlign: 'bottom',
+  position: 'absolute',
+  bottom: '5px',
+  color: 'rgba(101, 197, 188, 1)',
+  textAlign: 'revert',
+  letterSpacing: '1px',
+  fontSize: '8px',
+  fontWeight: '500',
+  right: 0,
+});
 
-export const PerfI = styled.i`
-  display: inline-flex;
-  font-style: normal;
-  padding: 0;
-  line-height: 13px;
-  font-size: 14px;
-  width: 62px;
-  position: relative;
-  font-weight: 500;
-  letter-spacing: 0px;
-  text-align: left;
-  height: 29px;
-  white-space: nowrap;
-  justify-content: space-evenly;
-  font-variant-numeric: tabular-nums;
-  svg {
-    left: 0;
-    padding: 0;
-    color: rgba(145, 145, 145, 0.12);
-    font-size: 22px;
-    position: absolute;
-    z-index: -1;
-    max-height: 21px;
-    left: 50%;
-    margin-left: -27px;
-    top: 4px;
-  }
-`;
-export const PerfSvg = styled.svg`
-  left: 0;
-  padding: 0;
-  color: rgba(145, 145, 145, 0.12);
-  font-size: 22px;
-  position: absolute;
-  z-index: -1;
-  max-height: 21px;
-  left: 50%;
-  margin-left: -27px;
-  top: 4px;
-`;
+export const Graph = styled('div', {
+  height: '61px',
+  overflow: 'hidden',
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  width: '310px',
+  margin: '0 auto',
+  maxWidth: '312px',
+});
 
-export const PerfB = styled.b`
-  vertical-align: bottom;
-  position: absolute;
-  bottom: 5px;
-  color: rgba(101, 197, 188, 1);
-  text-align: revert;
-  right: 0;
-  letter-spacing: 0;
-  letter-spacing: 1px;
-  font-size: 8px;
-  font-weight: 500;
-  right: 0;
-`;
+export const Graphpc = styled('div', {
+  textAlign: 'center',
+  fontWeight: 700,
+  fontSize: '12px',
+  lineHeight: '12px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  verticalAlign: 'middle',
+  color: '#f1f1f1',
+  padding: '7px',
+  width: '100%',
+  backgroundColor: 'rgba(36, 36, 37, 0.8)',
+  zIndex: 1,
+  position: 'absolute',
+  height: '100%',
+});
 
-export const PerfSm = styled.small`
-  font-size: 9px;
-  margin-top: 2px;
-  margin-left: -6px;
-  display: inline-block;
-`;
-export const Graph = styled.div`
-  height: 61px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 310px;
-  margin: 0 auto;
-  max-width: 312px;
-`;
-
-export const Graphpc = styled.div`
-  text-align: center;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  vertical-align: middle;
-  color: #f1f1f1;
-  padding: 7px;
-  width: 100%;
-  background-color: rgba(36, 36, 37, 0.8);
-  z-index: 1;
-  position: absolute;
-  height: 100%;
-`;
-export const GraphpSvg = styled.svg`
-  bottom: 0px;
-  max-width: 312px;
-  position: absolute;
-  z-index: 1;
-`;
-export const GraphcSvg = styled.svg`
-  bottom: -6px;
-  max-width: 312px;
-  position: absolute;
-  z-index: 1;
-`;
-
-export const Toggle = styled.div`
-  pointer-events: auto;
-  justify-content: center;
-  display: block;
-  cursor: pointer;
-  font-size: 12px;
-  background-color: rgb(41, 43, 45);
-  margin-top: 6px;
-  width: auto;
-  margin: 0 auto;
-  color: rgba(145, 145, 145, 1);
-
-  text-align: center;
-  position: absolute;
-  right: 0;
-  bottom: -21px;
-  padding: 4px 11px;
-`;
-
-export const ToggleSvg = styled.div`
-  font-size: 19px;
-  position: relative;
-  z-index: 0;
-  vertical-align: middle;
-  padding: 0;
-  left: initial;
-  top: initial;
-  color: rgba(145, 145, 145, 1);
-  margin: -6px -6px -6px -6px;
-  display: inline-block;
-  margin-top: -7px;
-`;
+export const Toggle = styled('div', {
+  pointerEvents: 'auto',
+  justifyContent: 'center',
+  display: 'block',
+  cursor: 'pointer',
+  fontSize: '12px',
+  backgroundColor: 'rgb(41, 43, 45)',
+  marginTop: '6px',
+  width: 'auto',
+  margin: '0 auto',
+  color: 'rgba(145, 145, 145, 1)',
+  textAlign: 'center',
+  position: 'absolute',
+  right: 0,
+  bottom: ' -21px',
+  padding: '4px 11px',
+});
