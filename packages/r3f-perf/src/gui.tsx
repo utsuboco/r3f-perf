@@ -16,6 +16,7 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 import { PerfProps } from '.';
 import { Toggle, PerfS, PerfI, PerfB, Graphpc, Graph } from './styles';
+import { CandyGraph } from 'candygraph';
 
 interface colors {
   [index: string]: string;
@@ -39,7 +40,6 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
 interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   colorBlind?: boolean;
   trackGPU?: boolean;
-  candyGraph?: any;
 }
 const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
   // Create a viewport. Units are in pixels.
@@ -129,41 +129,48 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
     cg.copyTo(viewport, canvas.current);
   }, [circularId]);
 
+  // console.log('render');
+
+  // };
   return null;
 };
-const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU, candyGraph }) => {
+const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   const canvas = useRef<any>(undefined);
   const [cg, setcg]: any = useState(null);
   useEffect(() => {
     if (canvas.current) {
-      const cg = new candyGraph(canvas.current);
+      const cg = new CandyGraph(canvas.current);
+
       cg.canvas.width = 310;
       cg.canvas.height = 100;
       setcg(cg);
+      // cg.copyTo(viewport, canvas.current);
     }
   }, [canvas.current]);
 
   const paused = usePerfStore((state) => state.paused);
   return (
     <Graph>
-      <canvas
-        ref={canvas}
-        style={{
-          width: `${310}px`,
-          height: `${100}px`,
-          marginBottom: `-42px`,
-          position: 'relative',
-        }}
-      >
-        {!paused && cg && (
-          <ChartCurve
-            colorBlind={colorBlind}
-            trackGPU={trackGPU}
-            cg={cg}
-            canvas={canvas}
-          />
-        )}
-      </canvas>
+      {cg && (
+        <canvas
+          ref={canvas}
+          style={{
+            width: `${cg.canvas.width}px`,
+            height: `${cg.canvas.height}px`,
+            marginBottom: `-42px`,
+            position: 'relative',
+          }}
+        >
+          {!paused && (
+            <ChartCurve
+              colorBlind={colorBlind}
+              trackGPU={trackGPU}
+              cg={cg}
+              canvas={canvas}
+            />
+          )}
+        </canvas>
+      )}
       {paused && (
         <Graphpc>
           <GiPauseButton /> PAUSED
@@ -305,21 +312,6 @@ const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
   );
 };
 
-const LoadGraphOnWindowDefined: FC<PerfProps> = ({ colorBlind, trackGPU }) => {
-  const [graphLoaded, setGraphLoaded] = useState<any>(undefined);
-
-  useEffect(() => {
-    import(`candygraph`).then((module) => setGraphLoaded(module.default));
-  }, []);
-
-  return graphLoaded !== undefined ? (
-    <ChartUI
-      colorBlind={colorBlind}
-      trackGPU={trackGPU}
-      candyGraph={graphLoaded.CandyGraph}
-    />
-  ) : null;
-};
 /**
  * Performance profiler component
  */
@@ -349,13 +341,7 @@ const Gui: FC<PerfProps> = ({
             trackGPU={trackGPU}
             openByDefault={openByDefault}
           />
-
-          {showGraph && (
-            <LoadGraphOnWindowDefined
-              colorBlind={colorBlind}
-              trackGPU={trackGPU}
-            />
-          )}
+          {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
         </PerfS>
       </Html>
     </>
