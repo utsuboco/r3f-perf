@@ -95,7 +95,6 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
     // const renderChart = async () => {
     const fps = graphs[0];
     const cpu = graphs[1];
-    const gpu = graphs[2];
     const xs = [];
     const ys = [];
 
@@ -103,19 +102,12 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
       xs.push(x);
       ys.push(0.5 + 0.25 * Math.sin(x * 2 * Math.PI));
     }
-    // fps
-    cg.clear([0.141, 0.141, 0.141, 1]);
-    cg.render(coords, viewport, [
+
+    const arrData = [
       cg.lineStrip(fps.pointsX, fps.pointsY, {
         colors: colorBlind
           ? [100 / 255, 143 / 255, 255 / 255, 1]
           : [238 / 255, 38 / 255, 110 / 255, 1],
-        widths: 1.5,
-      }),
-      cg.lineStrip(gpu.pointsX, gpu.pointsY, {
-        colors: colorBlind
-          ? [254 / 255, 254 / 255, 255 / 255, 1]
-          : [253 / 255, 151 / 255, 31 / 255, 1],
         widths: 1.5,
       }),
       cg.lineStrip(cpu.pointsX, cpu.pointsY, {
@@ -124,14 +116,26 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
           : [66 / 255, 226 / 255, 46 / 255, 1],
         widths: 1.5,
       }),
-    ]);
+    ];
+
+    if (trackGPU) {
+      const gpu = graphs[2];
+      arrData.push(
+        cg.lineStrip(gpu.pointsX, gpu.pointsY, {
+          colors: colorBlind
+            ? [254 / 255, 254 / 255, 255 / 255, 1]
+            : [253 / 255, 151 / 255, 31 / 255, 1],
+          widths: 1.5,
+        })
+      );
+    }
+    // fps
+    cg.clear([0.141, 0.141, 0.141, 1]);
+    cg.render(coords, viewport, arrData);
 
     cg.copyTo(viewport, canvas.current);
   }, [circularId]);
 
-  // console.log('render');
-
-  // };
   return null;
 };
 const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {

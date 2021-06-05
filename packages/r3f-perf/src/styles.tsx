@@ -38,6 +38,15 @@ export const PerfS = styled('div', {
       bottom: 'initial',
     },
   },
+  '*': {
+    margin: '0',
+    padding: '0',
+    border: '0',
+    fontSize: '100%',
+    lineHeight: '1',
+    font: 'inherit',
+    verticalAlign: 'baseline',
+  },
 });
 
 export const PerfI = styled('i', {

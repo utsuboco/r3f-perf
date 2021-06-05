@@ -33,10 +33,10 @@ export function App() {
           <AdaptiveEvents /> */}
           <Perf
             className={'override'}
-            trackGPU={true}
+            trackGPU={false}
             openByDefault={true}
             showGraph={true}
-            position={'bottom-left'}
+            position={'bottom-right'}
           />
         </Canvas>
       )}
