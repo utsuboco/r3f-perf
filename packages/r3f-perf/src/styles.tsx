@@ -26,7 +26,7 @@ export const PerfS = styled('div', {
     bottom: 0,
     left: 0,
     '.__perf_toggle': {
-      top: '-21px',
+      top: '-20px',
       bottom: 'initial',
     },
   },
@@ -34,7 +34,7 @@ export const PerfS = styled('div', {
     top: 'initial',
     bottom: 0,
     '.__perf_toggle': {
-      top: '-21px',
+      top: '-20px',
       bottom: 'initial',
     },
   },
@@ -70,7 +70,7 @@ export const PerfI = styled('i', {
     fontSize: '22px',
     position: 'absolute',
     zIndex: 1,
-    maxHeight: '21px',
+    maxHeight: '20px',
     left: ' 50%',
     marginLeft: '-23px',
     top: '4px',
@@ -132,6 +132,11 @@ export const Toggle = styled('div', {
   textAlign: 'center',
   position: 'absolute',
   right: 0,
-  bottom: ' -21px',
-  padding: '4px 11px',
+  bottom: ' -20px',
+  padding: '4px 6px',
+  svg: {
+    width: '12px',
+    height: '12px',
+    float: 'left',
+  },
 });

@@ -33,9 +33,13 @@ export function App() {
           <AdaptiveEvents /> */}
           <Perf
             className={'override'}
-            trackGPU={false}
+            trackGPU={true}
             openByDefault={true}
-            showGraph={true}
+            chart={{
+              hz: 35,
+              length: 120,
+            }}
+            colorBlind={true}
             position={'bottom-right'}
           />
         </Canvas>
