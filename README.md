@@ -79,9 +79,6 @@ export default function App() {
 The tool work with any server side rendering framework. You can try with Next and @react-three/fiber using this starter :
 https://github.com/pmndrs/react-three-next
 
-## Todo
-
-- Potential change of the GPU analyzer with settimout that is not clamped anymore in Chrome 90 (14 april) https://www.chromestatus.com/feature/4889002157015040
 
 ### Maintainers :
 
