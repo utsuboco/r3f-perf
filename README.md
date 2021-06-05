@@ -1,8 +1,9 @@
 ![npm](https://img.shields.io/npm/v/r3f-perf) [![dependencies Status](https://status.david-dm.org/gh/RenaudROHLINGER/r3f-perf.svg)](https://david-dm.org/RenaudROHLINGER/r3f-perf) [![devDependencies Status](https://status.david-dm.org/gh/RenaudROHLINGER/r3f-perf.svg?type=dev)](https://david-dm.org/RenaudROHLINGER/r3f-perf?type=dev) ![npm](https://img.shields.io/npm/dw/r3f-perf)
 
 # R3F-Perf
-
-![image](https://user-images.githubusercontent.com/15867665/108375920-c34f5c00-7245-11eb-87ba-22cba3de0cb5.png)
+<a href="https://wtp9t.csb.app/">
+  <img src="https://user-images.githubusercontent.com/15867665/120879065-bd666680-c5fb-11eb-9c8f-632b7ce09456.png" /></td>
+</a>
 
 Easily monitor the performances of your @react-three/fiber application.
 r3f-perf.js is 6.23 KB.
