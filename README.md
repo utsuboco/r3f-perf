@@ -29,8 +29,8 @@ yarn add --dev r3f-perf
 headless?: false, // Without UI. See Headless section
 showGraph?: true // show the graphs
 chart?: {
-  hz: 10, // graphs refresh frequency parameter
-  length: 30, // number of values shown on the monitor
+  hz: 35, // graphs refresh frequency parameter
+  length: 120, // number of values shown on the monitor
 }
 colorBlind?: false // Color blind colors for accessibility
 trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
