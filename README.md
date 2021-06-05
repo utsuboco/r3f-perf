@@ -41,8 +41,6 @@ position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // override posit
 
 ## Usage
 
-Simply add the the profiler component in your app
-
 ```jsx
 import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
