@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -34,12 +34,11 @@
   },
   "dependencies": {
     "@react-icons/all-files": "latest",
-    "@stitches/react": "^0.1.9",
+    "@stitches/react": "^0.2.2",
     "candygraph": "^0.3.0",
     "lerp": "^1.0.3",
-    "react-is": "^17.0.2",
     "three": "*",
-    "zustand": "^3.5.1"
+    "zustand": "^3.5.2"
   },
   "devDependencies": {
     "@types/three": "latest"

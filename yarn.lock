@@ -2711,13 +2711,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stitches/core@npm:^0.1.9":
-  version: 0.1.9
-  resolution: "@stitches/core@npm:0.1.9"
-  checksum: 23c06d2602c2fabee1491b1de7795fabc35dafc7b61789f814ffc88066b3f8471e67e628ef15afb8311498a0a437e453c5b83d52b10795ec16243520aea3ebf4
-  languageName: node
-  linkType: hard
-
 "@stitches/react@npm:^0.1.0":
   version: 0.1.0
   resolution: "@stitches/react@npm:0.1.0"
@@ -2729,14 +2722,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stitches/react@npm:^0.1.9":
-  version: 0.1.9
-  resolution: "@stitches/react@npm:0.1.9"
-  dependencies:
-    "@stitches/core": ^0.1.9
+"@stitches/react@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@stitches/react@npm:0.2.2"
   peerDependencies:
-    react: ">=17.0.0 <19.0.0"
-  checksum: 1aa64bf1b6bd2a08cfb7bda52e327e987b91e06965fb9d360452e5a18133e4f41214c41f1623e2a9224afdc2df1ceefcfc8ba2d973db83eff92a3f51b2661a19
+    react: ">= 17.0.0"
+  checksum: f1e71970a5c33847641a45c1ea3f9f5c4bba7e4e2c6e981c3b2f356d6b58fbdd04321d8a3293cd26ce3a3028aef9b536feae7e8da588191ccaaaa212afee71b3
   languageName: node
   linkType: hard
 
@@ -14097,13 +14088,12 @@ fsevents@^1.2.7:
   resolution: "r3f-perf@workspace:packages/r3f-perf"
   dependencies:
     "@react-icons/all-files": latest
-    "@stitches/react": ^0.1.9
+    "@stitches/react": ^0.2.2
     "@types/three": latest
     candygraph: ^0.3.0
     lerp: ^1.0.3
-    react-is: ^17.0.2
     three: "*"
-    zustand: ^3.5.1
+    zustand: ^3.5.2
   peerDependencies:
     "@react-three/fiber": "*"
     react: ">=16.8.0"
@@ -14380,7 +14370,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.1, react-is@npm:^17.0.2":
+"react-is@npm:^17.0.1":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 3eff23f410d40ab9bc5177f147a92c7f42c356a21ecea340e0554566956d67e5e1ba56f26cc7fa22339ac3c7151744177bd6305eaa26d3cbf15f354358c9d9b6
@@ -17974,6 +17964,18 @@ typescript@^4.2.3:
   peerDependencies:
     react: ">=16.8"
   checksum: fdd1e6caaecbb0c3b7e869064752ace7113a16eabca56ab2f8cae6b1a0588ead08662289b7b7dde6a550d9ddf30881af370292406ca0b37d6d5d78a93e7db2b2
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^3.5.2":
+  version: 3.5.2
+  resolution: "zustand@npm:3.5.2"
+  peerDependencies:
+    react: ">=16.8"
+  peerDependenciesMeta:
+    react:
+      optional: true
+  checksum: f5df58852571142d7448ba09b259843d38c5e6b2313d7a864a868bfb7e4e16182e80ffc381a2124958dfc625e710182ec917d849c3286c1c067c981a9095e2f5
   languageName: node
   linkType: hard
 
