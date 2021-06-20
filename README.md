@@ -77,6 +77,14 @@ export default function App() {
 The tool work with any server side rendering framework. You can try with Next and @react-three/fiber using this starter :
 https://github.com/pmndrs/react-three-next
 
+## Feature ideas todo :
+- Convert all DOM text to shader to increase the refresh rate
+- Buffer frame and Forward rendering differenciation in the "calls" section of the UI
+- Postprocess shaders differenciation
+- Deep analytics about the shaders (list the types of material/shader)
+- Lights informations in the scene
+- Show the number of items receiving and casting shadow in the scene
+- Add an audit button to find what consume the most CPU/GPU in the app for every loop
 
 ### Maintainers :
 
