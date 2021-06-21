@@ -83,7 +83,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
       PerfLib = new GLPerf({
         trackGPU: trackGPU,
         chartLen: chart ? chart.length : 120,
-        chartHz: chart ? chart.hz : 35,
+        chartHz: chart ? chart.hz : 60,
         gl: gl.getContext(),
         chartLogger: (chart: Chart) => {
           usePerfStore.setState({ chart });

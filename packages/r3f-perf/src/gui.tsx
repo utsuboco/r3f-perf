@@ -16,7 +16,6 @@ import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
 import { PerfProps } from '.';
 import { Toggle, PerfS, PerfI, PerfB, Graphpc, Graph } from './styles';
-// import { CandyGraph } from 'candygraph';
 
 interface colors {
   [index: string]: string;
@@ -281,7 +280,11 @@ const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
             <PerfB>{info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
             <span>{info.render.calls}</span>
           </PerfI>
-          <PerfI>
+          <PerfI
+            onClick={() => {
+              console.log(info.programs);
+            }}
+          >
             <FaServer />
             <PerfB>
               {info.programs.length === 1 ? 'shader' : 'shaders'}

@@ -49,7 +49,7 @@ export const PerfS = styled('div', {
   },
 });
 
-export const PerfI = styled('i', {
+export const PerfI = styled('a', {
   display: 'inline-flex',
   fontStyle: 'normal',
   padding: 0,
@@ -57,6 +57,8 @@ export const PerfI = styled('i', {
   fontSize: '14px',
   width: '62px',
   position: 'relative',
+  pointerEvents: 'auto',
+  cursor: 'pointer',
   fontWeight: 500,
   letterSpacing: '0px',
   textAlign: 'left',

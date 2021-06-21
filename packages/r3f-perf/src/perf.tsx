@@ -61,15 +61,8 @@ export default class GLPerf {
       this.extension = this.gl.getExtension('EXT_disjoint_timer_query_webgl2');
       if (this.extension === null) {
         this.isWebGL2 = false;
-        this.extension = this.gl.getExtension('EXT_disjoint_timer_query');
-
-        if (this.extension === null) {
-          console.warn('Disjoint_time_query extension not available.');
-          this.isGL();
-        }
-      } else {
-        this.isGL();
       }
+      this.isGL();
     }
   }
 
@@ -176,6 +169,7 @@ export default class GLPerf {
           gpu = this.isWebGL2
             ? this.gpuAccums[i]
             : this.gpuAccums[i] / duration;
+
           const mem = Math.round(
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / (1 << 20)
@@ -260,12 +254,7 @@ export default class GLPerf {
     } else {
       return;
     }
-    // else {
-    //   query = ext.createQueryEXT();
-    //   if (query instanceof WebGLQuery) {
-    //     ext.beginQueryEXT(ext.TIME_ELAPSED_EXT, query);
-    //   }
-    // }
+
     if (!query) {
       return;
     }
@@ -292,6 +281,8 @@ export default class GLPerf {
       }
 
       const ms = ns * 1e-6;
+      // console.log(ms, query, gl.QUERY_RESULT_AVAILABLE);
+
       if (available) {
         // update the display if it is valid
         if (!disjoint) {
@@ -321,8 +312,12 @@ export default class GLPerf {
 
     if (this.isWebGL2 && ext.TIME_ELAPSED_EXT) {
       gl.endQuery(ext.TIME_ELAPSED_EXT);
+      // manually flush after timing
+      gl.flush();
     } else if (ext.TIME_ELAPSED_EXT) {
       ext.endQueryEXT(ext.TIME_ELAPSED_EXT);
+      // manually flush after timing
+      gl.flush();
     }
   }
 
