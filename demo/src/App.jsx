@@ -6,6 +6,8 @@ import { Orbit } from './sandboxes/perf-minimal/src/orbit';
 import * as THREE from 'three';
 import { useControls } from 'leva';
 import Boxes from './sandboxes/perf-minimal/src/boxes';
+import Fireflies from './fire';
+
 import {
   Box,
   Cylinder,
@@ -75,7 +77,9 @@ export function App() {
           <ambientLight />
           <Suspense fallback={null}>
             <Bob />
+            <Fireflies count={30} />
           </Suspense>
+
           <Sphere position-x={2} position-y={2} material={mat} />
           <Cylinder position-x={2} position-y={0} material={mat} />
           <Cylinder position-x={4} position-y={2}>

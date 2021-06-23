@@ -8,7 +8,14 @@ import {
 import GLPerf from './perf';
 import create from 'zustand';
 import { PerfProps } from '.';
-import { Material, Mesh, Scene, WebGLProgram, WebGLRenderer } from 'three';
+import {
+  Material,
+  Mesh,
+  Points,
+  Scene,
+  WebGLProgram,
+  WebGLRenderer,
+} from 'three';
 
 export type ProgramsPerf = {
   meshes?: {
@@ -149,7 +156,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
         const programs: ProgramsPerfs = [];
 
         scene.traverse(function (object) {
-          if (object instanceof Mesh) {
+          if (object instanceof Mesh || object instanceof Points) {
             if (object.material) {
               if (!object.material.defines) {
                 object.material.defines = {};
@@ -190,7 +197,6 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
             const { material, meshes } = currentObjectWithMaterials[
               muiPerfTracker
             ];
-            // console.log(material, meshes);
             programs[muiPerfTracker] = {
               program,
               material,

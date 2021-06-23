@@ -310,61 +310,61 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
           let data: any = {
             name: e.id,
           };
-          e.cache.forEach((v: any) => {
-            values.push(v.toString().substring(0, 4));
-          });
-          data.value = values.join();
+          if (e.cache) {
+            e.cache.forEach((v: any) => {
+              values.push(v.toString().substring(0, 4));
+            });
+            data.value = values.join();
+            if (material[e.id] && material[e.id].image) {
+              if (material[e.id].image) {
+                TexCount++;
+                const repeatType = (wrap: number) => {
+                  switch (wrap) {
+                    case 1000:
+                      return 'RepeatWrapping';
+                    case 1001:
+                      return 'ClampToEdgeWrapping';
+                    case 1002:
+                      return 'MirroredRepeatWrapping';
+                    default:
+                      return 'ClampToEdgeWrapping';
+                  }
+                };
 
-          if (material[e.id] && material[e.id].image) {
-            if (material[e.id].image) {
-              TexCount++;
-              const repeatType = (wrap: number) => {
-                switch (wrap) {
-                  case 1000:
-                    return 'RepeatWrapping';
-                  case 1001:
-                    return 'ClampToEdgeWrapping';
-                  case 1002:
-                    return 'MirroredRepeatWrapping';
-                  default:
-                    return 'ClampToEdgeWrapping';
-                }
-              };
+                const encodingType = (encoding: number) => {
+                  switch (encoding) {
+                    case 3000:
+                      return 'LinearEncoding';
+                    case 3001:
+                      return 'sRGBEncoding';
+                    case 3002:
+                      return 'RGBEEncoding';
+                    case 3003:
+                      return 'LogLuvEncoding';
+                    case 3004:
+                      return 'RGBM7Encoding';
+                    case 3005:
+                      return 'RGBM16Encoding';
+                    case 3006:
+                      return 'RGBDEncoding';
+                    case 3007:
+                      return 'GammaEncoding';
+                    default:
+                      return 'ClampToEdgeWrapping';
+                  }
+                };
 
-              const encodingType = (encoding: number) => {
-                switch (encoding) {
-                  case 3000:
-                    return 'LinearEncoding';
-                  case 3001:
-                    return 'sRGBEncoding';
-                  case 3002:
-                    return 'RGBEEncoding';
-                  case 3003:
-                    return 'LogLuvEncoding';
-                  case 3004:
-                    return 'RGBM7Encoding';
-                  case 3005:
-                    return 'RGBM16Encoding';
-                  case 3006:
-                    return 'RGBDEncoding';
-                  case 3007:
-                    return 'GammaEncoding';
-                  default:
-                    return 'ClampToEdgeWrapping';
-                }
-              };
-
-              data.value = {
-                name: e.id,
-                url: material[e.id].image.currentSrc,
-                encoding: encodingType(material[e.id].encoding),
-                wrapT: repeatType(material[e.id].image.wrapT),
-                flipY: material[e.id].flipY.toString(),
-              };
+                data.value = {
+                  name: e.id,
+                  url: material[e.id].image.currentSrc,
+                  encoding: encodingType(material[e.id].encoding),
+                  wrapT: repeatType(material[e.id].image.wrapT),
+                  flipY: material[e.id].flipY.toString(),
+                };
+              }
             }
+            format.push(data);
           }
-
-          format.push(data);
         }
       });
       if (TexCount > 0) {
@@ -575,7 +575,6 @@ const InfoUI: FC<PerfProps> = () => {
   const gl = usePerfStore((state) => state.gl);
   if (!gl) return null;
   const { info } = gl;
-
   return (
     <div>
       <PerfI>
