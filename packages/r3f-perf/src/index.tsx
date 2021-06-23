@@ -1,6 +1,6 @@
-import React, { useCallback, VFC } from 'react';
+import React, { VFC } from 'react';
 import Gui from './gui';
-import { Headless, usePerfFunc, usePerfStore } from './headless';
+import { Headless, usePerfFunc } from './headless';
 
 type chart = {
   length: number;

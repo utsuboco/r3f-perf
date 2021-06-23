@@ -207,12 +207,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   );
 };
 
-const DynamicUI: FC<PerfProps> = ({
-  showGraph,
-  trackGPU,
-  colorBlind,
-  openByDefault,
-}) => {
+const DynamicUI: FC<PerfProps> = ({ showGraph, trackGPU, colorBlind }) => {
   const log = usePerfStore((state) => state.log);
   const gl = usePerfStore((state) => state.gl);
 
