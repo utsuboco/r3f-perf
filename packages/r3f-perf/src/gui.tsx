@@ -11,11 +11,37 @@ import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBr
 import { FaServer } from '@react-icons/all-files/fa/FaServer';
 import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
+import { IoIosImages } from '@react-icons/all-files/io/IoIosImages';
+import { IoIosImage } from '@react-icons/all-files/io/IoIosImage';
 import { GiPauseButton } from '@react-icons/all-files/gi/GiPauseButton';
+import { BsEyeSlashFill } from '@react-icons/all-files/bs/BsEyeSlashFill';
+import { BsEyeFill } from '@react-icons/all-files/bs/BsEyeFill';
+import { IoRocketSharp } from '@react-icons/all-files/io5/IoRocketSharp';
+import { IoLayers } from '@react-icons/all-files/io5/IoLayers';
+import { IoShapes } from '@react-icons/all-files/io5/IoShapes';
+import { GoSettings } from '@react-icons/all-files/go/GoSettings';
 import { Html } from './html';
-import { usePerfStore, Headless } from './headless';
+import { usePerfStore, Headless, ProgramsPerf } from './headless';
 import { PerfProps } from '.';
-import { Toggle, PerfS, PerfI, PerfB, Graphpc, Graph } from './styles';
+import { raf } from 'rafz';
+
+import {
+  Toggle,
+  PerfS,
+  PerfI,
+  PerfB,
+  Graphpc,
+  Graph,
+  ToggleContainer,
+  ProgramGeo,
+  ContainerScroll,
+  ProgramHeader,
+  ProgramTitle,
+  ToggleVisible,
+  ProgramConsole,
+  ProgramsUL,
+  ProgramsULHeader,
+} from './styles';
 
 interface colors {
   [index: string]: string;
@@ -53,12 +79,11 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
     cg.scale.linear([0, 1], [10, viewport.height - 4])
   );
 
-  const { circularId, data } = usePerfStore((state) => state.chart);
   const toPoints = (element: string, factor: number = 1) => {
     let maxVal = 0;
     let pointsX = [];
     let pointsY = [];
-    const chart = data[element];
+    const chart = usePerfStore.getState().chart.data[element];
     if (!chart || chart.length === 0) {
       return {
         pointsX: [0],
@@ -67,7 +92,7 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
     }
     let len = chart.length;
     for (let i = 0; i < len; i++) {
-      let id = (circularId + i + 1) % len;
+      let id = (usePerfStore.getState().chart.circularId + i + 1) % len;
       if (chart[id] !== undefined) {
         if (chart[id] > maxVal) {
           maxVal = chart[id] * factor;
@@ -85,13 +110,11 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
     };
     return graph;
   };
-
-  useEffect(() => {
+  raf(() => {
     const graphs: any = [toPoints('fps'), toPoints('cpu')];
     if (trackGPU) {
       graphs.push(toPoints('gpu'));
     }
-    // const renderChart = async () => {
     const fps = graphs[0];
     const cpu = graphs[1];
     const xs = [];
@@ -128,12 +151,12 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
         })
       );
     }
-    // fps
     cg.clear([0.141, 0.141, 0.141, 1]);
     cg.render(coords, viewport, arrData);
 
     cg.copyTo(viewport, canvas.current);
-  }, [circularId]);
+    return true;
+  });
 
   return null;
 };
@@ -146,7 +169,6 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
         // Do something with the module.
         const CandyGraph = module.CandyGraph;
         const cg = new CandyGraph(canvas.current);
-
         cg.canvas.width = 310;
         cg.canvas.height = 100;
         setcg(cg);
@@ -185,7 +207,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   );
 };
 
-const PerfUI: FC<PerfProps> = ({
+const DynamicUI: FC<PerfProps> = ({
   showGraph,
   trackGPU,
   colorBlind,
@@ -193,8 +215,9 @@ const PerfUI: FC<PerfProps> = ({
 }) => {
   const log = usePerfStore((state) => state.log);
   const gl = usePerfStore((state) => state.gl);
+
   return log ? (
-    <div>
+    <>
       <PerfI>
         <RiCpuLine />
         <PerfB
@@ -242,85 +265,421 @@ const PerfUI: FC<PerfProps> = ({
           <PerfB>Triangles</PerfB> <span>{gl.info.render.triangles}</span>
         </PerfI>
       )}
-      {/* <PerfI>
-        <BiTimer/>
-        <PerfB>Time</PerfB> {log.totalTime}
-        <small>ms</small>
-      </PerfI> */}
-      {gl && <PerfThree openByDefault={openByDefault} />}
-    </div>
+    </>
   ) : null;
 };
 
+const PerfUI: FC<PerfProps> = ({
+  showGraph,
+  trackGPU,
+  colorBlind,
+  openByDefault,
+}) => {
+  return (
+    <div>
+      <DynamicUI
+        showGraph={showGraph}
+        trackGPU={trackGPU}
+        colorBlind={colorBlind}
+      />
+      <PerfThree openByDefault={openByDefault} />
+    </div>
+  );
+};
+
+const UniformsGL = ({ program, material, setTexNumber }: any) => {
+  const gl = usePerfStore((state) => state.gl);
+  const [uniforms, set] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (gl) {
+      const data: any = program?.getUniforms();
+      let TexCount = 0;
+      const format: any = [];
+      data.seq.forEach((e: any) => {
+        if (
+          e.id !== 'isOrthographic' &&
+          e.id !== 'uvTransform' &&
+          e.id !== 'lightProbe' &&
+          e.id !== 'projectionMatrix' &&
+          e.id !== 'viewMatrix' &&
+          e.id !== 'normalMatrix' &&
+          e.id !== 'modelViewMatrix'
+        ) {
+          let values: any = [];
+          let data: any = {
+            name: e.id,
+          };
+          e.cache.forEach((v: any) => {
+            values.push(v.toString().substring(0, 4));
+          });
+          data.value = values.join();
+
+          if (material[e.id] && material[e.id].image) {
+            if (material[e.id].image) {
+              TexCount++;
+              const repeatType = (wrap: number) => {
+                switch (wrap) {
+                  case 1000:
+                    return 'RepeatWrapping';
+                  case 1001:
+                    return 'ClampToEdgeWrapping';
+                  case 1002:
+                    return 'MirroredRepeatWrapping';
+                  default:
+                    return 'ClampToEdgeWrapping';
+                }
+              };
+
+              const encodingType = (encoding: number) => {
+                switch (encoding) {
+                  case 3000:
+                    return 'LinearEncoding';
+                  case 3001:
+                    return 'sRGBEncoding';
+                  case 3002:
+                    return 'RGBEEncoding';
+                  case 3003:
+                    return 'LogLuvEncoding';
+                  case 3004:
+                    return 'RGBM7Encoding';
+                  case 3005:
+                    return 'RGBM16Encoding';
+                  case 3006:
+                    return 'RGBDEncoding';
+                  case 3007:
+                    return 'GammaEncoding';
+                  default:
+                    return 'ClampToEdgeWrapping';
+                }
+              };
+
+              data.value = {
+                name: e.id,
+                url: material[e.id].image.currentSrc,
+                encoding: encodingType(material[e.id].encoding),
+                wrapT: repeatType(material[e.id].image.wrapT),
+                flipY: material[e.id].flipY.toString(),
+              };
+            }
+          }
+
+          format.push(data);
+        }
+      });
+      if (TexCount > 0) {
+        setTexNumber(TexCount);
+      }
+      set(format);
+    }
+  }, []);
+
+  return (
+    <ProgramsUL>
+      {uniforms &&
+        uniforms.map((uniform: any) => {
+          return (
+            <span key={uniform.name}>
+              {typeof uniform.value === 'string' ? (
+                <li>
+                  <span>
+                    {uniform.name} :{' '}
+                    <b>
+                      {uniform.value.substring(0, 12)}
+                      {uniform.value.length > 12 ? '...' : ''}
+                    </b>
+                  </span>
+                </li>
+              ) : (
+                <>
+                  <li>{uniform.value.name}:</li>
+                  <div>
+                    {Object.keys(uniform.value).map((key) => {
+                      return key !== 'name' ? (
+                        <div key={key}>
+                          {key === 'url' ? (
+                            <a href={uniform.value[key]} target="_blank">
+                              <img src={uniform.value[key]} />
+                            </a>
+                          ) : (
+                            <li>
+                              {key}: <b>{uniform.value[key]}</b>
+                            </li>
+                          )}
+                        </div>
+                      ) : null;
+                    })}
+                    <ProgramConsole
+                      onClick={() => {
+                        console.info(material[uniform.value.name]);
+                      }}
+                    >
+                      console.log({uniform.value.name});
+                    </ProgramConsole>
+                  </div>
+                </>
+              )}
+            </span>
+          );
+        })}
+    </ProgramsUL>
+  );
+};
+type ProgramUIProps = {
+  el: ProgramsPerf;
+};
+const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
+  const [showProgram, setShowProgram] = useState(el.visible);
+
+  const [toggleProgram, set] = useState(el.expand);
+  const [texNumber, setTexNumber] = useState(0);
+  const { meshes, program, material }: any = el;
+  return (
+    <ProgramGeo>
+      <ProgramHeader
+        onPointerEnter={() => {
+          Object.keys(meshes).forEach((key) => {
+            const mesh = meshes[key];
+            mesh.material.wireframe = true;
+          });
+        }}
+        onPointerLeave={() => {
+          Object.keys(meshes).forEach((key) => {
+            const mesh = meshes[key];
+            mesh.material.wireframe = false;
+          });
+        }}
+        onClick={() => {
+          el.expand = !toggleProgram;
+
+          Object.keys(meshes).forEach((key) => {
+            const mesh = meshes[key];
+            mesh.material.wireframe = false;
+          });
+
+          set(!toggleProgram);
+        }}
+      >
+        <Toggle style={{ marginRight: '6px' }}>
+          {toggleProgram ? (
+            <span>
+              <RiArrowDownSFill />
+            </span>
+          ) : (
+            <span>
+              <RiArrowRightSFill />
+            </span>
+          )}
+        </Toggle>
+        {program && (
+          <span>
+            <ProgramTitle>{program.name}</ProgramTitle>
+
+            <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
+              <IoLayers style={{ top: '-1px' }} />
+              {Object.keys(meshes).length}
+              <small>{Object.keys(meshes).length > 1 ? 'users' : 'user'}</small>
+            </PerfI>
+            {texNumber > 0 && (
+              <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
+                {texNumber > 1 ? (
+                  <IoIosImages style={{ top: '-1px' }} />
+                ) : (
+                  <IoIosImage style={{ top: '-1px' }} />
+                )}
+                {texNumber}
+                <small>tex</small>
+              </PerfI>
+            )}
+
+            {material.glslVersion === '300 es' && (
+              <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
+                <IoRocketSharp style={{ top: '-1px' }} />
+                {/* <PerfB>glsl</PerfB> */}
+                300
+                <small>es</small>
+                <PerfB style={{ bottom: '-9px' }}>glsl</PerfB>
+              </PerfI>
+            )}
+          </span>
+        )}
+        <ToggleVisible
+          onClick={(e: any) => {
+            e.stopPropagation();
+            Object.keys(meshes).forEach((key) => {
+              const mesh = meshes[key];
+              const invert = !showProgram;
+              mesh.visible = invert;
+              el.visible = invert;
+              setShowProgram(invert);
+            });
+          }}
+        >
+          {showProgram ? <BsEyeFill /> : <BsEyeSlashFill />}
+        </ToggleVisible>
+      </ProgramHeader>
+      <div
+        style={{ maxHeight: toggleProgram ? '9999px' : 0, overflow: 'hidden' }}
+      >
+        <ProgramsULHeader>
+          <GoSettings /> Uniforms:
+        </ProgramsULHeader>
+        <UniformsGL
+          program={program}
+          material={material}
+          setTexNumber={setTexNumber}
+        />
+        <ProgramsULHeader>
+          <IoShapes /> Geometries:
+        </ProgramsULHeader>
+
+        <ProgramsUL>
+          {meshes &&
+            Object.keys(meshes).map(
+              (key) =>
+                meshes[key] &&
+                meshes[key].geometry && (
+                  <li key={key}>{meshes[key].geometry.type}</li>
+                )
+            )}
+        </ProgramsUL>
+        <ProgramConsole
+          onClick={() => {
+            console.info(material);
+          }}
+        >
+          console.log({material.type})
+        </ProgramConsole>
+      </div>
+    </ProgramGeo>
+  );
+};
+const ProgramsUI: FC<PerfProps> = () => {
+  usePerfStore((state) => state.triggerProgramsUpdate);
+  const programs = usePerfStore((state) => state.programs);
+  return (
+    <>
+      {programs &&
+        programs.map((el: ProgramsPerf) => {
+          if (!el) {
+            return null;
+          }
+          return el ? <ProgramUI key={el.material.id} el={el} /> : null;
+        })}
+    </>
+  );
+};
+
+const InfoUI: FC<PerfProps> = () => {
+  usePerfStore((state) => state.log);
+  const gl = usePerfStore((state) => state.gl);
+  if (!gl) return null;
+  const { info } = gl;
+
+  return (
+    <div>
+      <PerfI>
+        <AiOutlineCodeSandbox />
+        <PerfB>
+          {info.memory.geometries === 1 ? 'Geometry' : 'Geometries'}
+        </PerfB>{' '}
+        <span>{info.memory.geometries}</span>
+      </PerfI>
+      <PerfI>
+        <FaRegImages />
+        <PerfB>
+          {info.memory.textures === 1 ? 'Texture' : 'Textures'}
+        </PerfB>{' '}
+        <span>{info.memory.textures}</span>
+      </PerfI>
+      <PerfI>
+        <FiLayers />
+        <PerfB>{info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
+        <span>{info.render.calls}</span>
+      </PerfI>
+      <PerfI>
+        <FaServer />
+        {info.programs && (
+          <>
+            <PerfB>{info.programs.length === 1 ? 'shader' : 'shaders'}</PerfB>{' '}
+            <span>{info.programs.length}</span>
+          </>
+        )}
+      </PerfI>
+      {/* <PerfI>
+            <RiRhythmLine/>
+            <PerfB>Lines</PerfB> <span>{info.render.lines}</span>
+          </PerfI> */}
+      <PerfI>
+        <VscActivateBreakpoints />
+        <PerfB>Points</PerfB> <span>{info.render.points}</span>
+      </PerfI>
+    </div>
+  );
+};
+
+const ToggleEl = ({ tab, title, set }: any) => {
+  const tabStore = usePerfStore((state) => state.tab);
+  return (
+    <Toggle
+      className={`${tabStore === tab ? ' __perf_toggle_tab_active' : ''}`}
+      onClick={() => {
+        set(true);
+        usePerfStore.setState({ tab: tab });
+      }}
+    >
+      <span>{title}</span>
+    </Toggle>
+  );
+};
 const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
-  const { info } = usePerfStore((state) => state.gl);
   const [show, set] = React.useState(openByDefault);
+
   // const initialDpr = useThree((state) => state.viewport.initialDpr)
 
   return (
     <span>
-      {info && show && (
-        <div>
-          <PerfI>
-            <AiOutlineCodeSandbox />
-            <PerfB>
-              {info.memory.geometries === 1 ? 'Geometry' : 'Geometries'}
-            </PerfB>{' '}
-            <span>{info.memory.geometries}</span>
-          </PerfI>
-          <PerfI>
-            <FaRegImages />
-            <PerfB>
-              {info.memory.textures === 1 ? 'Texture' : 'Textures'}
-            </PerfB>{' '}
-            <span>{info.memory.textures}</span>
-          </PerfI>
-          <PerfI>
-            <FiLayers />
-            <PerfB>{info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
-            <span>{info.render.calls}</span>
-          </PerfI>
-          <PerfI
-            onClick={() => {
-              console.log(info.programs);
-            }}
-          >
-            <FaServer />
-            <PerfB>
-              {info.programs.length === 1 ? 'shader' : 'shaders'}
-            </PerfB>{' '}
-            <span>{info.programs.length}</span>
-          </PerfI>
-          {/* <PerfI>
-            <RiRhythmLine/>
-            <PerfB>Lines</PerfB> <span>{info.render.lines}</span>
-          </PerfI> */}
-          <PerfI>
-            <VscActivateBreakpoints />
-            <PerfB>Points</PerfB> <span>{info.render.points}</span>
-          </PerfI>
-        </div>
-      )}
-      <Toggle
-        className={'__perf_toggle'}
-        onClick={() => {
-          set(!show);
-        }}
-      >
-        {show ? (
-          <span>
-            <RiArrowDownSFill /> Minimize
-          </span>
-        ) : (
-          <span>
-            <RiArrowRightSFill /> More
-          </span>
-        )}
-      </Toggle>
+      <TabContainers show={show} />
+      <ToggleContainer className={'__perf_toggle'}>
+        {/* <ToggleEl tab="data" title="Geometries" set={set} /> */}
+        <ToggleEl tab="programs" title="Programs" set={set} />
+        <ToggleEl tab="infos" title="Infos" set={set} />
+        <Toggle
+          onClick={() => {
+            set(!show);
+          }}
+        >
+          {show ? (
+            <span>
+              <RiArrowDownSFill /> Minimize
+            </span>
+          ) : (
+            <span>
+              <RiArrowRightSFill /> More
+            </span>
+          )}
+        </Toggle>
+      </ToggleContainer>
     </span>
   );
 };
 
+const TabContainers = ({ show }: any) => {
+  const tab = usePerfStore((state) => state.tab);
+
+  return (
+    <>
+      {show && (
+        <ContainerScroll>
+          <div>
+            {tab === 'programs' && <ProgramsUI />}
+            {tab === 'infos' && <InfoUI />}
+          </div>
+        </ContainerScroll>
+      )}
+    </>
+  );
+};
 /**
  * Performance profiler component
  */

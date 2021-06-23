@@ -10,7 +10,6 @@ export const PerfS = styled('div', {
     sans-serif`,
   backgroundColor: 'rgba(36, 36, 36, 1)',
   color: '#fff',
-  pointerEvents: 'none',
   margin: 0,
   padding: '4px 6px',
   '-webkit-font-smoothing': 'antialiased',
@@ -91,6 +90,23 @@ export const PerfB = styled('span', {
   right: 0,
 });
 
+export const ProgramHeader = styled('div', {
+  backgroundColor: '#404040',
+  padding: '6px',
+  display: 'block',
+  fontSize: '12px',
+  marginBottom: '6px',
+  cursor: 'pointer',
+  '> span': {},
+  small: {
+    fontSize: '9px',
+  },
+  '> b': {
+    marginRight: '4px',
+    cursor: 'pointer',
+  },
+});
+
 export const Graph = styled('div', {
   height: '61px',
   overflow: 'hidden',
@@ -123,7 +139,135 @@ export const Graphpc = styled('div', {
 export const Toggle = styled('div', {
   pointerEvents: 'auto',
   justifyContent: 'center',
+  cursor: 'pointer',
+  fontSize: '12px',
+  backgroundColor: 'rgb(41, 43, 45)',
+  marginTop: '6px',
+  width: 'auto',
+  margin: '0',
+  color: 'rgba(145, 145, 145, 1)',
+  textAlign: 'center',
+  display: 'inline-block',
+  verticalAlign: 'middle',
+  padding: '4px 6px',
+  '&.__perf_toggle_tab_active': {
+    backgroundColor: 'rgb(31 31 31)',
+  },
+  svg: {
+    width: '12px',
+    height: '12px',
+    float: 'left',
+  },
+});
+
+export const ToggleVisible = styled('div', {
+  pointerEvents: 'auto',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  fontSize: '12px',
+  float: 'right',
+  backgroundColor: 'rgb(41, 43, 45)',
+  width: 'auto',
+  margin: '0',
+  color: 'rgba(145, 145, 145, 1)',
+  textAlign: 'center',
+  display: 'inline-block',
+  verticalAlign: 'middle',
+  padding: '4px 6px',
+  '&.__perf_toggle_tab_active': {
+    backgroundColor: 'rgb(31 31 31)',
+  },
+  svg: {
+    width: '12px',
+    height: '12px',
+    float: 'left',
+  },
+});
+
+export const ProgramGeo = styled('div', {
+  padding: '4px 6px',
+  fontSize: '12px',
+  pointerEvents: 'auto',
+});
+
+export const ProgramTitle = styled('span', {
+  fontWeight: 'bold',
+  letterSpacing: '0.08em',
+  maxWidth: '145px',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: 'inline-block',
+  verticalAlign: 'middle',
+  fontSize: '11px',
+  marginRight: '10px',
+});
+
+export const ContainerScroll = styled('div', {
+  maxHeight: '50vh',
+  overflowY: 'auto',
+});
+
+export const ProgramsULHeader = styled('div', {
   display: 'block',
+  position: 'relative',
+  fontWeight: 'bold',
+  color: '#fff',
+});
+
+export const ProgramsUL = styled('ul', {
+  display: 'block',
+  position: 'relative',
+  paddingLeft: '10px',
+  margin: '6px 6px',
+  img: {
+    maxHeight: '60px',
+    maxWidth: '100%',
+    margin: '6px auto',
+    display: 'block',
+  },
+  '&:after': {
+    content: '',
+    position: 'absolute',
+    left: '0px',
+    top: '0px',
+    width: '1px',
+    height: '100%',
+    backgroundColor: 'grey',
+    transform: 'translateX(-50%)',
+    maxHeight: '50vh',
+    overflowY: 'auto',
+  },
+  li: {
+    borderBottom: '1px solid #313131',
+    display: 'block',
+    padding: '4px',
+    margin: 0,
+    lineHeight: 1,
+    verticalAlign: 'middle',
+    height: '24px',
+  },
+  b: {
+    fontWeight: 'bold',
+  },
+});
+
+export const ProgramConsole = styled('button', {
+  fontWeight: 'bold',
+  letterSpacing: '0.02em',
+  backgroundColor: 'rgb(41, 43, 45)',
+  color: 'rgb(211, 211, 211)',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  cursor: 'pointer',
+  display: 'block',
+  verticalAlign: 'middle',
+  fontSize: '11px',
+  padding: '5px',
+  margin: '4px auto',
+});
+export const ToggleContainer = styled('div', {
+  display: 'flex',
+  justifyContent: 'center',
   cursor: 'pointer',
   fontSize: '12px',
   backgroundColor: 'rgb(41, 43, 45)',
@@ -135,7 +279,6 @@ export const Toggle = styled('div', {
   position: 'absolute',
   right: 0,
   bottom: ' -20px',
-  padding: '4px 6px',
   svg: {
     width: '12px',
     height: '12px',

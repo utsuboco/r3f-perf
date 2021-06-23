@@ -161,9 +161,9 @@ export default class GLPerf {
       this.paramFrame = this.frameId;
       this.paramTime = t;
     } else {
-      if (duration >= 1e3) {
+      if (duration >= 500) {
         const frameCount = this.frameId - this.paramFrame;
-        const fps = (frameCount / duration) * 1e3;
+        const fps = (frameCount / duration) * 1000;
         for (let i = 0; i < this.names.length; i++) {
           cpu = this.cpuAccums[i] / duration;
           gpu = this.isWebGL2

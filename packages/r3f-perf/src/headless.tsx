@@ -8,19 +8,35 @@ import {
 import GLPerf from './perf';
 import create from 'zustand';
 import { PerfProps } from '.';
+import { Material, Mesh, Scene, WebGLProgram, WebGLRenderer } from 'three';
+
+export type ProgramsPerf = {
+  meshes?: {
+    [index: string]: Mesh[];
+  };
+  material: Material;
+  program?: WebGLProgram;
+  visible: boolean;
+  expand: boolean;
+};
+
+type ProgramsPerfs = ProgramsPerf[];
 
 export type State = {
   log: any;
   paused: boolean;
+  triggerProgramsUpdate: number;
   chart: {
     data: {
       [index: string]: number[];
     };
     circularId: number;
   };
-  gl: {
-    info: any;
-  };
+  gl: WebGLRenderer | undefined;
+  scene: Scene | undefined;
+  programs: ProgramsPerfs;
+  objectWithMaterials: Mesh[] | null;
+  tab: 'infos' | 'programs' | 'data';
 };
 
 let PerfLib: GLPerf | null;
@@ -43,9 +59,12 @@ type Chart = {
   circularId: number;
 };
 
+const getMUIIndex = (muid: string) => muid === 'muiPerf';
+
 export const usePerfStore = create<State>(() => ({
   log: null,
   paused: false,
+  triggerProgramsUpdate: 0,
   chart: {
     data: {
       fps: [],
@@ -54,15 +73,19 @@ export const usePerfStore = create<State>(() => ({
     },
     circularId: 0,
   },
-  gl: {
-    info: null,
-  },
+  gl: undefined,
+  objectWithMaterials: null,
+  scene: undefined,
+  programs: [],
+  sceneLength: undefined,
+  tab: 'infos',
 }));
 
 export const usePerfFunc = () => {
   return {
     log: usePerfStore((state) => state.log),
     gl: usePerfStore((state) => state.gl)?.info,
+    programs: usePerfStore((state) => state.programs),
   };
 };
 
@@ -72,10 +95,10 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
  * Performance profiler component
  */
 export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
-  const { gl } = useThree();
+  const { gl, scene } = useThree();
   const mounted = useRef(false);
 
-  usePerfStore.setState({ gl });
+  usePerfStore.setState({ gl, scene });
 
   useEffect(() => {
     gl.info.autoReset = false;
@@ -121,6 +144,70 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
         if (PerfLib) {
           PerfLib.end('profiler');
           PerfLib.nextFrame(window.performance.now());
+        }
+        const currentObjectWithMaterials: any = {};
+        const programs: ProgramsPerfs = [];
+
+        scene.traverse(function (object) {
+          if (object instanceof Mesh) {
+            if (object.material) {
+              if (!object.material.defines) {
+                object.material.defines = {};
+              }
+
+              if (!object.material.defines.muiPerf) {
+                object.material.defines = Object.assign(
+                  object.material.defines || {},
+                  {
+                    muiPerf: object.material.id,
+                  }
+                );
+              }
+
+              if (!currentObjectWithMaterials[object.material.id]) {
+                currentObjectWithMaterials[object.material.id] = {
+                  meshes: {},
+                  material: object.material,
+                };
+                object.material.needsUpdate = true;
+              }
+              currentObjectWithMaterials[object.material.id].meshes[
+                object.uuid
+              ] = object;
+              object.material.needsUpdate = false;
+            }
+          }
+        });
+
+        gl?.info?.programs?.forEach((program: any) => {
+          const cacheKeySplited = program.cacheKey.split(',');
+          const muiPerfTracker =
+            cacheKeySplited[cacheKeySplited.findIndex(getMUIIndex) + 1];
+          if (
+            !isNaN(muiPerfTracker) &&
+            currentObjectWithMaterials[muiPerfTracker]
+          ) {
+            const { material, meshes } = currentObjectWithMaterials[
+              muiPerfTracker
+            ];
+            // console.log(material, meshes);
+            programs[muiPerfTracker] = {
+              program,
+              material,
+              meshes,
+              expand: false,
+              visible: true,
+            };
+          }
+        });
+
+        if (programs.length !== usePerfStore.getState().programs.length) {
+          // console.log(programs.length, usePerfStore.getState().programs.length);
+          usePerfStore.setState({
+            programs: programs,
+            triggerProgramsUpdate: usePerfStore.getState()
+              .triggerProgramsUpdate++,
+          });
         }
         return false;
       });

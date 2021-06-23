@@ -14092,6 +14092,7 @@ fsevents@^1.2.7:
     "@types/three": latest
     candygraph: ^0.3.0
     lerp: ^1.0.3
+    rafz: ^0.1.14
     three: "*"
     zustand: ^3.5.2
   peerDependencies:
@@ -14101,6 +14102,13 @@ fsevents@^1.2.7:
     three: "*"
   languageName: unknown
   linkType: soft
+
+"rafz@npm:^0.1.14":
+  version: 0.1.14
+  resolution: "rafz@npm:0.1.14"
+  checksum: 3a0d585910f6b2610aa4bedeeb4e17a4cf25b1fb81ea24f1c288204aa31b5634b9180be73e2584c0e0368c966e4b9a06885c7dd8a1962e80c6f775659bcdc2c2
+  languageName: node
+  linkType: hard
 
 "ramda@npm:^0.21.0":
   version: 0.21.0

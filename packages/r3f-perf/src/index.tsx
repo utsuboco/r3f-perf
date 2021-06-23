@@ -1,6 +1,6 @@
-import React, { VFC } from 'react';
+import React, { useCallback, VFC } from 'react';
 import Gui from './gui';
-import { Headless, usePerfFunc } from './headless';
+import { Headless, usePerfFunc, usePerfStore } from './headless';
 
 type chart = {
   length: number;
@@ -49,4 +49,5 @@ export const Perf: VFC<PerfProps> = ({
     />
   );
 };
+
 export const usePerf = usePerfFunc;
