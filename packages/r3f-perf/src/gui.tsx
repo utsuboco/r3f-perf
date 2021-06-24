@@ -372,7 +372,7 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
       if (material.uniforms) {
         Object.keys(material.uniforms).forEach((key: any) => {
           const uniform = material.uniforms[key];
-          if (uniform.value && !format.has(key)) {
+          if (uniform.value) {
             const { value } = uniform;
             let data: any = {
               name: key,
@@ -382,7 +382,12 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
               TexCount++;
               data.value = addTextureUniforms(key, value);
             } else {
-              const sb = value.toString();
+              let sb = JSON.stringify(value);
+              try {
+                sb = JSON.stringify(value);
+              } catch (_err) {
+                sb = value.toString();
+              }
               data.value = sb;
             }
             format.set(key, data);
@@ -408,8 +413,8 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
                   <span>
                     {uniform.name} :{' '}
                     <b>
-                      {uniform.value.substring(0, 12)}
-                      {uniform.value.length > 12 ? '...' : ''}
+                      {uniform.value.substring(0, 30)}
+                      {uniform.value.length > 30 ? '...' : ''}
                     </b>
                   </span>
                 </li>

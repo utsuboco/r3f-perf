@@ -41,6 +41,7 @@ const MyMaterial = new THREE.ShaderMaterial({
   uniforms: {
     amount: { value: 0.5 },
     offset: { value: [0, -0.2] },
+    offset2: { value: new THREE.Vector4(2, 1, 2, 2) },
     albedo: { value: null },
   },
   fragmentShader,

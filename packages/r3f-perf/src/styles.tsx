@@ -212,6 +212,9 @@ export const ProgramsULHeader = styled('div', {
   position: 'relative',
   fontWeight: 'bold',
   color: '#fff',
+  svg: {
+    display: 'inline-block',
+  },
 });
 
 export const ProgramsUL = styled('ul', {
