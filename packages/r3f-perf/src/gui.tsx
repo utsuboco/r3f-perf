@@ -299,6 +299,7 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
           e.id !== 'projectionMatrix' &&
           e.id !== 'viewMatrix' &&
           e.id !== 'normalMatrix' &&
+          e.id !== 'modelMatrix' &&
           e.id !== 'modelViewMatrix'
         ) {
           let values: any = [];
@@ -432,18 +433,6 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
   return (
     <ProgramGeo>
       <ProgramHeader
-        onPointerEnter={() => {
-          Object.keys(meshes).forEach((key) => {
-            const mesh = meshes[key];
-            mesh.material.wireframe = true;
-          });
-        }}
-        onPointerLeave={() => {
-          Object.keys(meshes).forEach((key) => {
-            const mesh = meshes[key];
-            mesh.material.wireframe = false;
-          });
-        }}
         onClick={() => {
           el.expand = !toggleProgram;
 
@@ -490,7 +479,6 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
             {material.glslVersion === '300 es' && (
               <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
                 <IoRocketSharp style={{ top: '-1px' }} />
-                {/* <PerfB>glsl</PerfB> */}
                 300
                 <small>es</small>
                 <PerfB style={{ bottom: '-9px' }}>glsl</PerfB>
@@ -499,6 +487,18 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
           </span>
         )}
         <ToggleVisible
+          onPointerEnter={() => {
+            Object.keys(meshes).forEach((key) => {
+              const mesh = meshes[key];
+              mesh.material.wireframe = true;
+            });
+          }}
+          onPointerLeave={() => {
+            Object.keys(meshes).forEach((key) => {
+              const mesh = meshes[key];
+              mesh.material.wireframe = false;
+            });
+          }}
           onClick={(e: any) => {
             e.stopPropagation();
             Object.keys(meshes).forEach((key) => {
