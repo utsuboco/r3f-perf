@@ -28,7 +28,8 @@ const vertexShader = /* glsl */ `
   }
 `;
 const fragmentShader = /* glsl */ `
-  uniform float amount; // { "value": 0.5, "min": 0, "max": 10 }
+  uniform float amount; 
+  uniform sampler2D albedo;
   varying vec2 vUv;
   out vec4 glFrag;
   void main() {
@@ -36,26 +37,31 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
-const MyMaterial = shaderMaterial(
-  {
-    amount: 0.5,
-    offset: [0, -0.2],
-    glslVersion: THREE.GLSL3,
+const MyMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    amount: { value: 0.5 },
+    offset: { value: [0, -0.2] },
+    albedo: { value: null },
   },
+  fragmentShader,
   vertexShader,
-  fragmentShader
-);
-
-extend({ MyMaterial });
+  glslVersion: THREE.GLSL3,
+});
 
 const Bob = () => {
   const bob = useTexture('../caveman.png');
   return (
-    <Box position-x={-3}>
-      <meshBasicMaterial map={bob} />
-    </Box>
+    <>
+      <Box position-x={-3}>
+        <shaderMaterial args={[MyMaterial]} uniforms-albedo-value={bob} />
+      </Box>
+      <Box position-x={-1}>
+        <meshBasicMaterial map={bob} />
+      </Box>
+    </>
   );
 };
+
 export function App() {
   const { showCanvas } = useControls('Test', {
     showCanvas: true,
@@ -86,7 +92,7 @@ export function App() {
             <meshPhysicalMaterial />
           </Cylinder>
           <Sphere position-y={-2}>
-            <myMaterial />
+            <meshBasicMaterial />
           </Sphere>
 
           <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />

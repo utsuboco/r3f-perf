@@ -42,6 +42,7 @@ import {
   ProgramsUL,
   ProgramsULHeader,
 } from './styles';
+import { Texture } from 'three';
 
 interface colors {
   [index: string]: string;
@@ -60,6 +61,51 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
     gpu: colorBlind ? '254,254,254' : '253,151,31',
   };
   return colors;
+};
+
+const addTextureUniforms = (id: string, texture: any) => {
+  const repeatType = (wrap: number) => {
+    switch (wrap) {
+      case 1000:
+        return 'RepeatWrapping';
+      case 1001:
+        return 'ClampToEdgeWrapping';
+      case 1002:
+        return 'MirroredRepeatWrapping';
+      default:
+        return 'ClampToEdgeWrapping';
+    }
+  };
+
+  const encodingType = (encoding: number) => {
+    switch (encoding) {
+      case 3000:
+        return 'LinearEncoding';
+      case 3001:
+        return 'sRGBEncoding';
+      case 3002:
+        return 'RGBEEncoding';
+      case 3003:
+        return 'LogLuvEncoding';
+      case 3004:
+        return 'RGBM7Encoding';
+      case 3005:
+        return 'RGBM16Encoding';
+      case 3006:
+        return 'RGBDEncoding';
+      case 3007:
+        return 'GammaEncoding';
+      default:
+        return 'ClampToEdgeWrapping';
+    }
+  };
+  return {
+    name: id,
+    url: texture.image.currentSrc,
+    encoding: encodingType(texture.encoding),
+    wrapT: repeatType(texture.image.wrapT),
+    flipY: texture.flipY.toString(),
+  };
 };
 
 interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
@@ -290,7 +336,8 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
     if (gl) {
       const data: any = program?.getUniforms();
       let TexCount = 0;
-      const format: any = [];
+      const format: any = new Map();
+
       data.seq.forEach((e: any) => {
         if (
           e.id !== 'isOrthographic' &&
@@ -314,55 +361,35 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
             if (material[e.id] && material[e.id].image) {
               if (material[e.id].image) {
                 TexCount++;
-                const repeatType = (wrap: number) => {
-                  switch (wrap) {
-                    case 1000:
-                      return 'RepeatWrapping';
-                    case 1001:
-                      return 'ClampToEdgeWrapping';
-                    case 1002:
-                      return 'MirroredRepeatWrapping';
-                    default:
-                      return 'ClampToEdgeWrapping';
-                  }
-                };
-
-                const encodingType = (encoding: number) => {
-                  switch (encoding) {
-                    case 3000:
-                      return 'LinearEncoding';
-                    case 3001:
-                      return 'sRGBEncoding';
-                    case 3002:
-                      return 'RGBEEncoding';
-                    case 3003:
-                      return 'LogLuvEncoding';
-                    case 3004:
-                      return 'RGBM7Encoding';
-                    case 3005:
-                      return 'RGBM16Encoding';
-                    case 3006:
-                      return 'RGBDEncoding';
-                    case 3007:
-                      return 'GammaEncoding';
-                    default:
-                      return 'ClampToEdgeWrapping';
-                  }
-                };
-
-                data.value = {
-                  name: e.id,
-                  url: material[e.id].image.currentSrc,
-                  encoding: encodingType(material[e.id].encoding),
-                  wrapT: repeatType(material[e.id].image.wrapT),
-                  flipY: material[e.id].flipY.toString(),
-                };
+                data.value = addTextureUniforms(e.id, material[e.id]);
               }
             }
-            format.push(data);
+            format.set(e.id, data);
           }
         }
       });
+
+      if (material.uniforms) {
+        Object.keys(material.uniforms).forEach((key: any) => {
+          const uniform = material.uniforms[key];
+          if (uniform.value && !format.has(key)) {
+            const { value } = uniform;
+            let data: any = {
+              name: key,
+            };
+
+            if (value instanceof Texture) {
+              TexCount++;
+              data.value = addTextureUniforms(key, value);
+            } else {
+              const sb = value.toString();
+              data.value = sb;
+            }
+            format.set(key, data);
+          }
+        });
+      }
+
       if (TexCount > 0) {
         setTexNumber(TexCount);
       }
@@ -373,7 +400,7 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
   return (
     <ProgramsUL>
       {uniforms &&
-        uniforms.map((uniform: any) => {
+        Array.from(uniforms.values()).map((uniform: any) => {
           return (
             <span key={uniform.name}>
               {typeof uniform.value === 'string' ? (
@@ -388,7 +415,9 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
                 </li>
               ) : (
                 <>
-                  <li>{uniform.value.name}:</li>
+                  <li>
+                    <b>{uniform.value.name}:</b>
+                  </li>
                   <div>
                     {Object.keys(uniform.value).map((key) => {
                       return key !== 'name' ? (
@@ -407,10 +436,13 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
                     })}
                     <ProgramConsole
                       onClick={() => {
-                        console.info(material[uniform.value.name]);
+                        console.info(
+                          material[uniform.value.name] ||
+                            material?.uniforms[uniform.value.name]?.value
+                        );
                       }}
                     >
-                      console.log({uniform.value.name});
+                      console.info({uniform.value.name});
                     </ProgramConsole>
                   </div>
                 </>
@@ -543,7 +575,7 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
             console.info(material);
           }}
         >
-          console.log({material.type})
+          console.info({material.type})
         </ProgramConsole>
       </div>
     </ProgramGeo>
