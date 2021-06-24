@@ -27,7 +27,19 @@ export type ProgramsPerf = {
   expand: boolean;
 };
 
-type ProgramsPerfs = ProgramsPerf[];
+type ProgramsPerfs = Map<string, ProgramsPerf>;
+
+const isUUID = (uuid: string) => {
+  let s: any = '' + uuid;
+
+  s = s.match(
+    '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+  );
+  if (s === null) {
+    return false;
+  }
+  return true;
+};
 
 export type State = {
   log: any;
@@ -83,7 +95,7 @@ export const usePerfStore = create<State>(() => ({
   gl: undefined,
   objectWithMaterials: null,
   scene: undefined,
-  programs: [],
+  programs: new Map(),
   sceneLength: undefined,
   tab: 'infos',
 }));
@@ -153,7 +165,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
           PerfLib.nextFrame(window.performance.now());
         }
         const currentObjectWithMaterials: any = {};
-        const programs: ProgramsPerfs = [];
+        const programs: ProgramsPerfs = new Map();
 
         scene.traverse(function (object) {
           if (object instanceof Mesh || object instanceof Points) {
@@ -166,19 +178,19 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
                 object.material.defines = Object.assign(
                   object.material.defines || {},
                   {
-                    muiPerf: object.material.id,
+                    muiPerf: object.material.uuid,
                   }
                 );
               }
 
-              if (!currentObjectWithMaterials[object.material.id]) {
-                currentObjectWithMaterials[object.material.id] = {
+              if (!currentObjectWithMaterials[object.material.uuid]) {
+                currentObjectWithMaterials[object.material.uuid] = {
                   meshes: {},
                   material: object.material,
                 };
                 object.material.needsUpdate = true;
               }
-              currentObjectWithMaterials[object.material.id].meshes[
+              currentObjectWithMaterials[object.material.uuid].meshes[
                 object.uuid
               ] = object;
               object.material.needsUpdate = false;
@@ -191,24 +203,23 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
           const muiPerfTracker =
             cacheKeySplited[cacheKeySplited.findIndex(getMUIIndex) + 1];
           if (
-            !isNaN(muiPerfTracker) &&
+            isUUID(muiPerfTracker) &&
             currentObjectWithMaterials[muiPerfTracker]
           ) {
             const { material, meshes } = currentObjectWithMaterials[
               muiPerfTracker
             ];
-            programs[muiPerfTracker] = {
+            programs.set(muiPerfTracker, {
               program,
               material,
               meshes,
               expand: false,
               visible: true,
-            };
+            });
           }
         });
 
-        if (programs.length !== usePerfStore.getState().programs.length) {
-          // console.log(programs.length, usePerfStore.getState().programs.length);
+        if (programs.size !== usePerfStore.getState().programs.size) {
           usePerfStore.setState({
             programs: programs,
             triggerProgramsUpdate: usePerfStore.getState()

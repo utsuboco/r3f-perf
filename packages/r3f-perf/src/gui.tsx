@@ -555,11 +555,11 @@ const ProgramsUI: FC<PerfProps> = () => {
   return (
     <>
       {programs &&
-        programs.map((el: ProgramsPerf) => {
+        Array.from(programs.values()).map((el: ProgramsPerf) => {
           if (!el) {
             return null;
           }
-          return el ? <ProgramUI key={el.material.id} el={el} /> : null;
+          return el ? <ProgramUI key={el.material.uuid} el={el} /> : null;
         })}
     </>
   );
