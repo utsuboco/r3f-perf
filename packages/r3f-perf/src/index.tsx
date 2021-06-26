@@ -12,6 +12,7 @@ export interface PerfProps {
   showGraph?: boolean;
   colorBlind?: boolean;
   trackGPU?: boolean;
+  trackCPU?: boolean;
   openByDefault?: boolean;
   className?: any;
   position?: string;
@@ -26,12 +27,13 @@ export const Perf: VFC<PerfProps> = ({
   headless = false,
   colorBlind = false,
   showGraph = true,
+  trackCPU = false,
   trackGPU = true,
   openByDefault = false,
   position = 'top-right',
   chart = {
     length: 30,
-    hz: 10,
+    hz: 15,
   },
   className,
 }) => {
@@ -41,6 +43,7 @@ export const Perf: VFC<PerfProps> = ({
     <Gui
       colorBlind={colorBlind}
       showGraph={showGraph}
+      trackCPU={trackCPU}
       trackGPU={trackGPU}
       openByDefault={openByDefault}
       className={className}

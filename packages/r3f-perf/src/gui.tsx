@@ -2,6 +2,7 @@ import React, { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { FaMemory } from '@react-icons/all-files/fa/FaMemory';
 import { RiCpuLine } from '@react-icons/all-files/ri/RiCpuLine';
 import { RiCpuFill } from '@react-icons/all-files/ri/RiCpuFill';
+import { RiRhythmLine } from '@react-icons/all-files/ri/RiRhythmLine';
 import { VscPulse } from '@react-icons/all-files/vsc/VscPulse';
 import { AiOutlineCodeSandbox } from '@react-icons/all-files/ai/AiOutlineCodeSandbox';
 import { FaRegImages } from '@react-icons/all-files/fa/FaRegImages';
@@ -109,10 +110,12 @@ const addTextureUniforms = (id: string, texture: any) => {
 };
 
 interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
+  perfContainerRef: any;
   colorBlind?: boolean;
+  trackCPU?: boolean;
   trackGPU?: boolean;
 }
-const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
+const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
   // Create a viewport. Units are in pixels.
   const viewport = {
     x: 0,
@@ -162,7 +165,6 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
       graphs.push(toPoints('gpu'));
     }
     const fps = graphs[0];
-    const cpu = graphs[1];
     const xs = [];
     const ys = [];
 
@@ -178,13 +180,17 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
           : [238 / 255, 38 / 255, 110 / 255, 1],
         widths: 1.5,
       }),
+    ];
+
+    if (trackCPU) {
+      const cpu = graphs[1];
       cg.lineStrip(cpu.pointsX, cpu.pointsY, {
         colors: colorBlind
           ? [254 / 255, 254 / 255, 98 / 255, 1]
           : [66 / 255, 226 / 255, 46 / 255, 1],
         widths: 1.5,
-      }),
-    ];
+      });
+    }
 
     if (trackGPU) {
       const gpu = graphs[2];
@@ -206,7 +212,12 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackGPU }: any) => {
 
   return null;
 };
-const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
+const ChartUI: FC<PerfUIProps> = ({
+  perfContainerRef,
+  colorBlind,
+  trackCPU,
+  trackGPU,
+}) => {
   const canvas = useRef<any>(undefined);
   const [cg, setcg]: any = useState(null);
   useEffect(() => {
@@ -215,18 +226,24 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
         // Do something with the module.
         const CandyGraph = module.CandyGraph;
         const cg = new CandyGraph(canvas.current);
-        cg.canvas.width = 310;
+        const { width } = perfContainerRef.current.getBoundingClientRect();
+        cg.canvas.width = width;
         cg.canvas.height = 100;
         setcg(cg);
       });
 
       // cg.copyTo(viewport, canvas.current);
     }
-  }, [canvas.current]);
+  }, [canvas.current, perfContainerRef.current]);
 
   const paused = usePerfStore((state) => state.paused);
   return (
-    <Graph>
+    <Graph
+      style={{
+        width: trackCPU ? 'auto' : '310px',
+        display: trackCPU ? 'table' : 'flex',
+      }}
+    >
       <canvas
         ref={canvas}
         style={{
@@ -239,6 +256,7 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
       {!paused && cg && (
         <ChartCurve
           colorBlind={colorBlind}
+          trackCPU={trackCPU}
           trackGPU={trackGPU}
           cg={cg}
           canvas={canvas}
@@ -253,29 +271,41 @@ const ChartUI: FC<PerfUIProps> = ({ colorBlind, trackGPU }) => {
   );
 };
 
-const DynamicUI: FC<PerfProps> = ({ showGraph, trackGPU, colorBlind }) => {
+const DynamicUI: FC<PerfProps> = ({
+  showGraph,
+  trackCPU,
+  trackGPU,
+  colorBlind,
+}) => {
   const log = usePerfStore((state) => state.log);
   const gl = usePerfStore((state) => state.gl);
 
   return log ? (
     <>
-      <PerfI>
-        <RiCpuLine />
-        <PerfB
-          style={
-            showGraph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}
-          }
-        >
-          CPU
-        </PerfB>{' '}
-        <span>{(Math.round(log.cpu * 100) || 0).toFixed(2)}%</span>
-      </PerfI>
+      {trackCPU && (
+        <PerfI>
+          <RiCpuLine />
+          <PerfB
+            style={
+              showGraph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}
+            }
+          >
+            CPU
+          </PerfB>{' '}
+          <span>{(Math.round(log.cpu * 100) || 0).toFixed(2)}%</span>
+        </PerfI>
+      )}
+
       <PerfI>
         <RiCpuFill />
         <PerfB
           style={
             showGraph && trackGPU
-              ? { color: `rgb(${colorsGraph(colorBlind).gpu})` }
+              ? {
+                  color: `rgb(${colorsGraph(colorBlind)
+                    .gpu.toString()
+                    .substr(0, 4)})`,
+                }
               : {}
           }
         >
@@ -302,6 +332,13 @@ const DynamicUI: FC<PerfProps> = ({ showGraph, trackGPU, colorBlind }) => {
       </PerfI>
       {gl && (
         <PerfI>
+          <FiLayers />
+          <PerfB>{gl.info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
+          <span>{gl.info.render.calls}</span>
+        </PerfI>
+      )}
+      {gl && (
+        <PerfI>
           <BsTriangle />
           <PerfB>Triangles</PerfB> <span>{gl.info.render.triangles}</span>
         </PerfI>
@@ -312,6 +349,7 @@ const DynamicUI: FC<PerfProps> = ({ showGraph, trackGPU, colorBlind }) => {
 
 const PerfUI: FC<PerfProps> = ({
   showGraph,
+  trackCPU,
   trackGPU,
   colorBlind,
   openByDefault,
@@ -321,6 +359,7 @@ const PerfUI: FC<PerfProps> = ({
       <DynamicUI
         showGraph={showGraph}
         trackGPU={trackGPU}
+        trackCPU={trackCPU}
         colorBlind={colorBlind}
       />
       <PerfThree openByDefault={openByDefault} />
@@ -624,11 +663,6 @@ const InfoUI: FC<PerfProps> = () => {
         <span>{info.memory.textures}</span>
       </PerfI>
       <PerfI>
-        <FiLayers />
-        <PerfB>{info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
-        <span>{info.render.calls}</span>
-      </PerfI>
-      <PerfI>
         <FaServer />
         {info.programs && (
           <>
@@ -637,10 +671,10 @@ const InfoUI: FC<PerfProps> = () => {
           </>
         )}
       </PerfI>
-      {/* <PerfI>
-            <RiRhythmLine/>
-            <PerfB>Lines</PerfB> <span>{info.render.lines}</span>
-          </PerfI> */}
+      <PerfI>
+        <RiRhythmLine />
+        <PerfB>Lines</PerfB> <span>{info.render.lines}</span>
+      </PerfI>
       <PerfI>
         <VscActivateBreakpoints />
         <PerfB>Points</PerfB> <span>{info.render.points}</span>
@@ -718,14 +752,17 @@ const Gui: FC<PerfProps> = ({
   showGraph,
   colorBlind,
   trackGPU,
+  trackCPU,
   openByDefault,
   className,
   position,
   chart,
 }) => {
+  const perfContainerRef = useRef(null);
+
   return (
     <>
-      <Headless trackGPU={trackGPU} chart={chart} />
+      <Headless trackGPU={trackGPU} trackCPU={trackCPU} chart={chart} />
       {/* @ts-ignore */}
       <Html transform={false}>
         <PerfS
@@ -733,14 +770,23 @@ const Gui: FC<PerfProps> = ({
             (className ? ' '.concat(className) : ' ') +
             ` ${position ? position : ''}`
           }
+          ref={perfContainerRef}
         >
           <PerfUI
             colorBlind={colorBlind}
             showGraph={showGraph}
             trackGPU={trackGPU}
+            trackCPU={trackCPU}
             openByDefault={openByDefault}
           />
-          {showGraph && <ChartUI colorBlind={colorBlind} trackGPU={trackGPU} />}
+          {showGraph && (
+            <ChartUI
+              perfContainerRef={perfContainerRef}
+              colorBlind={colorBlind}
+              trackCPU={trackCPU}
+              trackGPU={trackGPU}
+            />
+          )}
         </PerfS>
       </Html>
     </>

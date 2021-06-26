@@ -4,6 +4,7 @@
 
 Easily monitor the performances of your @react-three/fiber application.
 r3f-perf.js is 6.23 KB.
+
 <table>
   <tr>
     <td>Add the Perf component anywhere in your Canvas.</td>
@@ -13,9 +14,6 @@ r3f-perf.js is 6.23 KB.
 </a>
   </tr>
 </table>
-
-
-
 
 ## Installation
 
@@ -33,7 +31,8 @@ chart?: {
   length: 120, // number of values shown on the monitor
 }
 colorBlind?: false // Color blind colors for accessibility
-trackGPU?: true // show a graph of the GPU (Experimental, might not be relevant)
+trackGPU?: true // show a graph of the GPU
+trackCPU?: false // show a graph of the CPU (Experimental as it should require a server, so might not be relevant)
 openByDefault?: false // show more informations by default
 className?: false // override CSS class
 position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // override position, default is top-right
@@ -78,6 +77,7 @@ The tool work with any server side rendering framework. You can try with Next an
 https://github.com/pmndrs/react-three-next
 
 ## Feature ideas todo :
+
 - Convert all DOM text to shader to increase the refresh rate
 - Buffer frame and Forward rendering differenciation in the "calls" section of the UI
 - Postprocess shaders differenciation

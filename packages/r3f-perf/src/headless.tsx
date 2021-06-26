@@ -113,7 +113,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
+export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
   const { gl, scene } = useThree();
   const mounted = useRef(false);
 
@@ -124,6 +124,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
     if (!PerfLib && gl.info) {
       PerfLib = new GLPerf({
         trackGPU: trackGPU,
+        trackCPU: trackCPU,
         chartLen: chart ? chart.length : 120,
         chartHz: chart ? chart.hz : 60,
         gl: gl.getContext(),
@@ -236,7 +237,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, chart }) => {
     } else {
       return undefined;
     }
-  }, [gl, trackGPU, chart]);
+  }, [gl, trackGPU, trackCPU, chart]);
   useEffect(() => {
     const unsub = addTail(() => {
       if (PerfLib && mounted.current) {

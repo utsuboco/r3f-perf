@@ -28,6 +28,7 @@ export default class GLPerf {
   chartHz: number = 10;
   factorGPU: number = 1;
   trackGPU: boolean = true;
+  trackCPU: boolean = false;
   chartFrame: number = 0;
   gpuTimeProcess: number = 0;
   chartTime: number = 0;

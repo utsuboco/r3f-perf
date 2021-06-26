@@ -103,12 +103,13 @@ export function App() {
           <Perf
             className={'override'}
             trackGPU={true}
+            // trackCPU={true}
             openByDefault={true}
             chart={{
               hz: 35,
               length: 120,
             }}
-            colorBlind={true}
+            // colorBlind={true}
             position={'bottom-right'}
           />
         </Canvas>

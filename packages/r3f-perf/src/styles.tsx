@@ -48,7 +48,7 @@ export const PerfS = styled('div', {
   },
 });
 
-export const PerfI = styled('a', {
+export const PerfI = styled('div', {
   display: 'inline-flex',
   fontStyle: 'normal',
   padding: 0,
@@ -57,7 +57,7 @@ export const PerfI = styled('a', {
   width: '62px',
   position: 'relative',
   pointerEvents: 'auto',
-  cursor: 'pointer',
+  cursor: 'default',
   fontWeight: 500,
   letterSpacing: '0px',
   textAlign: 'left',
@@ -115,7 +115,6 @@ export const Graph = styled('div', {
   justifyContent: 'center',
   width: '310px',
   margin: '0 auto',
-  maxWidth: '312px',
 });
 
 export const Graphpc = styled('div', {
