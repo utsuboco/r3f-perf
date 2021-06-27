@@ -22,6 +22,7 @@ import { PerfProps } from '.';
 import {
   Toggle,
   PerfS,
+  PerfIContainer,
   PerfI,
   PerfB,
   ToggleContainer,
@@ -51,7 +52,7 @@ const DynamicUI: FC<PerfProps> = ({
   const gl = usePerfStore((state) => state.gl);
 
   return log ? (
-    <>
+    <PerfIContainer>
       {trackCPU && (
         <PerfI>
           <RiCpuLine />
@@ -72,9 +73,7 @@ const DynamicUI: FC<PerfProps> = ({
           style={
             showGraph && trackGPU
               ? {
-                  color: `rgb(${colorsGraph(colorBlind)
-                    .gpu.toString()
-                    .substr(0, 4)})`,
+                  color: `rgb(${colorsGraph(colorBlind).gpu.toString()})`,
                 }
               : {}
           }
@@ -113,7 +112,7 @@ const DynamicUI: FC<PerfProps> = ({
           <PerfB>Triangles</PerfB> <span>{gl.info.render.triangles}</span>
         </PerfI>
       )}
-    </>
+    </PerfIContainer>
   ) : null;
 };
 
@@ -125,7 +124,7 @@ const PerfUI: FC<PerfProps> = ({
   openByDefault,
 }) => {
   return (
-    <div>
+    <>
       <DynamicUI
         showGraph={showGraph}
         trackGPU={trackGPU}
@@ -133,7 +132,7 @@ const PerfUI: FC<PerfProps> = ({
         colorBlind={colorBlind}
       />
       <PerfThree openByDefault={openByDefault} />
-    </div>
+    </>
   );
 };
 
@@ -202,7 +201,7 @@ const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
     <span>
       <TabContainers show={show} />
       <ToggleContainer className={'__perf_toggle'}>
-        {/* <ToggleEl tab="data" title="Geometries" set={set} /> */}
+        {/* <ToggleEl tab="inspector" title="Inspector" set={set} /> */}
         <ToggleEl tab="programs" title="Programs" set={set} />
         <ToggleEl tab="infos" title="Infos" set={set} />
         <Toggle

@@ -83,11 +83,16 @@ export const PerfB = styled('span', {
   position: 'absolute',
   bottom: '5px',
   color: 'rgba(101, 197, 188, 1)',
-  textAlign: 'revert',
+  textAlign: 'right',
   letterSpacing: '1px',
   fontSize: '8px',
   fontWeight: '500',
-  right: 0,
+  width: '60px',
+});
+
+export const PerfIContainer = styled('div', {
+  display: 'flex',
+  justifyContent: 'space-between',
 });
 
 export const ProgramHeader = styled('div', {
@@ -97,6 +102,9 @@ export const ProgramHeader = styled('div', {
   fontSize: '12px',
   marginBottom: '6px',
   cursor: 'pointer',
+  '*': {
+    cursor: 'pointer !important',
+  },
   '> span': {},
   small: {
     fontSize: '9px',
@@ -113,7 +121,8 @@ export const Graph = styled('div', {
   position: 'relative',
   display: 'flex',
   justifyContent: 'center',
-  width: '310px',
+  width: 'auto',
+  minWidth: '310px',
   margin: '0 auto',
 });
 
@@ -250,6 +259,14 @@ export const ProgramsUL = styled('ul', {
   },
   b: {
     fontWeight: 'bold',
+  },
+  small: {
+    textAlign: 'revert',
+    letterSpacing: '1px',
+    fontSize: '10px',
+    fontWeight: '500',
+    marginLeft: '2px',
+    color: 'rgb(101, 197, 188)',
   },
 });
 

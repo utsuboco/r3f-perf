@@ -282,7 +282,6 @@ export default class GLPerf {
       }
 
       const ms = ns * 1e-6;
-      // console.log(ms, query, gl.QUERY_RESULT_AVAILABLE);
 
       if (available) {
         // update the display if it is valid

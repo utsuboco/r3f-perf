@@ -143,7 +143,7 @@ export const ChartUI: FC<PerfUIProps> = ({
   return (
     <Graph
       style={{
-        width: trackCPU ? 'auto' : '310px',
+        // width: trackCPU ? 'auto' : '310px',
         display: trackCPU ? 'table' : 'flex',
       }}
     >

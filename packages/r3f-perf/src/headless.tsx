@@ -16,6 +16,17 @@ import {
   WebGLProgram,
   WebGLRenderer,
 } from 'three';
+import countGeoDrawCalls from './helpers/countGeoDrawCalls';
+
+type drawCount = {
+  type: string;
+  drawCount: number;
+};
+export type drawCounts = {
+  total: number;
+  type: string;
+  data: drawCount[];
+};
 
 export type ProgramsPerf = {
   meshes?: {
@@ -24,10 +35,11 @@ export type ProgramsPerf = {
   material: Material;
   program?: WebGLProgram;
   visible: boolean;
+  drawCounts: drawCounts;
   expand: boolean;
 };
 
-type ProgramsPerfs = Map<string, ProgramsPerf>;
+export type ProgramsPerfs = Map<string, ProgramsPerf>;
 
 const isUUID = (uuid: string) => {
   let s: any = '' + uuid;
@@ -214,6 +226,11 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
               program,
               material,
               meshes,
+              drawCounts: {
+                total: 0,
+                type: 'triangle',
+                data: [],
+              },
               expand: false,
               visible: true,
             });
@@ -221,6 +238,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
         });
 
         if (programs.size !== usePerfStore.getState().programs.size) {
+          countGeoDrawCalls(programs);
           usePerfStore.setState({
             programs: programs,
             triggerProgramsUpdate: usePerfStore.getState()

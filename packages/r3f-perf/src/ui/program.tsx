@@ -25,6 +25,8 @@ import {
 import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
 import { PerfProps } from '..';
+import { BsTriangle } from '@react-icons/all-files/bs/BsTriangle';
+import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBreakpoints';
 
 const addTextureUniforms = (id: string, texture: any) => {
   const repeatType = (wrap: number) => {
@@ -204,12 +206,55 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
 type ProgramUIProps = {
   el: ProgramsPerf;
 };
+
+const DynamicDrawCallInfo = ({ el }: any) => {
+  usePerfStore((state) => state.log);
+  const gl = usePerfStore((state) => state.gl);
+
+  const getVal = (el: any) => {
+    if (!gl) return 0;
+
+    const res =
+      Math.round(
+        (el.drawCounts.total /
+          (gl.info.render.triangles +
+            gl.info.render.lines +
+            gl.info.render.points)) *
+          100 *
+          10
+      ) / 10;
+    return (isFinite(res) && res) || 0;
+  };
+  return (
+    <>
+      {el.drawCounts.total > 0 && (
+        <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
+          {el.drawCounts.type === 'Triangle' ? (
+            <BsTriangle style={{ top: '-1px' }} />
+          ) : (
+            <VscActivateBreakpoints style={{ top: '-1px' }} />
+          )}
+          {el.drawCounts.total}
+          <small>{el.drawCounts.type}</small>
+          {gl && (
+            <PerfB
+              style={{ bottom: '-10px', width: '40px', fontWeight: 'bold' }}
+            >
+              {el.visible && !el.material.wireframe ? getVal(el) : 0}%
+            </PerfB>
+          )}
+        </PerfI>
+      )}
+    </>
+  );
+};
 const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
   const [showProgram, setShowProgram] = useState(el.visible);
 
   const [toggleProgram, set] = useState(el.expand);
   const [texNumber, setTexNumber] = useState(0);
   const { meshes, program, material }: any = el;
+
   return (
     <ProgramGeo>
       <ProgramHeader
@@ -218,6 +263,7 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
 
           Object.keys(meshes).forEach((key) => {
             const mesh = meshes[key];
+
             mesh.material.wireframe = false;
           });
 
@@ -255,13 +301,13 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
                 <small>tex</small>
               </PerfI>
             )}
-
+            <DynamicDrawCallInfo el={el} />
             {material.glslVersion === '300 es' && (
               <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
                 <IoRocketSharp style={{ top: '-1px' }} />
                 300
                 <small>es</small>
-                <PerfB style={{ bottom: '-9px' }}>glsl</PerfB>
+                <PerfB style={{ bottom: '-10px', width: '40px' }}>glsl</PerfB>
               </PerfI>
             )}
           </span>
@@ -281,6 +327,7 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
           }}
           onClick={(e: any) => {
             e.stopPropagation();
+
             Object.keys(meshes).forEach((key) => {
               const mesh = meshes[key];
               const invert = !showProgram;
@@ -314,7 +361,15 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
               (key) =>
                 meshes[key] &&
                 meshes[key].geometry && (
-                  <li key={key}>{meshes[key].geometry.type}</li>
+                  <li key={key}>
+                    {meshes[key].geometry.type}
+                    {meshes[key].userData && meshes[key].userData.drawCount && (
+                      <b>
+                        : {meshes[key].userData.drawCount.count}
+                        <small> {meshes[key].userData.drawCount.type}</small>
+                      </b>
+                    )}
+                  </li>
                 )
             )}
         </ProgramsUL>
