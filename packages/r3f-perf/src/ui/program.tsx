@@ -235,7 +235,7 @@ const DynamicDrawCallInfo = ({ el }: any) => {
             <VscActivateBreakpoints style={{ top: '-1px' }} />
           )}
           {el.drawCounts.total}
-          <small>{el.drawCounts.type}</small>
+          <small>{el.drawCounts.type}s</small>
           {gl && (
             <PerfB
               style={{ bottom: '-10px', width: '40px', fontWeight: 'bold' }}
@@ -366,7 +366,7 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
                     {meshes[key].userData && meshes[key].userData.drawCount && (
                       <b>
                         : {meshes[key].userData.drawCount.count}
-                        <small> {meshes[key].userData.drawCount.type}</small>
+                        <small> {meshes[key].userData.drawCount.type}s</small>
                       </b>
                     )}
                   </li>
