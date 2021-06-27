@@ -58,9 +58,10 @@ const countGeoDrawCalls = (programs: ProgramsPerfs) => {
         countInstanceRatio = countInstanceRatio / 3;
       }
 
-      const drawCount =
+      const drawCount = Math.round(
         Math.max(0, drawEnd - drawStart + 1) *
-        (countInstanceRatio * instanceCount);
+          (countInstanceRatio * instanceCount)
+      );
 
       if (drawCount > mostDrawCalls) {
         mostDrawCalls = drawCount;

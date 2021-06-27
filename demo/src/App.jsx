@@ -89,12 +89,12 @@ export function App() {
 
           <Sphere position-x={2} position-y={2} material={mat} />
           <Cylinder position-x={2} position-y={0} material={mat} />
-          <Cylinder position-x={4} position-y={2}>
+          {/* <Cylinder position-x={4} position-y={2}>
             <meshPhysicalMaterial />
-          </Cylinder>
-          <Sphere position-y={-2}>
+          </Cylinder> */}
+          {/* <Sphere position-y={-2}>
             <meshBasicMaterial />
-          </Sphere>
+          </Sphere> */}
 
           <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
           <Orbit />
