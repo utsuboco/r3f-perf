@@ -22,7 +22,6 @@ export default class GLPerf {
   cpuChart: number[] = [];
   paramLogger: any = () => {};
   glFinish: any = () => {};
-  addProfiler: any = () => {};
   chartLogger: any = () => {};
   chartLen: number = 60;
   chartHz: number = 10;
@@ -63,56 +62,6 @@ export default class GLPerf {
       if (this.extension === null) {
         this.isWebGL2 = false;
       }
-      this.isGL();
-    }
-  }
-
-  isGL() {
-    const gl = this.gl;
-    if (gl) {
-      const resolved = (t: any, activeAccums: any) => {
-        setTimeout(() => {
-          gl.getError();
-          const dt = this.now() - t;
-          activeAccums.forEach((active: any, i: any) => {
-            if (active) {
-              this.gpuAccums[i] += dt;
-            }
-          });
-        });
-      };
-      const glFinish = async (t: any, activeAccums: any) =>
-        await Promise.resolve(resolved(t, activeAccums));
-
-      const addProfiler = (fn: any, self: any, target: any) =>
-        function () {
-          const t = self.now();
-          fn.apply(target, arguments);
-          self.finished.push(glFinish(t, self.activeAccums.slice(0)));
-        };
-
-      [
-        'drawArrays',
-        'drawElements',
-        'drawArraysInstanced',
-        'drawBuffers',
-        'drawElementsInstanced',
-        'drawRangeElements',
-      ].forEach((fn) => {
-        if (gl[fn]) {
-          gl[fn] = addProfiler(gl[fn], this, gl);
-        }
-      });
-      gl.getExtension = ((fn, self) =>
-        function () {
-          let ext = fn.apply(gl, arguments);
-          if (ext) {
-            ['drawElementsInstancedANGLE', 'drawBuffersWEBGL'].forEach((fn) => {
-              if (ext[fn]) ext[fn] = addProfiler(ext[fn], self, ext);
-            });
-          }
-          return ext;
-        })(gl.getExtension, this);
     }
   }
 
