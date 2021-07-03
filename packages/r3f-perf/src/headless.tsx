@@ -53,6 +53,32 @@ const isUUID = (uuid: string) => {
   return true;
 };
 
+const addMuiPerfID = (material: Material, currentObjectWithMaterials: any) => {
+  if (!material.defines) {
+    material.defines = {};
+  }
+
+  if (material.defines && !material.defines.muiPerf) {
+    material.defines = Object.assign(material.defines || {}, {
+      muiPerf: material.uuid,
+    });
+  }
+
+  const uuid = material.uuid;
+
+  if (!currentObjectWithMaterials[uuid]) {
+    currentObjectWithMaterials[uuid] = {
+      meshes: {},
+      material: material,
+    };
+    material.needsUpdate = true;
+  }
+  material.needsUpdate = false;
+  // console.log(material);
+  // debugger;
+  return uuid;
+};
+
 export type State = {
   log: any;
   paused: boolean;
@@ -183,30 +209,23 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
         scene.traverse(function (object) {
           if (object instanceof Mesh || object instanceof Points) {
             if (object.material) {
-              if (!object.material.defines) {
-                object.material.defines = {};
-              }
-
-              if (!object.material.defines.muiPerf) {
-                object.material.defines = Object.assign(
-                  object.material.defines || {},
-                  {
-                    muiPerf: object.material.uuid,
-                  }
+              let uuid = object.material.uuid;
+              // troika generate and attach 2 materials
+              const isTroika =
+                Array.isArray(object.material) && object.material.length > 1;
+              if (isTroika) {
+                uuid = addMuiPerfID(
+                  object.material[1],
+                  currentObjectWithMaterials
+                );
+              } else {
+                uuid = addMuiPerfID(
+                  object.material,
+                  currentObjectWithMaterials
                 );
               }
 
-              if (!currentObjectWithMaterials[object.material.uuid]) {
-                currentObjectWithMaterials[object.material.uuid] = {
-                  meshes: {},
-                  material: object.material,
-                };
-                object.material.needsUpdate = true;
-              }
-              currentObjectWithMaterials[object.material.uuid].meshes[
-                object.uuid
-              ] = object;
-              object.material.needsUpdate = false;
+              currentObjectWithMaterials[uuid].meshes[object.uuid] = object;
             }
           }
         });

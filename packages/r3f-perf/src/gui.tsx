@@ -109,7 +109,8 @@ const DynamicUI: FC<PerfProps> = ({
       {gl && (
         <PerfI>
           <BsTriangle />
-          <PerfB>Triangles</PerfB> <span>{gl.info.render.triangles}</span>
+          <PerfB>Triangles</PerfB>{' '}
+          <span>{gl.info.render.triangles.toString()}</span>
         </PerfI>
       )}
     </PerfIContainer>

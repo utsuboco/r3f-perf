@@ -8,13 +8,7 @@ import { useControls } from 'leva';
 import Boxes from './sandboxes/perf-minimal/src/boxes';
 import Fireflies from './fire';
 
-import {
-  Box,
-  Cylinder,
-  shaderMaterial,
-  Sphere,
-  useTexture,
-} from '@react-three/drei';
+import { Box, Cylinder, Text, Sphere, useTexture } from '@react-three/drei';
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -95,7 +89,23 @@ export function App() {
           {/* <Sphere position-y={-2}>
             <meshBasicMaterial />
           </Sphere> */}
-
+          <Text
+            color="black"
+            anchorX="center"
+            anchorY="middle"
+            fontSize={0.4}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={'left'}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            outlineWidth={0.07}
+            outlineColor="#ffffff"
+            rotation={[0, -0.6, 0]}
+            position={[-2, -2, 0]}
+          >
+            Some 3D Text
+          </Text>
           <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
           <Orbit />
           {/* <AdaptiveDpr pixelated />

@@ -85,6 +85,7 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
 
       data.seq.forEach((e: any) => {
         if (
+          !e.id.includes('uTroika') &&
           e.id !== 'isOrthographic' &&
           e.id !== 'uvTransform' &&
           e.id !== 'lightProbe' &&
@@ -100,7 +101,9 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
           };
           if (e.cache) {
             e.cache.forEach((v: any) => {
-              values.push(v.toString().substring(0, 4));
+              if (typeof v !== 'undefined') {
+                values.push(v.toString().substring(0, 4));
+              }
             });
             data.value = values.join();
             if (material[e.id] && material[e.id].image) {
@@ -108,6 +111,9 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
                 TexCount++;
                 data.value = addTextureUniforms(e.id, material[e.id]);
               }
+            }
+            if (!data.value) {
+              data.value = 'empty';
             }
             format.set(e.id, data);
           }
@@ -122,7 +128,9 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
             let data: any = {
               name: key,
             };
-
+            if (key.includes('uTroika')) {
+              return;
+            }
             if (value instanceof Texture) {
               TexCount++;
               data.value = addTextureUniforms(key, value);
