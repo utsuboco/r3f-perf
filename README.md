@@ -78,6 +78,7 @@ https://github.com/pmndrs/react-three-next
 
 ## Feature ideas todo :
 
+- Use BufferGeometryUtils.estimateBytesUsed
 - Convert all DOM text to shader to increase the refresh rate
 - Buffer frame and Forward rendering differenciation in the "calls" section of the UI
 - Postprocess shaders differenciation
