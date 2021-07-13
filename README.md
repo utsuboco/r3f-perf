@@ -1,4 +1,4 @@
-![npm](https://img.shields.io/npm/v/r3f-perf) [![dependencies Status](https://status.david-dm.org/gh/RenaudROHLINGER/r3f-perf.svg)](https://david-dm.org/RenaudROHLINGER/r3f-perf) [![devDependencies Status](https://status.david-dm.org/gh/RenaudROHLINGER/r3f-perf.svg?type=dev)](https://david-dm.org/RenaudROHLINGER/r3f-perf?type=dev) ![npm](https://img.shields.io/npm/dw/r3f-perf)
+![npm](https://img.shields.io/npm/v/r3f-perf) ![npm](https://img.shields.io/npm/dw/r3f-perf)
 
 # R3F-Perf
 
@@ -78,7 +78,6 @@ https://github.com/pmndrs/react-three-next
 
 ## Feature ideas todo :
 
-- Use BufferGeometryUtils.estimateBytesUsed
 - Convert all DOM text to shader to increase the refresh rate
 - Buffer frame and Forward rendering differenciation in the "calls" section of the UI
 - Postprocess shaders differenciation

@@ -1438,6 +1438,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.14.6":
+  version: 7.14.6
+  resolution: "@babel/runtime@npm:7.14.6"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: dd931f6ef1c8dab295c4a00c592db6352bf12a5c443f8222304d5c1d3e88d795fa949afcb6f053eec2e69e9827a17ff274524c1cd43813f56b61e3a540274d2f
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.12.13, @babel/template@npm:^7.12.7":
   version: 7.12.13
   resolution: "@babel/template@npm:7.12.13"
@@ -1707,10 +1716,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chevrotain/types@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "@chevrotain/types@npm:9.0.2"
+  checksum: 4b593cfdc038c5002e458065ff9cad1ea5b25d38fcd0396b267038c3d10bc8602dbc35100514fe4ab6a09e2ff39686f42cfdc1a11a8d77f526eb960532f1a0dc
+  languageName: node
+  linkType: hard
+
 "@chevrotain/utils@npm:^9.0.0":
   version: 9.0.0
   resolution: "@chevrotain/utils@npm:9.0.0"
   checksum: 8ae3742679b776dd76972b0e60c3d999ebf1df67f4cf73d36833ec3321c249c8b363135dbaf58a21755a1e54f25f661b0d4e51a303b51fd5ecab90e7b21bc215
+  languageName: node
+  linkType: hard
+
+"@chevrotain/utils@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "@chevrotain/utils@npm:9.0.2"
+  checksum: 012e968d8db2d1953a59df6793c395b341ec67e2e28f96c899c325ec7491ad4dd6ed3e86b0b8fbad23b3a3f61c73046bdfee1d3ce9bda315e2d0959180a02ec2
   languageName: node
   linkType: hard
 
@@ -6055,6 +6078,17 @@ __metadata:
     "@chevrotain/utils": ^9.0.0
     regexp-to-ast: 0.5.0
   checksum: b3010035b5e70d9c34c72b6fef3c462b6a16b99292002705aefb02e4f34555b3c053677f9de244d022ee5f924dc692091de70daa74acce83d5891a1b66247a6b
+  languageName: node
+  linkType: hard
+
+"chevrotain@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "chevrotain@npm:9.0.2"
+  dependencies:
+    "@chevrotain/types": ^9.0.2
+    "@chevrotain/utils": ^9.0.2
+    regexp-to-ast: 0.5.0
+  checksum: e53279b40312cc6639b51e021e9953107759f2bba34a6b627370d9f6c9f373cf699f9b90f39e64610e69f59fceb947cc76cd0318a3f6722333d75100f16e1331
   languageName: node
   linkType: hard
 
@@ -14094,6 +14128,7 @@ fsevents@^1.2.7:
     lerp: ^1.0.3
     rafz: ^0.1.14
     three: "*"
+    three-stdlib: ^2.3.1
     zustand: ^3.5.2
   peerDependencies:
     "@react-three/fiber": "*"
@@ -16436,6 +16471,26 @@ resolve@^2.0.0-next.3:
   peerDependencies:
     three: ">=0.128.0"
   checksum: 5da0170c2eeea2ff7a347be538b017a47cbe9fc1c6a50027d3fd6f34a1b56d7972a3a973ee669d2ddde76a7d753169d630a5de5b3526e78aa73756ec979d7dcf
+  languageName: node
+  linkType: hard
+
+"three-stdlib@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "three-stdlib@npm:2.3.1"
+  dependencies:
+    "@babel/runtime": ^7.14.6
+    "@webgpu/glslang": ^0.0.15
+    "@webxr-input-profiles/motion-controllers": ^1.0.0
+    chevrotain: ^9.0.2
+    fflate: ^0.6.9
+    ktx-parse: ^0.2.1
+    mmd-parser: ^1.0.4
+    opentype.js: ^1.3.3
+    potpack: ^1.0.1
+    zstddec: ^0.0.2
+  peerDependencies:
+    three: ">=0.128.0"
+  checksum: d4a51044878546b225e37f156866077b80984a5b8d46b647787005c987b8f9aed42713d157bae41052544ec46455b8edb31d2400c6c2949a718d2e6498154d98
   languageName: node
   linkType: hard
 

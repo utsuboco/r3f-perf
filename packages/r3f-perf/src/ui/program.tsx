@@ -21,12 +21,14 @@ import {
   Toggle,
   PerfI,
   PerfB,
+  ProgramsGeoLi,
 } from '../styles';
 import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
 import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
 import { PerfProps } from '..';
 import { BsTriangle } from '@react-icons/all-files/bs/BsTriangle';
 import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBreakpoints';
+import { estimateBytesUsed } from 'three-stdlib';
 
 const addTextureUniforms = (id: string, texture: any) => {
   const repeatType = (wrap: number) => {
@@ -369,15 +371,26 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
               (key) =>
                 meshes[key] &&
                 meshes[key].geometry && (
-                  <li key={key}>
-                    {meshes[key].geometry.type}
+                  <ProgramsGeoLi key={key}>
+                    <span>{meshes[key].geometry.type}: </span>
                     {meshes[key].userData && meshes[key].userData.drawCount && (
                       <b>
-                        : {meshes[key].userData.drawCount.count}
-                        <small> {meshes[key].userData.drawCount.type}s</small>
+                        <div>
+                          {meshes[key].userData.drawCount.count}
+                          <small> {meshes[key].userData.drawCount.type}s</small>
+                        </div>
+                        <br />
+                        <div>
+                          {Math.round(
+                            (estimateBytesUsed(meshes[key].geometry) / 1024) *
+                              1000
+                          ) / 1000}
+                          Kb
+                          <small> memory used</small>
+                        </div>
                       </b>
                     )}
-                  </li>
+                  </ProgramsGeoLi>
                 )
             )}
         </ProgramsUL>

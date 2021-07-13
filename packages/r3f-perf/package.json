@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "4.7.3",
+  "version": "4.8.0",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -39,6 +39,7 @@
     "lerp": "^1.0.3",
     "rafz": "^0.1.14",
     "three": "*",
+    "three-stdlib": "^2.3.1",
     "zustand": "^3.5.2"
   },
   "devDependencies": {

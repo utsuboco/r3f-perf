@@ -304,3 +304,16 @@ export const ToggleContainer = styled('div', {
     float: 'left',
   },
 });
+
+export const ProgramsGeoLi = styled('li', {
+  display: 'flex !important',
+  height: 'auto !important',
+  span: {
+    height: '40px',
+    display: 'block',
+    position: 'relative',
+  },
+  b: {
+    paddingLeft: '12px',
+  },
+});
