@@ -43,7 +43,6 @@ export const PerfS = styled('div', {
     border: '0',
     fontSize: '100%',
     lineHeight: '1',
-    font: 'inherit',
     verticalAlign: 'baseline',
   },
 });
