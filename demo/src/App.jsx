@@ -4,7 +4,6 @@ import './index.css';
 import { Canvas, extend } from '@react-three/fiber';
 import { Orbit } from './sandboxes/perf-minimal/src/orbit';
 import * as THREE from 'three';
-import { useControls } from 'leva';
 import Boxes from './sandboxes/perf-minimal/src/boxes';
 import Fireflies from './fire';
 
@@ -58,73 +57,67 @@ const Bob = () => {
 };
 
 export function App() {
-  const { showCanvas } = useControls('Test', {
-    showCanvas: true,
-  });
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
   return (
     <>
       {/* frameloop={'demand'}  */}
-      {showCanvas && (
-        <Canvas
-          concurrent
-          shadows
-          dpr={[1, 2]}
-          performance={{ min: 0.2 }}
-          orthographic
-          pixelRatio={[1, 2]}
-          camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
-        >
-          <ambientLight />
-          <Suspense fallback={null}>
-            <Bob />
-            <Fireflies count={30} />
-          </Suspense>
+      <Canvas
+        concurrent
+        shadows
+        dpr={[1, 2]}
+        performance={{ min: 0.2 }}
+        orthographic
+        pixelRatio={[1, 2]}
+        camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
+      >
+        <ambientLight />
+        <Suspense fallback={null}>
+          <Bob />
+          <Fireflies count={30} />
+        </Suspense>
 
-          <Sphere position-x={2} position-y={2} material={mat} />
-          <Cylinder position-x={2} position-y={0} material={mat} />
-          {/* <Cylinder position-x={4} position-y={2}>
+        <Sphere position-x={2} position-y={2} material={mat} />
+        <Cylinder position-x={2} position-y={0} material={mat} />
+        {/* <Cylinder position-x={4} position-y={2}>
             <meshPhysicalMaterial />
           </Cylinder> */}
-          {/* <Sphere position-y={-2}>
+        {/* <Sphere position-y={-2}>
             <meshBasicMaterial />
           </Sphere> */}
-          <Text
-            color="black"
-            anchorX="center"
-            anchorY="middle"
-            fontSize={0.4}
-            maxWidth={200}
-            lineHeight={1}
-            letterSpacing={0.02}
-            textAlign={'left'}
-            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-            outlineWidth={0.07}
-            outlineColor="#ffffff"
-            rotation={[0, -0.6, 0]}
-            position={[-2, -2, 0]}
-          >
-            Some 3D Text
-          </Text>
-          <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
-          <Orbit />
-          {/* <AdaptiveDpr pixelated />
+        <Text
+          color="black"
+          anchorX="center"
+          anchorY="middle"
+          fontSize={0.4}
+          maxWidth={200}
+          lineHeight={1}
+          letterSpacing={0.02}
+          textAlign={'left'}
+          font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+          outlineWidth={0.07}
+          outlineColor="#ffffff"
+          rotation={[0, -0.6, 0]}
+          position={[-2, -2, 0]}
+        >
+          Some 3D Text
+        </Text>
+        <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
+        <Orbit />
+        {/* <AdaptiveDpr pixelated />
           <AdaptiveEvents /> */}
-          <Perf
-            className={'override'}
-            trackGPU={true}
-            // trackCPU={true}
-            openByDefault={true}
-            chart={{
-              hz: 35,
-              length: 120,
-            }}
-            // colorBlind={true}
-            position={'bottom-right'}
-          />
-        </Canvas>
-      )}
-      {!showCanvas && <div>Canvas OFF</div>}
+        <Perf
+          className={'override'}
+          trackGPU={true}
+          // trackCPU={true}
+          openByDefault={true}
+          chart={{
+            hz: 35,
+            length: 120,
+          }}
+          // colorBlind={true}
+          position={'bottom-right'}
+        />
+      </Canvas>
     </>
   );
 }
