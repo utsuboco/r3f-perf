@@ -3,6 +3,11 @@ import { GiPauseButton } from 'react-icons/gi';
 import { raf } from 'rafz';
 import { usePerfStore } from '../headless';
 import { Graph, Graphpc } from '../styles';
+import {
+  createCartesianCoordinateSystem,
+  createLinearScale,
+  createLineStrip,
+} from 'candygraph';
 
 export interface graphData {
   pointsX: number[];
@@ -25,9 +30,9 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
     width: cg.canvas.width,
     height: cg.canvas.height,
   };
-  const coords = cg.coordinate.cartesian(
-    cg.scale.linear([0, 1], [0, viewport.width - 4]),
-    cg.scale.linear([0, 1], [10, viewport.height - 4])
+  const coords = createCartesianCoordinateSystem(
+    createLinearScale([0, 1], [0, viewport.width - 4]),
+    createLinearScale([0, 1], [10, viewport.height - 4])
   );
 
   const toPoints = (element: string, factor: number = 1) => {
@@ -76,7 +81,7 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
     }
 
     const arrData = [
-      cg.lineStrip(fps.pointsX, fps.pointsY, {
+      createLineStrip(cg, fps.pointsX, fps.pointsY, {
         colors: colorBlind
           ? [100 / 255, 143 / 255, 255 / 255, 1]
           : [238 / 255, 38 / 255, 110 / 255, 1],
@@ -86,7 +91,7 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
 
     if (trackCPU) {
       const cpu = graphs[1];
-      cg.lineStrip(cpu.pointsX, cpu.pointsY, {
+      createLineStrip(cg, cpu.pointsX, cpu.pointsY, {
         colors: colorBlind
           ? [254 / 255, 254 / 255, 98 / 255, 1]
           : [66 / 255, 226 / 255, 46 / 255, 1],
@@ -97,7 +102,7 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
     if (trackGPU) {
       const gpu = graphs[2];
       arrData.push(
-        cg.lineStrip(gpu.pointsX, gpu.pointsY, {
+        createLineStrip(cg, gpu.pointsX, gpu.pointsY, {
           colors: colorBlind
             ? [254 / 255, 254 / 255, 255 / 255, 1]
             : [253 / 255, 151 / 255, 31 / 255, 1],
