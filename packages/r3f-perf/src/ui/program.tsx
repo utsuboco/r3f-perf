@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
-import { IoIosImages } from '@react-icons/all-files/io/IoIosImages';
-import { IoIosImage } from '@react-icons/all-files/io/IoIosImage';
-import { BsEyeSlashFill } from '@react-icons/all-files/bs/BsEyeSlashFill';
-import { BsEyeFill } from '@react-icons/all-files/bs/BsEyeFill';
-import { IoRocketSharp } from '@react-icons/all-files/io5/IoRocketSharp';
-import { IoLayers } from '@react-icons/all-files/io5/IoLayers';
-import { IoShapes } from '@react-icons/all-files/io5/IoShapes';
-import { GoSettings } from '@react-icons/all-files/go/GoSettings';
+import { IoIosImages } from 'react-icons/io';
+import { IoIosImage } from 'react-icons/io';
+import { BsEyeSlashFill } from 'react-icons/bs';
+import { BsEyeFill } from 'react-icons/bs';
+import { IoRocketSharp } from 'react-icons/io5';
+import { IoLayers } from 'react-icons/io5';
+import { IoShapes } from 'react-icons/io5';
+import { GoSettings } from 'react-icons/go';
 import { ProgramsPerf, usePerfStore } from '../headless';
 import { Texture } from 'three';
 
@@ -23,11 +23,11 @@ import {
   PerfB,
   ProgramsGeoLi,
 } from '../styles';
-import { RiArrowDownSFill } from '@react-icons/all-files/ri/RiArrowDownSFill';
-import { RiArrowRightSFill } from '@react-icons/all-files/ri/RiArrowRightSFill';
+import { RiArrowDownSFill } from 'react-icons/ri';
+import { RiArrowRightSFill } from 'react-icons/ri';
 import { PerfProps } from '..';
-import { BsTriangle } from '@react-icons/all-files/bs/BsTriangle';
-import { VscActivateBreakpoints } from '@react-icons/all-files/vsc/VscActivateBreakpoints';
+import { BsTriangle } from 'react-icons/bs';
+import { VscActivateBreakpoints } from 'react-icons/vsc';
 import { estimateBytesUsed } from 'three-stdlib';
 
 const addTextureUniforms = (id: string, texture: any) => {

@@ -1,5 +1,5 @@
 import React, { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
-import { GiPauseButton } from '@react-icons/all-files/gi/GiPauseButton';
+import { GiPauseButton } from 'react-icons/gi';
 import { raf } from 'rafz';
 import { usePerfStore } from '../headless';
 import { Graph, Graphpc } from '../styles';
