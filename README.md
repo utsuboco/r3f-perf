@@ -25,15 +25,13 @@ yarn add --dev r3f-perf
 
 ```jsx
 headless?: false, // Without UI. See Headless section
+deepAnalyze?: false, // More detailed informations about gl programs
 showGraph?: true // show the graphs
 chart?: {
   hz: 60, // graphs refresh frequency parameter
   length: 120, // number of values shown on the monitor
 }
 colorBlind?: false // Color blind colors for accessibility
-trackGPU?: true // show a graph of the GPU
-trackCPU?: false // show a graph of the CPU (Experimental as it should require a server, so might not be relevant)
-openByDefault?: false // show more informations by default
 className?: false // override CSS class
 position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // override position, default is top-right
 ```

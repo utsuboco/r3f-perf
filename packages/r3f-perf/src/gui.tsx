@@ -1,19 +1,6 @@
 import React, { FC, useRef } from 'react';
-import { FaMemory } from 'react-icons/fa';
-import { RiCpuLine } from 'react-icons/ri';
-import { RiCpuFill } from 'react-icons/ri';
-import { RiRhythmLine } from 'react-icons/ri';
-import { VscPulse } from 'react-icons/vsc';
-import { AiOutlineCodeSandbox } from 'react-icons/ai';
-import { FaRegImages } from 'react-icons/fa';
-import { FiLayers } from 'react-icons/fi';
-import { BsTriangle } from 'react-icons/bs';
-import { VscActivateBreakpoints } from 'react-icons/vsc';
-import { FaServer } from 'react-icons/fa';
-import { RiArrowDownSFill } from 'react-icons/ri';
-import { RiArrowRightSFill } from 'react-icons/ri';
-import { ProgramsUI } from './ui/program';
 import { ChartUI } from './ui/graph';
+import { ActivityLogIcon, BarChartIcon, Crosshair1Icon, DotIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, PaddingIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
 import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
@@ -27,7 +14,9 @@ import {
   PerfB,
   ToggleContainer,
   ContainerScroll,
+  PerfSmallI,
 } from './styles';
+import { ProgramsUI } from './ui/program';
 
 interface colors {
   [index: string]: string;
@@ -36,7 +25,7 @@ interface colors {
 export const colorsGraph = (colorBlind: boolean | undefined) => {
   const colors: colors = {
     fps: colorBlind ? '100, 143, 255' : '238,38,110',
-    cpu: colorBlind ? '254, 254, 98' : '66,226,46',
+    mem: colorBlind ? '254, 254, 98' : '66,226,46',
     gpu: colorBlind ? '254,254,254' : '253,151,31',
   };
   return colors;
@@ -44,34 +33,17 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
 
 const DynamicUI: FC<PerfProps> = ({
   showGraph,
-  trackCPU,
-  trackGPU,
   colorBlind,
 }) => {
-  const log = usePerfStore((state) => state.log);
   const gl = usePerfStore((state) => state.gl);
 
-  return log ? (
+  return gl ? (
     <PerfIContainer>
-      {trackCPU && (
-        <PerfI>
-          <RiCpuLine />
-          <PerfB
-            style={
-              showGraph ? { color: `rgb(${colorsGraph(colorBlind).cpu})` } : {}
-            }
-          >
-            CPU
-          </PerfB>{' '}
-          <span>{(Math.round(log.cpu * 100) || 0).toFixed(2)}%</span>
-        </PerfI>
-      )}
-
       <PerfI>
-        <RiCpuFill />
+        <LightningBoltIcon />
         <PerfB
           style={
-            showGraph && trackGPU
+            showGraph
               ? {
                   color: `rgb(${colorsGraph(colorBlind).gpu.toString()})`,
                 }
@@ -79,38 +51,40 @@ const DynamicUI: FC<PerfProps> = ({
           }
         >
           GPU
-        </PerfB>{' '}
-        <span>{(Math.round(log.gpu * 1000) / 1000 || 0).toFixed(2)}</span>
-        <small>ms</small>
+        </PerfB>
+        <PerfSmallI>ms</PerfSmallI>
       </PerfI>
       <PerfI>
-        <FaMemory />
-        <PerfB>Memory</PerfB> {log.mem}
-        <small>mb</small>
+        <RulerHorizontalIcon />
+        <PerfB  style={
+            showGraph
+              ? {
+                  color: `rgb(${colorsGraph(colorBlind).mem.toString()})`,
+                }
+              : {}
+          }>Memory</PerfB>
+        <PerfSmallI>mb</PerfSmallI>
       </PerfI>
       <PerfI>
-        <VscPulse />
+        <LapTimerIcon />
         <PerfB
           style={
             showGraph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}
           }
         >
           FPS
-        </PerfB>{' '}
-        <span>{log.fps}</span>
+        </PerfB>
       </PerfI>
       {gl && (
         <PerfI>
-          <FiLayers />
-          <PerfB>{gl.info.render.calls === 1 ? 'call' : 'calls'}</PerfB>{' '}
-          <span>{gl.info.render.calls}</span>
+          <TextAlignJustifyIcon />
+          <PerfB>{gl.info.render.calls === 1 ? 'call' : 'calls'}</PerfB>
         </PerfI>
       )}
       {gl && (
         <PerfI>
-          <BsTriangle />
-          <PerfB>Triangles</PerfB>{' '}
-          <span>{gl.info.render.triangles.toString()}</span>
+          <VercelLogoIcon />
+          <PerfB>Triangles</PerfB>
         </PerfI>
       )}
     </PerfIContainer>
@@ -119,61 +93,47 @@ const DynamicUI: FC<PerfProps> = ({
 
 const PerfUI: FC<PerfProps> = ({
   showGraph,
-  trackCPU,
-  trackGPU,
   colorBlind,
+  deepAnalyze,
   openByDefault,
 }) => {
   return (
     <>
       <DynamicUI
         showGraph={showGraph}
-        trackGPU={trackGPU}
-        trackCPU={trackCPU}
         colorBlind={colorBlind}
       />
-      <PerfThree openByDefault={openByDefault} />
+      <PerfThree openByDefault={openByDefault} deepAnalyze={deepAnalyze} showGraph={showGraph} />
     </>
   );
 };
 
 const InfoUI: FC<PerfProps> = () => {
-  usePerfStore((state) => state.log);
-  const gl = usePerfStore((state) => state.gl);
-  if (!gl) return null;
-  const { info } = gl;
   return (
     <div>
       <PerfI>
-        <AiOutlineCodeSandbox />
+        <MarginIcon />
         <PerfB>
-          {info.memory.geometries === 1 ? 'Geometry' : 'Geometries'}
-        </PerfB>{' '}
-        <span>{info.memory.geometries}</span>
+          Geometries
+        </PerfB>
       </PerfI>
       <PerfI>
-        <FaRegImages />
+        <ImageIcon />
         <PerfB>
-          {info.memory.textures === 1 ? 'Texture' : 'Textures'}
-        </PerfB>{' '}
-        <span>{info.memory.textures}</span>
+          Textures
+        </PerfB>
       </PerfI>
       <PerfI>
-        <FaServer />
-        {info.programs && (
-          <>
-            <PerfB>{info.programs.length === 1 ? 'shader' : 'shaders'}</PerfB>{' '}
-            <span>{info.programs.length}</span>
-          </>
-        )}
+        <ActivityLogIcon />
+        <PerfB>shaders</PerfB>
       </PerfI>
       <PerfI>
-        <RiRhythmLine />
-        <PerfB>Lines</PerfB> <span>{info.render.lines}</span>
+        <MinusIcon />
+        <PerfB>Lines</PerfB>
       </PerfI>
       <PerfI>
-        <VscActivateBreakpoints />
-        <PerfB>Points</PerfB> <span>{info.render.points}</span>
+        <DotIcon />
+        <PerfB>Points</PerfB>
       </PerfI>
     </div>
   );
@@ -193,50 +153,52 @@ const ToggleEl = ({ tab, title, set }: any) => {
     </Toggle>
   );
 };
-const PerfThree: FC<PerfProps> = ({ openByDefault }) => {
+const PerfThree: FC<PerfProps> = ({ openByDefault, showGraph, deepAnalyze }) => {
   const [show, set] = React.useState(openByDefault);
 
   // const initialDpr = useThree((state) => state.viewport.initialDpr)
 
   return (
     <span>
-      <TabContainers show={show} />
-      <ToggleContainer className={'__perf_toggle'}>
-        {/* <ToggleEl tab="inspector" title="Inspector" set={set} /> */}
-        <ToggleEl tab="programs" title="Programs" set={set} />
-        <ToggleEl tab="infos" title="Infos" set={set} />
-        <Toggle
-          onClick={() => {
-            set(!show);
-          }}
-        >
-          {show ? (
-            <span>
-              <RiArrowDownSFill /> Minimize
-            </span>
-          ) : (
-            <span>
-              <RiArrowRightSFill /> More
-            </span>
-          )}
-        </Toggle>
-      </ToggleContainer>
+      <TabContainers show={show} showGraph={showGraph} />
+      {openByDefault && !deepAnalyze ? null :
+        <ToggleContainer className={'__perf_toggle'}>
+          {/* <ToggleEl tab="inspector" title="Inspector" set={set} /> */}
+          {deepAnalyze && <ToggleEl tab="programs" title="Programs" set={set} />}
+          {deepAnalyze && <ToggleEl tab="infos" title="Infos" set={set} />}
+          <Toggle
+            onClick={() => {
+              set(!show);
+            }}
+          >
+            {show ? (
+              <span>
+                <TriangleDownIcon /> Minimize
+              </span>
+            ) : (
+              <span>
+                <TriangleUpIcon /> More
+              </span>
+            )}
+          </Toggle>
+        </ToggleContainer>
+      }
     </span>
   );
 };
 
-const TabContainers = ({ show }: any) => {
+const TabContainers = ({ show, showGraph }: any) => {
   const tab = usePerfStore((state) => state.tab);
 
   return (
     <>
+      <InfoUI />
       {show && (
-        <ContainerScroll>
-          <div>
+        <div>
+          <ContainerScroll style={{marginTop: showGraph? '38px' : 0}}>
             {tab === 'programs' && <ProgramsUI />}
-            {tab === 'infos' && <InfoUI />}
+          </ContainerScroll>
           </div>
-        </ContainerScroll>
       )}
     </>
   );
@@ -247,18 +209,17 @@ const TabContainers = ({ show }: any) => {
 const Gui: FC<PerfProps> = ({
   showGraph,
   colorBlind,
-  trackGPU,
-  trackCPU,
   openByDefault,
   className,
   position,
   chart,
+  deepAnalyze,
 }) => {
   const perfContainerRef = useRef(null);
 
   return (
     <>
-      <Headless trackGPU={trackGPU} trackCPU={trackCPU} chart={chart} />
+      <Headless chart={chart} deepAnalyze={deepAnalyze} />
       {/* @ts-ignore */}
       <Html transform={false}>
         <PerfS
@@ -266,23 +227,21 @@ const Gui: FC<PerfProps> = ({
             (className ? ' '.concat(className) : ' ') +
             ` ${position ? position : ''}`
           }
+          style={{minHeight: showGraph ? '100px' : '60px'}}
           ref={perfContainerRef}
         >
-          <PerfUI
-            colorBlind={colorBlind}
-            showGraph={showGraph}
-            trackGPU={trackGPU}
-            trackCPU={trackCPU}
-            openByDefault={openByDefault}
-          />
-          {showGraph && (
             <ChartUI
               perfContainerRef={perfContainerRef}
               colorBlind={colorBlind}
-              trackCPU={trackCPU}
-              trackGPU={trackGPU}
+              chart={chart}
+              showGraph={showGraph}
             />
-          )}
+          <PerfUI
+            colorBlind={colorBlind}
+            showGraph={showGraph}
+            deepAnalyze={deepAnalyze}
+            openByDefault={openByDefault}
+          />
         </PerfS>
       </Html>
     </>

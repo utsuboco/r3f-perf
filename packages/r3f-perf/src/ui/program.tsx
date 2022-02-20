@@ -1,12 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import { IoIosImages } from 'react-icons/io';
-import { IoIosImage } from 'react-icons/io';
-import { BsEyeSlashFill } from 'react-icons/bs';
-import { BsEyeFill } from 'react-icons/bs';
-import { IoRocketSharp } from 'react-icons/io5';
-import { IoLayers } from 'react-icons/io5';
-import { IoShapes } from 'react-icons/io5';
-import { GoSettings } from 'react-icons/go';
 import { ProgramsPerf, usePerfStore } from '../headless';
 import { Texture } from 'three';
 
@@ -22,13 +14,11 @@ import {
   PerfI,
   PerfB,
   ProgramsGeoLi,
+  ProgramsContainer,
 } from '../styles';
-import { RiArrowDownSFill } from 'react-icons/ri';
-import { RiArrowRightSFill } from 'react-icons/ri';
 import { PerfProps } from '..';
-import { BsTriangle } from 'react-icons/bs';
-import { VscActivateBreakpoints } from 'react-icons/vsc';
 import { estimateBytesUsed } from 'three-stdlib';
+import { ActivityLogIcon, ButtonIcon, CubeIcon, EyeNoneIcon, EyeOpenIcon, ImageIcon, LayersIcon, RocketIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons';
 
 const addTextureUniforms = (id: string, texture: any) => {
   const repeatType = (wrap: number) => {
@@ -240,9 +230,9 @@ const DynamicDrawCallInfo = ({ el }: any) => {
       {el.drawCounts.total > 0 && (
         <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
           {el.drawCounts.type === 'Triangle' ? (
-            <BsTriangle style={{ top: '-1px' }} />
+            <VercelLogoIcon style={{ top: '-1px' }} />
           ) : (
-            <VscActivateBreakpoints style={{ top: '-1px' }} />
+            <ActivityLogIcon style={{ top: '-1px' }} />
           )}
           {el.drawCounts.total}
           <small>{el.drawCounts.type}s</small>
@@ -283,11 +273,11 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
         <Toggle style={{ marginRight: '6px' }}>
           {toggleProgram ? (
             <span>
-              <RiArrowDownSFill />
+              <TriangleDownIcon />
             </span>
           ) : (
             <span>
-              <RiArrowRightSFill />
+              <TriangleUpIcon />
             </span>
           )}
         </Toggle>
@@ -296,16 +286,16 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
             <ProgramTitle>{program.name}</ProgramTitle>
 
             <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
-              <IoLayers style={{ top: '-1px' }} />
+              <LayersIcon style={{ top: '-1px' }} />
               {Object.keys(meshes).length}
               <small>{Object.keys(meshes).length > 1 ? 'users' : 'user'}</small>
             </PerfI>
             {texNumber > 0 && (
               <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
                 {texNumber > 1 ? (
-                  <IoIosImages style={{ top: '-1px' }} />
+                  <ImageIcon style={{ top: '-1px' }} />
                 ) : (
-                  <IoIosImage style={{ top: '-1px' }} />
+                  <ImageIcon style={{ top: '-1px' }} />
                 )}
                 {texNumber}
                 <small>tex</small>
@@ -314,7 +304,7 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
             <DynamicDrawCallInfo el={el} />
             {material.glslVersion === '300 es' && (
               <PerfI style={{ height: 'auto', width: 'auto', margin: '0 4px' }}>
-                <IoRocketSharp style={{ top: '-1px' }} />
+                <RocketIcon style={{ top: '-1px' }} />
                 300
                 <small>es</small>
                 <PerfB style={{ bottom: '-10px', width: '40px' }}>glsl</PerfB>
@@ -347,14 +337,14 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
             });
           }}
         >
-          {showProgram ? <BsEyeFill /> : <BsEyeSlashFill />}
+          {showProgram ? <EyeOpenIcon /> : <EyeNoneIcon />}
         </ToggleVisible>
       </ProgramHeader>
       <div
         style={{ maxHeight: toggleProgram ? '9999px' : 0, overflow: 'hidden' }}
       >
         <ProgramsULHeader>
-          <GoSettings /> Uniforms:
+          <ButtonIcon /> Uniforms:
         </ProgramsULHeader>
         <UniformsGL
           program={program}
@@ -362,7 +352,7 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
           setTexNumber={setTexNumber}
         />
         <ProgramsULHeader>
-          <IoShapes /> Geometries:
+          <CubeIcon /> Geometries:
         </ProgramsULHeader>
 
         <ProgramsUL>
@@ -410,7 +400,7 @@ export const ProgramsUI: FC<PerfProps> = () => {
   usePerfStore((state) => state.triggerProgramsUpdate);
   const programs = usePerfStore((state) => state.programs);
   return (
-    <>
+    <ProgramsContainer>
       {programs &&
         Array.from(programs.values()).map((el: ProgramsPerf) => {
           if (!el) {
@@ -418,6 +408,6 @@ export const ProgramsUI: FC<PerfProps> = () => {
           }
           return el ? <ProgramUI key={el.material.uuid} el={el} /> : null;
         })}
-    </>
+    </ProgramsContainer>
   );
 };

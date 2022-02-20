@@ -11,7 +11,8 @@ export const PerfS = styled('div', {
   backgroundColor: 'rgba(36, 36, 36, 1)',
   color: '#fff',
   margin: 0,
-  padding: '4px 6px',
+  minHeight: '100px',
+  padding: '4px 0',
   '-webkit-font-smoothing': 'antialiased',
   '-moz-osx-font-smoothing': 'grayscale',
   userSelect: 'none',
@@ -47,6 +48,12 @@ export const PerfS = styled('div', {
   },
 });
 
+export const PerfSmallI = styled('small', {
+  position: 'absolute',
+  right: 0,
+  fontSize: '10px'
+})
+
 export const PerfI = styled('div', {
   display: 'inline-flex',
   fontStyle: 'normal',
@@ -64,10 +71,13 @@ export const PerfI = styled('div', {
   whiteSpace: 'nowrap',
   justifyContent: 'space-evenly',
   fontVariantNumeric: 'tabular-nums',
+  small: {
+    paddingLeft: '12px',
+  },
   svg: {
     padding: 0,
-    color: 'rgba(145, 145, 145, 0.12)',
-    fontSize: '22px',
+    color: 'rgba(145, 145, 145, 0.3)',
+    fontSize: '40px',
     position: 'absolute',
     zIndex: 1,
     maxHeight: '20px',
@@ -91,7 +101,7 @@ export const PerfB = styled('span', {
 
 export const PerfIContainer = styled('div', {
   display: 'flex',
-  justifyContent: 'space-between',
+  // justifyContent: 'space-between',
 });
 
 export const ProgramHeader = styled('div', {
@@ -115,14 +125,19 @@ export const ProgramHeader = styled('div', {
 });
 
 export const Graph = styled('div', {
-  height: '61px',
+  height: '66px',
   overflow: 'hidden',
-  position: 'relative',
+  position: 'absolute',
+  pointerEvents: 'none',
   display: 'flex',
+  top: '0px',
   justifyContent: 'center',
-  width: 'auto',
+  width: '100%',
   minWidth: '310px',
   margin: '0 auto',
+  canvas: {
+    background: 'transparent !important',
+  }
 });
 
 export const Graphpc = styled('div', {
@@ -212,14 +227,20 @@ export const ProgramTitle = styled('span', {
 export const ContainerScroll = styled('div', {
   maxHeight: '50vh',
   overflowY: 'auto',
+  marginTop: '38px'
+});
+export const ProgramsContainer = styled('div', {
+  marginTop: '0'
 });
 
 export const ProgramsULHeader = styled('div', {
-  display: 'block',
+  display: 'flex',
   position: 'relative',
   fontWeight: 'bold',
   color: '#fff',
+  lineHeight: '14px',
   svg: {
+    marginRight: '4px',
     display: 'inline-block',
   },
 });

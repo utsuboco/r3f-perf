@@ -14,20 +14,19 @@ export default class GLPerf {
   extension: any;
   paused: boolean = false;
   isWebGL2: boolean = true;
-  cpuAccums: number[] = [];
+  memAccums: number[] = [];
   gpuAccums: number[] = [];
   activeAccums: boolean[] = [];
   chart: number[] = [];
   gpuChart: number[] = [];
-  cpuChart: number[] = [];
+  memChart: number[] = [];
   paramLogger: any = () => {};
   glFinish: any = () => {};
   chartLogger: any = () => {};
   chartLen: number = 60;
+  maxMemory: number = 1500;
   chartHz: number = 10;
   factorGPU: number = 1;
-  trackGPU: boolean = true;
-  trackCPU: boolean = false;
   chartFrame: number = 0;
   gpuTimeProcess: number = 0;
   chartTime: number = 0;
@@ -35,6 +34,8 @@ export default class GLPerf {
   circularId: number = 0;
   detected: number = 0;
   frameId: number = 0;
+  rafId: number = 0;
+  currentMem: number = 0;
   paramFrame: number = 0;
   paramTime: number = 0;
   now: any = () => {};
@@ -47,7 +48,7 @@ export default class GLPerf {
 
     this.chart = new Array(this.chartLen).fill(0);
     this.gpuChart = new Array(this.chartLen).fill(0);
-    this.cpuChart = new Array(this.chartLen).fill(0);
+    this.memChart = new Array(this.chartLen).fill(0);
     this.now = () =>
       window.performance && window.performance.now
         ? window.performance.now()
@@ -69,14 +70,13 @@ export default class GLPerf {
    * 120hz device detection
    */
   is120hz() {
-    let rafId: number;
     let n = 0;
     const loop = (t: number) => {
       if (++n < 20) {
-        rafId = window.requestAnimationFrame(loop);
+        this.rafId = window.requestAnimationFrame(loop);
       } else {
         this.detected = Math.ceil((1e3 * n) / (t - this.t0) / 70);
-        window.cancelAnimationFrame(rafId);
+        window.cancelAnimationFrame(this.rafId);
       }
       if (!this.t0) this.t0 = t;
     };
@@ -90,7 +90,6 @@ export default class GLPerf {
   addUI(name: string) {
     if (this.names.indexOf(name) === -1) {
       this.names.push(name);
-      this.cpuAccums.push(0);
       this.gpuAccums.push(0);
       this.activeAccums.push(false);
     }
@@ -104,37 +103,36 @@ export default class GLPerf {
     this.frameId++;
     const t = now || this.now();
     const duration = t - this.paramTime;
-    let cpu = 0;
     let gpu = 0;
     // params
     if (this.frameId <= 1) {
       this.paramFrame = this.frameId;
       this.paramTime = t;
     } else {
-      if (duration >= 500) {
+      if ( t >= this.paramTime + 1000 ) {
+      // if (duration >= 60) {
+        this.maxMemory =  window.performance.memory ? window.performance.memory.jsHeapSizeLimit / 1048576 : 0
         const frameCount = this.frameId - this.paramFrame;
-        const fps = (frameCount / duration) * 1000;
+        const fps = (frameCount * 1000) / (duration);
         for (let i = 0; i < this.names.length; i++) {
-          cpu = this.cpuAccums[i] / duration;
           gpu = this.isWebGL2
             ? this.gpuAccums[i]
             : this.gpuAccums[i] / duration;
 
-          const mem = Math.round(
+            this.currentMem = Math.round(
             window.performance && window.performance.memory
-              ? window.performance.memory.usedJSHeapSize / (1 << 20)
+              ? window.performance.memory.usedJSHeapSize / 1048576
               : 0
           );
           this.paramLogger({
             i,
-            cpu,
             gpu,
-            mem,
-            fps: Math.round(fps * 10) / 10,
+            mem: this.currentMem,
+            maxMemory: this.maxMemory,
+            fps: fps,
             duration: Math.round(duration),
             frameCount,
           });
-          this.cpuAccums[i] = 0;
           if (this.isWebGL2) {
             this.gpuAccums[i] = 0;
           } else {
@@ -161,7 +159,7 @@ export default class GLPerf {
         const frameCount = this.frameId - this.chartFrame;
         const fps = (frameCount / timespan) * 1e3;
         this.chart[this.circularId % this.chartLen] = fps;
-        const cpuS = this.cpuAccums[1] / duration + 0.1;
+        const memS = 1000 / this.currentMem;
         const gpuS =
           (this.isWebGL2
             ? this.gpuAccums[1] * 2
@@ -169,16 +167,17 @@ export default class GLPerf {
         if (gpuS > 0) {
           this.gpuChart[this.circularId % this.chartLen] = gpuS;
         }
-        if (cpuS > 0) {
-          this.cpuChart[this.circularId % this.chartLen] = cpuS;
+        if (memS > 0) {
+          this.memChart[this.circularId % this.chartLen] = memS;
         }
         for (let i = 0; i < this.names.length; i++) {
+          // console.log( window.performance.memory.jsHeapSizeLimit / 1048576)
           this.chartLogger({
             i,
             data: {
               fps: this.chart,
               gpu: this.gpuChart,
-              cpu: this.cpuChart,
+              mem: this.memChart,
             },
             circularId: this.circularId,
           });
@@ -296,13 +295,7 @@ export default class GLPerf {
     }
 
     const t = this.now();
-    const dt = t - this.t0;
 
-    for (let i = 0; i < nameId + 1; i++) {
-      if (this.activeAccums[i]) {
-        this.cpuAccums[i] += dt;
-      }
-    }
     this.activeAccums[nameId] = !this.activeAccums[nameId];
     this.t0 = t;
   }

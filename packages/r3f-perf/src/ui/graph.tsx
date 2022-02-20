@@ -1,46 +1,118 @@
-import React, { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
-import { GiPauseButton } from 'react-icons/gi';
-import { raf } from 'rafz';
+import React, { FC, HTMLAttributes, memo, Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { usePerfStore } from '../headless';
 import { Graph, Graphpc } from '../styles';
+import { PauseIcon } from '@radix-ui/react-icons';
+import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
+import { Text } from '@react-three/drei';
+import { BufferGeometry, SplineCurve, Vector2, Vector3 } from 'three';
+import { chart } from '..';
+import { colorsGraph } from '../gui';
 
 export interface graphData {
-  pointsX: number[];
-  pointsY: number[];
+  curve: SplineCurve;
   maxVal: number;
   element: string;
 }
 
 interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
-  perfContainerRef: any;
+  perfContainerRef?: any;
   colorBlind?: boolean;
-  trackCPU?: boolean;
-  trackGPU?: boolean;
+  showGraph?: boolean;
+  chart?: chart;
 }
-const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
-  // Create a viewport. Units are in pixels.
-  const viewport = {
-    x: 0,
-    y: 0,
-    width: cg.canvas.width,
-    height: cg.canvas.height,
-  };
-  const coords = cg.coordinate.cartesian(
-    cg.scale.linear([0, 1], [0, viewport.width - 4]),
-    cg.scale.linear([0, 1], [10, viewport.height - 4])
-  );
+interface TextHighHZProps {
+  metric: string;
+  isPerf?: boolean;
+  isMemory?: boolean;
+  isShadersInfo?: boolean;
+  fontSize: number;
+  round: number;
+  color?: string;
+  offsetX: number;
+  offsetY?: number;
+}
 
-  const toPoints = (element: string, factor: number = 1) => {
+const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round }) => {
+  const { width: w, height: h } = useThree(s=>s.viewport)
+  const fpsRef = useRef<any>(null)
+  useFrame(() => {
+    const gl:any = usePerfStore.getState().gl
+    const log = usePerfStore.getState().log
+    
+    if (!log || !fpsRef.current) return
+
+    let info = log[metric]
+    if (isShadersInfo) {
+      info = gl.info.programs?.length
+    } else if (!isPerf && gl.info.render) {
+      const infos: any = isMemory? gl.info.memory : gl.info.render
+      info = infos[metric]
+    }
+
+    fpsRef.current.text = (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
+  })
+  return (
+    <Text ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color}>
+      0
+    </Text>
+  )
+})
+
+
+
+const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind }) => {
+  const [supportMemory] = useState(window.performance.memory)
+
+  const fontSize: number = 14
+  return (
+    <Suspense fallback={null}>
+      <TextHighHZ color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} isPerf metric='fps' fontSize={fontSize} offsetX={140} round={0} />
+      <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='mem' fontSize={fontSize} offsetX={80} round={0} />
+      <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='maxMemory' fontSize={9} offsetX={112} offsetY={9} round={0} />
+      <TextHighHZ color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} isPerf metric='gpu'  fontSize={fontSize} offsetX={10} round={3}/>
+      <TextHighHZ metric='calls'  fontSize={fontSize} offsetX={200} round={0}/>
+      <TextHighHZ metric='triangles'  fontSize={fontSize} offsetX={260} round={0}/>
+      <TextHighHZ isMemory metric='geometries' fontSize={fontSize} offsetY={30} offsetX={0} round={0}/>
+      <TextHighHZ isMemory metric='textures'  fontSize={fontSize} offsetY={30} offsetX={80} round={0}/>
+      <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0}/>
+      <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0}/>
+      <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0}/>
+    </Suspense>
+  );
+};
+
+
+const ChartCurve:FC<PerfUIProps> = ({colorBlind, chart= {length: 30, hz: 15}}) => {
+  
+  // Create a viewport. Units are in pixels.
+  // console.log(candyGraph)
+  // const coords = candyGraph.createCartesianCoordinateSystem(
+  //   candyGraph.createLinearScale([0, 1], [0, viewport.width - 4]),
+  //   candyGraph.createLinearScale([0, 1], [10, viewport.height - 4])
+  // );
+  // console.log(coords)
+  const curves: any = useMemo(() => {
+    return {
+      fps: new Float32Array(chart.length * 3),
+      mem: new Float32Array(chart.length * 3),
+      gpu: new Float32Array(chart.length * 3)
+    }
+  }, [chart])
+
+  const fpsRef= useRef<any>(null)
+  const gpuRef= useRef<any>(null)
+  const memRef= useRef<any>(null)
+
+  const dummyVec3 = useMemo(() => new Vector3(0,0,0), [])
+  const updatePoints = useCallback((element: string, factor: number = 1, ref: any, viewport: Viewport) => {
     let maxVal = 0;
-    let pointsX = [];
-    let pointsY = [];
+    const {width: w, height: h} = viewport
     const chart = usePerfStore.getState().chart.data[element];
     if (!chart || chart.length === 0) {
-      return {
-        pointsX: [0],
-        pointsY: [0],
-      };
+      return
     }
+    const padding = 6
+    const paddingTop = 50
     let len = chart.length;
     for (let i = 0; i < len; i++) {
       let id = (usePerfStore.getState().chart.circularId + i + 1) % len;
@@ -48,126 +120,111 @@ const ChartCurve = ({ cg, canvas, colorBlind, trackCPU, trackGPU }: any) => {
         if (chart[id] > maxVal) {
           maxVal = chart[id] * factor;
         }
-
-        pointsX.push(i / (len - 1));
-        pointsY.push((Math.min(100, chart[id]) * factor) / 100);
+        dummyVec3.set(padding + i / (len - 1) * (w - padding * 2) - w / 2,(Math.min(100, chart[id]) * factor) / 100 * (h - padding * 2 - paddingTop) - h / 2,0)
+        dummyVec3.toArray(ref.attributes.position.array, i * 3)
       }
     }
-    const graph: graphData = {
-      pointsX,
-      pointsY,
-      maxVal,
-      element,
-    };
-    return graph;
-  };
-  raf(() => {
-    const graphs: any = [toPoints('fps'), toPoints('cpu')];
-    if (trackGPU) {
-      graphs.push(toPoints('gpu'));
+    
+    ref.attributes.position.needsUpdate = true;
+  }, []);
+
+  const [supportMemory] = useState(window.performance.memory)
+  useFrame(({viewport}) => {
+    updatePoints('fps', 1, fpsRef.current, viewport)
+    updatePoints('gpu', 5, gpuRef.current, viewport)
+    if (supportMemory) {
+      updatePoints('mem', 1, memRef.current, viewport)
     }
-    const fps = graphs[0];
-    const xs = [];
-    const ys = [];
-
-    for (let x = 0; x <= 1; x += 0.001) {
-      xs.push(x);
-      ys.push(0.5 + 0.25 * Math.sin(x * 2 * Math.PI));
-    }
-
-    const arrData = [
-      cg.lineStrip(fps.pointsX, fps.pointsY, {
-        colors: colorBlind
-          ? [100 / 255, 143 / 255, 255 / 255, 1]
-          : [238 / 255, 38 / 255, 110 / 255, 1],
-        widths: 1.5,
-      }),
-    ];
-
-    if (trackCPU) {
-      const cpu = graphs[1];
-      cg.lineStrip(cpu.pointsX, cpu.pointsY, {
-        colors: colorBlind
-          ? [254 / 255, 254 / 255, 98 / 255, 1]
-          : [66 / 255, 226 / 255, 46 / 255, 1],
-        widths: 1.5,
-      });
-    }
-
-    if (trackGPU) {
-      const gpu = graphs[2];
-      arrData.push(
-        cg.lineStrip(gpu.pointsX, gpu.pointsY, {
-          colors: colorBlind
-            ? [254 / 255, 254 / 255, 255 / 255, 1]
-            : [253 / 255, 151 / 255, 31 / 255, 1],
-          widths: 1.5,
-        })
-      );
-    }
-    cg.clear([0.141, 0.141, 0.141, 1]);
-    cg.render(coords, viewport, arrData);
-
-    cg.copyTo(viewport, canvas.current);
-    return true;
-  });
-
-  return null;
+  })
+  return (
+    <>
+      <line>
+        <bufferGeometry ref={fpsRef}>
+          <bufferAttribute
+              attachObject={['attributes', 'position']}
+              count={chart.length}
+              array={curves.fps}
+              itemSize={3}
+              needsUpdate={true}
+            />
+        </bufferGeometry>
+        <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} transparent opacity={0.5} />
+      </line>
+      <line>
+        <bufferGeometry ref={gpuRef}>
+          <bufferAttribute
+              attachObject={['attributes', 'position']}
+              count={chart.length}
+              array={curves.gpu}
+              itemSize={3}
+              needsUpdate={true}
+            />
+        </bufferGeometry>
+        <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} transparent opacity={0.5} />
+      </line>
+      {supportMemory && <line>
+        <bufferGeometry ref={memRef}>
+          <bufferAttribute
+            attachObject={['attributes', 'position']}
+            count={chart.length}
+            array={curves.mem}
+            itemSize={3}
+            needsUpdate={true}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).mem.toString()})`} transparent opacity={0.5} />
+      </line>}
+    </>
+  );
 };
 
 export const ChartUI: FC<PerfUIProps> = ({
-  perfContainerRef,
   colorBlind,
-  trackCPU,
-  trackGPU,
+  chart,
+  showGraph= true,
 }) => {
   const canvas = useRef<any>(undefined);
-  const [cg, setcg]: any = useState(null);
-  useEffect(() => {
-    if (canvas.current) {
-      import('candygraph').then((module) => {
-        // Do something with the module.
-        const CandyGraph = module.CandyGraph;
-        const cg = new CandyGraph(canvas.current);
-        const { width } = perfContainerRef.current.getBoundingClientRect();
-        cg.canvas.width = width;
-        cg.canvas.height = 100;
-        setcg(cg);
-      });
-
-      // cg.copyTo(viewport, canvas.current);
-    }
-  }, [canvas.current, perfContainerRef.current]);
 
   const paused = usePerfStore((state) => state.paused);
   return (
     <Graph
       style={{
-        // width: trackCPU ? 'auto' : '310px',
-        display: trackCPU ? 'table' : 'flex',
+        display: 'flex',
+        height: showGraph ? '100px' : '60px'
       }}
     >
-      <canvas
+      <Canvas
         ref={canvas}
+        orthographic
+        dpr={1}
+        gl={{
+          antialias: false,
+          alpha: true,
+          stencil: false,
+          depth: false,
+        }}
+        flat={true}
         style={{
-          width: `${cg ? cg.canvas.width : 0}px`,
-          height: `${cg ? cg.canvas.height : 0}px`,
           marginBottom: `-42px`,
           position: 'relative',
+          pointerEvents: 'none',
+          background: 'transparent !important',
+          height: showGraph ? '100px' : '60px'
         }}
-      />
-      {!paused && cg && (
-        <ChartCurve
-          colorBlind={colorBlind}
-          trackCPU={trackCPU}
-          trackGPU={trackGPU}
-          cg={cg}
-          canvas={canvas}
-        />
-      )}
+      >
+        {!paused ? (
+          <>
+            <TextsHighHZ />
+            {showGraph && <ChartCurve
+              colorBlind={colorBlind}
+              chart={chart}
+            />}
+          </>
+        ) : null}
+      </Canvas>
       {paused && (
         <Graphpc>
-          <GiPauseButton /> PAUSED
+          <PauseIcon /> PAUSED
         </Graphpc>
       )}
     </Graph>

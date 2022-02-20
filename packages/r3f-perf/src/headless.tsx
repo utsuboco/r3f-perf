@@ -100,7 +100,7 @@ let PerfLib: GLPerf | null;
 
 type Logger = {
   i: number;
-  cpu: number;
+  maxMemory: number;
   gpu: number;
   mem: number;
   fps: number;
@@ -126,7 +126,7 @@ export const usePerfStore = create<State>(() => ({
     data: {
       fps: [],
       gpu: [],
-      cpu: [],
+      mem: [],
     },
     circularId: 0,
   },
@@ -151,7 +151,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
+export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
   const { gl, scene } = useThree();
   const mounted = useRef(false);
 
@@ -159,10 +159,11 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
 
   useEffect(() => {
     gl.info.autoReset = false;
+    let unsub1: any = null
+    let unsub2: any = null
     if (!PerfLib && gl.info) {
       PerfLib = new GLPerf({
-        trackGPU: trackGPU,
-        trackCPU: trackCPU,
+        trackGPU: true,
         chartLen: chart ? chart.length : 120,
         chartHz: chart ? chart.hz : 60,
         gl: gl.getContext(),
@@ -175,7 +176,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
           }
           usePerfStore.setState({
             log: {
-              cpu: logger.cpu,
+              maxMemory: logger.maxMemory,
               gpu: logger.gpu,
               mem: logger.mem,
               fps: logger.fps,
@@ -188,7 +189,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
     }
     if (PerfLib && gl.info) {
       PerfLib.gl = gl.getContext();
-      const unsub1 = addEffect(() => {
+      unsub1 = addEffect(() => {
         if (usePerfStore.getState().paused) {
           usePerfStore.setState({ paused: false });
         }
@@ -198,83 +199,92 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
         }
         return false;
       });
-      const unsub2 = addAfterEffect(() => {
+      unsub2 = addAfterEffect(() => {
         if (PerfLib) {
           PerfLib.end('profiler');
           PerfLib.nextFrame(window.performance.now());
         }
+        if (deepAnalyze) {
         const currentObjectWithMaterials: any = {};
         const programs: ProgramsPerfs = new Map();
 
-        scene.traverse(function (object) {
-          if (object instanceof Mesh || object instanceof Points) {
-            if (object.material) {
-              let uuid = object.material.uuid;
-              // troika generate and attach 2 materials
-              const isTroika =
-                Array.isArray(object.material) && object.material.length > 1;
-              if (isTroika) {
-                uuid = addMuiPerfID(
-                  object.material[1],
-                  currentObjectWithMaterials
-                );
-              } else {
-                uuid = addMuiPerfID(
-                  object.material,
-                  currentObjectWithMaterials
-                );
+          scene.traverse(function (object) {
+            if (object instanceof Mesh || object instanceof Points) {
+              if (object.material) {
+                let uuid = object.material.uuid;
+                // troika generate and attach 2 materials
+                const isTroika =
+                  Array.isArray(object.material) && object.material.length > 1;
+                if (isTroika) {
+                  uuid = addMuiPerfID(
+                    object.material[1],
+                    currentObjectWithMaterials
+                  );
+                } else {
+                  uuid = addMuiPerfID(
+                    object.material,
+                    currentObjectWithMaterials
+                  );
+                }
+
+                currentObjectWithMaterials[uuid].meshes[object.uuid] = object;
               }
-
-              currentObjectWithMaterials[uuid].meshes[object.uuid] = object;
             }
-          }
-        });
+          });
 
-        gl?.info?.programs?.forEach((program: any) => {
-          const cacheKeySplited = program.cacheKey.split(',');
-          const muiPerfTracker =
-            cacheKeySplited[cacheKeySplited.findIndex(getMUIIndex) + 1];
-          if (
-            isUUID(muiPerfTracker) &&
-            currentObjectWithMaterials[muiPerfTracker]
-          ) {
-            const { material, meshes } = currentObjectWithMaterials[
-              muiPerfTracker
-            ];
-            programs.set(muiPerfTracker, {
-              program,
-              material,
-              meshes,
-              drawCounts: {
-                total: 0,
-                type: 'triangle',
-                data: [],
-              },
-              expand: false,
-              visible: true,
+          gl?.info?.programs?.forEach((program: any) => {
+            const cacheKeySplited = program.cacheKey.split(',');
+            const muiPerfTracker =
+              cacheKeySplited[cacheKeySplited.findIndex(getMUIIndex) + 1];
+            if (
+              isUUID(muiPerfTracker) &&
+              currentObjectWithMaterials[muiPerfTracker]
+            ) {
+              const { material, meshes } = currentObjectWithMaterials[
+                muiPerfTracker
+              ];
+              programs.set(muiPerfTracker, {
+                program,
+                material,
+                meshes,
+                drawCounts: {
+                  total: 0,
+                  type: 'triangle',
+                  data: [],
+                },
+                expand: false,
+                visible: true,
+              });
+            }
+          });
+          if (programs.size !== usePerfStore.getState().programs.size) {
+            countGeoDrawCalls(programs);
+            usePerfStore.setState({
+              programs: programs,
+              triggerProgramsUpdate: usePerfStore.getState()
+                .triggerProgramsUpdate++,
             });
           }
-        });
-
-        if (programs.size !== usePerfStore.getState().programs.size) {
-          countGeoDrawCalls(programs);
-          usePerfStore.setState({
-            programs: programs,
-            triggerProgramsUpdate: usePerfStore.getState()
-              .triggerProgramsUpdate++,
-          });
         }
+          
         return false;
       });
 
-      return () => {
-        unsub1();
-        unsub2();
-      };
-    } else {
-      return undefined;
+    
     }
-  }, [gl, trackGPU, trackCPU, chart]);
+    return () => {
+      if (PerfLib) {
+        window.cancelAnimationFrame(PerfLib.rafId);
+      }
+
+      if (unsub1) {
+        unsub1();
+      }
+      if (unsub2) {
+        unsub2();
+      }
+    };
+  }, [gl, trackCPU, chart]);
   useEffect(() => {
     const unsub = addTail(() => {
       if (PerfLib && mounted.current) {
@@ -282,7 +292,7 @@ export const Headless: FC<PerfProps> = ({ trackGPU, trackCPU, chart }) => {
         usePerfStore.setState({
           paused: true,
           log: {
-            cpu: 0,
+            maxMemory: 0,
             gpu: 0,
             mem: 0,
             fps: 0,

@@ -6,6 +6,7 @@ import { Orbit } from './sandboxes/perf-minimal/src/orbit';
 import * as THREE from 'three';
 import Boxes from './sandboxes/perf-minimal/src/boxes';
 import Fireflies from './fire';
+import { useControls } from 'leva'
 
 import { Box, Cylinder, Text, Sphere, useTexture } from '@react-three/drei';
 
@@ -57,6 +58,9 @@ const Bob = () => {
 };
 
 export function App() {
+  const {enable} = useControls({
+    enable: true
+  })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
   return (
     <>
@@ -74,6 +78,23 @@ export function App() {
         <Suspense fallback={null}>
           <Bob />
           <Fireflies count={30} />
+          <Text
+            color="black"
+            anchorX="center"
+            anchorY="middle"
+            fontSize={0.4}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={'left'}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            outlineWidth={0.07}
+            outlineColor="#ffffff"
+            rotation={[0, -0.6, 0]}
+            position={[-2, -2, 0]}
+          >
+            Some 3D Text
+          </Text>
         </Suspense>
 
         <Sphere position-x={2} position-y={2} material={mat} />
@@ -84,39 +105,19 @@ export function App() {
         {/* <Sphere position-y={-2}>
             <meshBasicMaterial />
           </Sphere> */}
-        <Text
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-          fontSize={0.4}
-          maxWidth={200}
-          lineHeight={1}
-          letterSpacing={0.02}
-          textAlign={'left'}
-          font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-          outlineWidth={0.07}
-          outlineColor="#ffffff"
-          rotation={[0, -0.6, 0]}
-          position={[-2, -2, 0]}
-        >
-          Some 3D Text
-        </Text>
+       
         <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         <Orbit />
-        {/* <AdaptiveDpr pixelated />
-          <AdaptiveEvents /> */}
-        <Perf
+        {enable && <Perf
           className={'override'}
-          trackGPU={true}
-          // trackCPU={true}
-          openByDefault={true}
+          showGraph={false}
           chart={{
             hz: 35,
-            length: 120,
+            length: 60,
           }}
           // colorBlind={true}
-          position={'bottom-right'}
-        />
+          position={'top-left'}
+        />}
       </Canvas>
     </>
   );

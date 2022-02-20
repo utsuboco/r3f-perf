@@ -2,7 +2,7 @@ import React, { VFC } from 'react';
 import Gui from './gui';
 import { Headless, usePerfFunc } from './headless';
 
-type chart = {
+export type chart = {
   length: number;
   hz: number;
 };
@@ -11,12 +11,12 @@ export interface PerfProps {
   headless?: boolean;
   showGraph?: boolean;
   colorBlind?: boolean;
-  trackGPU?: boolean;
   trackCPU?: boolean;
   openByDefault?: boolean;
   className?: any;
   position?: string;
   chart?: chart;
+  deepAnalyze?: boolean;
 }
 
 /**
@@ -28,8 +28,8 @@ export const Perf: VFC<PerfProps> = ({
   colorBlind = false,
   showGraph = true,
   trackCPU = false,
-  trackGPU = true,
-  openByDefault = false,
+  deepAnalyze = false,
+  openByDefault = true,
   position = 'top-right',
   chart = {
     length: 30,
@@ -38,17 +38,17 @@ export const Perf: VFC<PerfProps> = ({
   className,
 }) => {
   return headless ? (
-    <Headless chart={chart} />
+    <Headless chart={chart} deepAnalyze={deepAnalyze} />
   ) : (
     <Gui
       colorBlind={colorBlind}
       showGraph={showGraph}
       trackCPU={trackCPU}
-      trackGPU={trackGPU}
       openByDefault={openByDefault}
       className={className}
       position={position}
       chart={chart}
+      deepAnalyze={deepAnalyze}
     />
   );
 };

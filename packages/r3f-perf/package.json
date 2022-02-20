@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "4.9.1",
+  "version": "5.2.0",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -27,20 +27,20 @@
     ]
   },
   "peerDependencies": {
+    "three": ">=0.137",
     "@react-three/fiber": "*",
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "three": "*"
+    "react": ">=17.0",
+    "react-dom": ">=17.0",
+    "three-stdlib": "*"
   },
   "dependencies": {
-    "@stitches/react": "^1.1.0",
-    "candygraph": "0.3.1",
-    "lerp": "^1.0.3",
-    "rafz": "^0.1.14",
-    "react-icons": "^4.2.0",
-    "three": "*",
-    "three-stdlib": "^2.4.0",
-    "zustand": "^3.5.10"
+    "@radix-ui/react-icons": "^1.0.3",
+    "@react-three/drei": "^8.10.4",
+    "@react-three/fiber": "^7.0.26",
+    "@stitches/react": "^1.2.6",
+    "three": "^0.137.5",
+    "three-stdlib": "^2.8.6",
+    "zustand": "^3.7.0"
   },
   "devDependencies": {
     "@types/three": "latest"
