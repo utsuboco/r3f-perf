@@ -1,9 +1,9 @@
 ![npm](https://img.shields.io/npm/v/r3f-perf) ![npm](https://img.shields.io/npm/dw/r3f-perf)
 
 # R3F-Perf
+**[Changelog](https://github.com/utsuboco/r3f-perf/blob/main/packages/r3f-perf/CHANGELOG.md)**
 
 Easily monitor the performances of your @react-three/fiber application.
-r3f-perf.js is 6.23 KB.
 
 <table>
   <tr>
@@ -75,15 +75,15 @@ export default function App() {
 The tool work with any server side rendering framework. You can try with Next and @react-three/fiber using this starter :
 https://github.com/pmndrs/react-three-next
 
+
+
 ## Feature ideas todo :
 
-- Convert all DOM text to shader to increase the refresh rate
-- Buffer frame and Forward rendering differenciation in the "calls" section of the UI
+- Buffer frame and Forward rendering differenciation in the "calls" section of the UI <-- PR WebGLInfos in Threejs
 - Postprocess shaders differenciation
-- Deep analytics about the shaders (list the types of material/shader)
 - Lights informations in the scene
 - Show the number of items receiving and casting shadow in the scene
-- Add an audit button to find what consume the most CPU/GPU in the app for every loop
+- Add an diagnostic button to find what consume the most CPU/GPU in the app for every loop
 
 ### Maintainers :
 
