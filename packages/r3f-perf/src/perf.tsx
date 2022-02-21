@@ -36,6 +36,7 @@ export default class GLPerf {
   detected: number = 0;
   frameId: number = 0;
   rafId: number = 0;
+  checkQueryId: number = 0;
   uuid: string|undefined = undefined;
   currentMem: number = 0;
   paramFrame: number = 0;
@@ -83,7 +84,7 @@ export default class GLPerf {
       }
       if (!this.t0) this.t0 = t;
     };
-    window.requestAnimationFrame(loop);
+    this.rafId = window.requestAnimationFrame(loop);
   }
 
   /**
@@ -213,6 +214,9 @@ export default class GLPerf {
 
     this.activeQueries++;
 
+    if (this.checkQueryId) {
+      window.cancelAnimationFrame(this.checkQueryId);
+    }
     const checkQuery = () => {
       if (!query || !this.isWebGL2) {
         return;
@@ -245,11 +249,11 @@ export default class GLPerf {
         this.activeQueries--;
       } else {
         // otherwise try again the next frame
-        window.requestAnimationFrame(checkQuery);
+        this.checkQueryId = window.requestAnimationFrame(checkQuery);
       }
     };
 
-    window.requestAnimationFrame(checkQuery);
+    this.checkQueryId = window.requestAnimationFrame(checkQuery);
   }
 
   endGpu() {

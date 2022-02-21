@@ -266,6 +266,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
     return () => {
       if (PerfLib) {
         window.cancelAnimationFrame(PerfLib.rafId);
+        window.cancelAnimationFrame(PerfLib.checkQueryId);
       }
       effectSub();
       afterEffectSub();

@@ -1,5 +1,7 @@
 # R3F-Perf
 
+## 5.3.2:
+- Fix memory leak createQuery stacking in WebGL2 context
 ## 5.3.1:
 - Fix potential memory leak when gl context is lost.
 
