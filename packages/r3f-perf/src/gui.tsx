@@ -214,6 +214,7 @@ const Gui: FC<PerfProps> = ({
   position,
   chart,
   deepAnalyze,
+  antialias,
 }) => {
   const perfContainerRef = useRef(null);
 
@@ -235,6 +236,7 @@ const Gui: FC<PerfProps> = ({
               colorBlind={colorBlind}
               chart={chart}
               showGraph={showGraph}
+              antialias={antialias}
             />
           <PerfUI
             colorBlind={colorBlind}

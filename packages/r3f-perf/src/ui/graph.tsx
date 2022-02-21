@@ -4,7 +4,7 @@ import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
-import { BufferGeometry, SplineCurve, Vector2, Vector3 } from 'three';
+import { SplineCurve, Vector3 } from 'three';
 import { chart } from '..';
 import { colorsGraph } from '../gui';
 
@@ -18,6 +18,7 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   perfContainerRef?: any;
   colorBlind?: boolean;
   showGraph?: boolean;
+  antialias?: boolean;
   chart?: chart;
 }
 interface TextHighHZProps {
@@ -182,6 +183,7 @@ export const ChartUI: FC<PerfUIProps> = ({
   colorBlind,
   chart,
   showGraph= true,
+  antialias= true,
 }) => {
   const canvas = useRef<any>(undefined);
 
@@ -196,9 +198,9 @@ export const ChartUI: FC<PerfUIProps> = ({
       <Canvas
         ref={canvas}
         orthographic
-        dpr={1}
+        dpr={antialias ? [1,2] : 1}
         gl={{
-          antialias: false,
+          antialias: true,
           alpha: true,
           stencil: false,
           depth: false,

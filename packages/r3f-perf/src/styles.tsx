@@ -8,7 +8,7 @@ export const PerfS = styled('div', {
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif`,
-  backgroundColor: 'rgba(36, 36, 36, 1)',
+  backgroundColor: 'rgba(36, 36, 36, .9)',
   color: '#fff',
   margin: 0,
   minHeight: '100px',

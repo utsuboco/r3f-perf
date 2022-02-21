@@ -24,6 +24,7 @@ yarn add --dev r3f-perf
 ## Options
 
 ```jsx
+antialias?: true, // Take a bit more performances but render the text with antialiasing
 headless?: false, // Without UI. See Headless section
 deepAnalyze?: false, // More detailed informations about gl programs
 showGraph?: true // show the graphs

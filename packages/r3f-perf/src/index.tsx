@@ -11,6 +11,7 @@ export interface PerfProps {
   headless?: boolean;
   showGraph?: boolean;
   colorBlind?: boolean;
+  antialias?: boolean;
   trackCPU?: boolean;
   openByDefault?: boolean;
   className?: any;
@@ -29,6 +30,7 @@ export const Perf: VFC<PerfProps> = ({
   showGraph = true,
   trackCPU = false,
   deepAnalyze = false,
+  antialias = true,
   openByDefault = true,
   position = 'top-right',
   chart = {
@@ -47,6 +49,7 @@ export const Perf: VFC<PerfProps> = ({
       openByDefault={openByDefault}
       className={className}
       position={position}
+      antialias={antialias}
       chart={chart}
       deepAnalyze={deepAnalyze}
     />
