@@ -58,11 +58,12 @@ const Bob = () => {
 };
 
 export function App() {
-  const {enable} = useControls({
-    enable: true
+  const {enable, mountCanvas} = useControls({
+    enable: true,
+    mountCanvas: true
   })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
-  return (
+  return mountCanvas ? (
     <>
       {/* frameloop={'demand'}  */}
       <Canvas
@@ -110,7 +111,7 @@ export function App() {
         <Orbit />
         {enable && <Perf
           className={'override'}
-          showGraph={false}
+          showGraph={true}
           chart={{
             hz: 35,
             length: 60,
@@ -120,6 +121,6 @@ export function App() {
         />}
       </Canvas>
     </>
-  );
+  ) : null;
 }
 // ReactDOM.render(<App />, document.getElementById('root'));

@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, useEffect, useRef } from 'react';
+import { FC, HTMLAttributes, useEffect, useMemo, useRef } from 'react';
 import {
   addEffect,
   addAfterEffect,
@@ -96,7 +96,6 @@ export type State = {
   tab: 'infos' | 'programs' | 'data';
 };
 
-let PerfLib: GLPerf | null;
 
 type Logger = {
   i: number;
@@ -153,141 +152,129 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
  */
 export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
   const { gl, scene } = useThree();
-  const mounted = useRef(false);
 
   usePerfStore.setState({ gl, scene });
 
+  const PerfLib = useMemo(() => new GLPerf({
+    trackGPU: true,
+    chartLen: chart ? chart.length : 120,
+    chartHz: chart ? chart.hz : 60,
+    gl: gl.getContext(),
+    chartLogger: (chart: Chart) => {
+      usePerfStore.setState({ chart });
+    },
+    paramLogger: (logger: Logger) => {
+      usePerfStore.setState({
+        log: {
+          maxMemory: logger.maxMemory,
+          gpu: logger.gpu,
+          mem: logger.mem,
+          fps: logger.fps,
+          totalTime: logger.duration,
+          frameCount: logger.frameCount,
+        },
+      });
+    },
+  }), [])
+
   useEffect(() => {
+
     gl.info.autoReset = false;
-    let unsub1: any = null
-    let unsub2: any = null
-    if (!PerfLib && gl.info) {
-      PerfLib = new GLPerf({
-        trackGPU: true,
-        chartLen: chart ? chart.length : 120,
-        chartHz: chart ? chart.hz : 60,
-        gl: gl.getContext(),
-        chartLogger: (chart: Chart) => {
-          usePerfStore.setState({ chart });
-        },
-        paramLogger: (logger: Logger) => {
-          if (PerfLib && gl.info) {
-            PerfLib.factorGPU = 1 / gl.info.render.calls;
-          }
-          usePerfStore.setState({
-            log: {
-              maxMemory: logger.maxMemory,
-              gpu: logger.gpu,
-              mem: logger.mem,
-              fps: logger.fps,
-              totalTime: logger.duration,
-              frameCount: logger.frameCount,
-            },
-          });
-        },
-      });
-    }
-    if (PerfLib && gl.info) {
-      PerfLib.gl = gl.getContext();
-      unsub1 = addEffect(() => {
-        if (usePerfStore.getState().paused) {
-          usePerfStore.setState({ paused: false });
-        }
-        if (PerfLib && gl.info) {
-          gl.info.reset();
-          PerfLib.begin('profiler');
-        }
-        return false;
-      });
-      unsub2 = addAfterEffect(() => {
-        if (PerfLib) {
-          PerfLib.end('profiler');
-          PerfLib.nextFrame(window.performance.now());
-        }
-        if (deepAnalyze) {
-        const currentObjectWithMaterials: any = {};
-        const programs: ProgramsPerfs = new Map();
-
-          scene.traverse(function (object) {
-            if (object instanceof Mesh || object instanceof Points) {
-              if (object.material) {
-                let uuid = object.material.uuid;
-                // troika generate and attach 2 materials
-                const isTroika =
-                  Array.isArray(object.material) && object.material.length > 1;
-                if (isTroika) {
-                  uuid = addMuiPerfID(
-                    object.material[1],
-                    currentObjectWithMaterials
-                  );
-                } else {
-                  uuid = addMuiPerfID(
-                    object.material,
-                    currentObjectWithMaterials
-                  );
-                }
-
-                currentObjectWithMaterials[uuid].meshes[object.uuid] = object;
-              }
-            }
-          });
-
-          gl?.info?.programs?.forEach((program: any) => {
-            const cacheKeySplited = program.cacheKey.split(',');
-            const muiPerfTracker =
-              cacheKeySplited[cacheKeySplited.findIndex(getMUIIndex) + 1];
-            if (
-              isUUID(muiPerfTracker) &&
-              currentObjectWithMaterials[muiPerfTracker]
-            ) {
-              const { material, meshes } = currentObjectWithMaterials[
-                muiPerfTracker
-              ];
-              programs.set(muiPerfTracker, {
-                program,
-                material,
-                meshes,
-                drawCounts: {
-                  total: 0,
-                  type: 'triangle',
-                  data: [],
-                },
-                expand: false,
-                visible: true,
-              });
-            }
-          });
-          if (programs.size !== usePerfStore.getState().programs.size) {
-            countGeoDrawCalls(programs);
-            usePerfStore.setState({
-              programs: programs,
-              triggerProgramsUpdate: usePerfStore.getState()
-                .triggerProgramsUpdate++,
-            });
-          }
-        }
-          
-        return false;
-      });
+    let effectSub: any = null
+    let afterEffectSub: any = null
+    if (!gl.info) return
 
     
-    }
+    effectSub = addEffect(() => {
+      if (usePerfStore.getState().paused) {
+        usePerfStore.setState({ paused: false });
+      }
+      if (PerfLib && gl.info) {
+        gl.info.reset();
+        PerfLib.begin('profiler');
+      }
+    });
+    afterEffectSub = addAfterEffect(() => {
+      if (PerfLib) {
+        PerfLib.end('profiler');
+        PerfLib.nextFrame(window.performance.now());
+      }
+      if (deepAnalyze) {
+      const currentObjectWithMaterials: any = {};
+      const programs: ProgramsPerfs = new Map();
+
+        scene.traverse(function (object) {
+          if (object instanceof Mesh || object instanceof Points) {
+            if (object.material) {
+              let uuid = object.material.uuid;
+              // troika generate and attach 2 materials
+              const isTroika =
+                Array.isArray(object.material) && object.material.length > 1;
+              if (isTroika) {
+                uuid = addMuiPerfID(
+                  object.material[1],
+                  currentObjectWithMaterials
+                );
+              } else {
+                uuid = addMuiPerfID(
+                  object.material,
+                  currentObjectWithMaterials
+                );
+              }
+
+              currentObjectWithMaterials[uuid].meshes[object.uuid] = object;
+            }
+          }
+        });
+
+        gl?.info?.programs?.forEach((program: any) => {
+          const cacheKeySplited = program.cacheKey.split(',');
+          const muiPerfTracker =
+            cacheKeySplited[cacheKeySplited.findIndex(getMUIIndex) + 1];
+          if (
+            isUUID(muiPerfTracker) &&
+            currentObjectWithMaterials[muiPerfTracker]
+          ) {
+            const { material, meshes } = currentObjectWithMaterials[
+              muiPerfTracker
+            ];
+            programs.set(muiPerfTracker, {
+              program,
+              material,
+              meshes,
+              drawCounts: {
+                total: 0,
+                type: 'triangle',
+                data: [],
+              },
+              expand: false,
+              visible: true,
+            });
+          }
+        });
+        if (programs.size !== usePerfStore.getState().programs.size) {
+          countGeoDrawCalls(programs);
+          usePerfStore.setState({
+            programs: programs,
+            triggerProgramsUpdate: usePerfStore.getState()
+              .triggerProgramsUpdate++,
+          });
+        }
+      }
+    });
+
     return () => {
       if (PerfLib) {
         window.cancelAnimationFrame(PerfLib.rafId);
       }
-
-      if (unsub1) {
-        unsub1();
-      }
-      if (unsub2) {
-        unsub2();
-      }
+      effectSub();
+      afterEffectSub();
     };
-  }, [gl, trackCPU, chart]);
+  }, [PerfLib, gl, trackCPU, chart]);
+
   useEffect(() => {
     const unsub = addTail(() => {
-      if (PerfLib && mounted.current) {
+      if (PerfLib) {
         PerfLib.paused = true;
         usePerfStore.setState({
           paused: true,
@@ -301,14 +288,13 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
           },
         });
       }
-      mounted.current = true;
-
       return false;
     });
 
     return () => {
       unsub();
     };
-  }, [mounted]);
+  }, []);
+
   return null;
 };

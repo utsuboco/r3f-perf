@@ -1,3 +1,5 @@
+import { MathUtils } from "three";
+
 declare global {
   interface Window {
     GLPerf: any;
@@ -26,7 +28,6 @@ export default class GLPerf {
   chartLen: number = 60;
   maxMemory: number = 1500;
   chartHz: number = 10;
-  factorGPU: number = 1;
   chartFrame: number = 0;
   gpuTimeProcess: number = 0;
   chartTime: number = 0;
@@ -35,6 +36,7 @@ export default class GLPerf {
   detected: number = 0;
   frameId: number = 0;
   rafId: number = 0;
+  uuid: string|undefined = undefined;
   currentMem: number = 0;
   paramFrame: number = 0;
   paramTime: number = 0;
@@ -57,6 +59,7 @@ export default class GLPerf {
     this.is120hz();
   }
   initGpu() {
+    this.uuid = MathUtils.generateUUID()
     if (this.gl) {
       this.isWebGL2 = true;
       this.extension = this.gl.getExtension('EXT_disjoint_timer_query_webgl2');
