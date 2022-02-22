@@ -38,6 +38,9 @@ export const PerfS = styled('div', {
       bottom: 'initial',
     },
   },
+  '&.minimal': {
+    backgroundColor: 'rgba(36, 36, 36, .75)',
+  },
   '*': {
     margin: '0',
     padding: '0',

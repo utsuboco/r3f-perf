@@ -28,6 +28,12 @@ antialias?: true, // Take a bit more performances but render the text with antia
 headless?: false, // Without UI. See Headless section
 deepAnalyze?: false, // More detailed informations about gl programs
 showGraph?: true // show the graphs
+minimal?: false // condensed version with the most important informations (gpu/memory/fps/custom data)
+customData?: {
+  value: 0 // initial value,
+  name: '' // name to show
+  info: '' // additional information about the data (fps/ms for instance)
+}
 chart?: {
   hz: 60, // graphs refresh frequency parameter
   length: 120, // number of values shown on the monitor
@@ -69,6 +75,22 @@ export default function App() {
   );
 }
 ```
+
+
+## Custom Data
+
+```jsx
+import { setCustomData, getCustomData } from 'r3f-perf';
+
+const UpdateCustomData = () => {
+  // recommended to throttle to 1sec for readability
+  useFrame(() => {
+    setCustomData(55 + Math.random() * 5) // will update the panel with the current information
+  })
+  return null
+}
+```
+
 
 ## SSR
 

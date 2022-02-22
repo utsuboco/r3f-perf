@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, useEffect, useMemo, useRef } from 'react';
+import { FC, HTMLAttributes, useEffect, useMemo } from 'react';
 import {
   addEffect,
   addAfterEffect,
@@ -6,8 +6,8 @@ import {
   addTail,
 } from '@react-three/fiber';
 import GLPerf from './perf';
-import create from 'zustand';
-import { PerfProps } from '.';
+import create, { GetState, SetState } from 'zustand';
+import { customData, PerfProps } from '.';
 import {
   Material,
   Mesh,
@@ -83,6 +83,7 @@ export type State = {
   log: any;
   paused: boolean;
   triggerProgramsUpdate: number;
+  customData: number;
   chart: {
     data: {
       [index: string]: number[];
@@ -121,6 +122,7 @@ export const usePerfStore = create<State>(() => ({
   log: null,
   paused: false,
   triggerProgramsUpdate: 0,
+  customData: 0,
   chart: {
     data: {
       fps: [],
@@ -136,6 +138,13 @@ export const usePerfStore = create<State>(() => ({
   sceneLength: undefined,
   tab: 'infos',
 }));
+
+export const setCustomData = (customData: number) => {
+  usePerfStore.setState({customData})
+}
+export const getCustomData = () => {
+  return usePerfStore.getState().customData
+}
 
 export const usePerfFunc = () => {
   return {

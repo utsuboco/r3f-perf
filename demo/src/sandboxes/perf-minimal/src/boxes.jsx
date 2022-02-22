@@ -5,7 +5,7 @@ import perlin3 from './perlin';
 import { extend, useFrame, useThree } from '@react-three/fiber';
 extend({ RoundedBoxGeometry });
 
-const NUM = 3;
+const NUM = 12;
 const TOT = NUM * NUM * NUM;
 const Boxes = ({ scale: s = 1, ...props }) => {
   const ref = useRef();

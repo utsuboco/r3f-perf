@@ -1,5 +1,11 @@
 # R3F-Perf
 
+## 5.4.0:
+- New `minimal` option. Useful for smartphone and smaller viewports.
+- New `customData` option (See [README](https://github.com/utsuboco/r3f-perf)). Introducing custom data log. Can be useful for logging your physic fps for instance.
+- New getter setter `setCustomData()` and `getCustomData()` methods to update the customData information.
+- Added `/` before maxMemory.
+
 ## 5.3.2:
 - Fix memory leak createQuery stacking in WebGL2 context
 ## 5.3.1:

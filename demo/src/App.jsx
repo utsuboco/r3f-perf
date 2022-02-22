@@ -1,7 +1,7 @@
 import React, { useMemo, Suspense } from 'react';
-import { Perf } from 'r3f-perf';
+import { Perf, setCustomData } from 'r3f-perf';
 import './index.css';
-import { Canvas, extend } from '@react-three/fiber';
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { Orbit } from './sandboxes/perf-minimal/src/orbit';
 import * as THREE from 'three';
 import Boxes from './sandboxes/perf-minimal/src/boxes';
@@ -51,18 +51,46 @@ const Bob = () => {
         <shaderMaterial args={[MyMaterial]} uniforms-albedo-value={bob} />
       </Box>
       <Box position-x={-1}>
-        <meshBasicMaterial map={bob} />
+        <meshPhysicalMaterial map={bob} />
       </Box>
     </>
   );
 };
 
+const UpdateCustomData = () => {
+  // recommended to throttle to 1sec for readability
+  const { width } = useThree(s=>s.size)
+
+  useFrame(() => {
+    setCustomData(30 + Math.random() * 5)
+  })
+
+  return <Perf
+  className={'override'}
+  showGraph={true}
+  chart={{
+    hz: 35,
+    length: 60,
+  }}
+  minimal={width < 712}
+  customData={{
+    value: 30,
+    name: 'physic',
+    info: 'fps'
+  }}
+  // colorBlind={true}
+  position={'top-left'}
+/>
+}
+
 export function App() {
-  const {enable, mountCanvas} = useControls({
+  const {enable, mountCanvas, minimal} = useControls({
     enable: true,
-    mountCanvas: true
+    mountCanvas: true,
+    minimal: true
   })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
+
   return mountCanvas ? (
     <>
       {/* frameloop={'demand'}  */}
@@ -75,7 +103,7 @@ export function App() {
         pixelRatio={[1, 2]}
         camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
       >
-        <ambientLight />
+        <pointLight />
         <Suspense fallback={null}>
           <Bob />
           <Fireflies count={30} />
@@ -109,16 +137,8 @@ export function App() {
        
         <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         <Orbit />
-        {enable && <Perf
-          className={'override'}
-          showGraph={true}
-          chart={{
-            hz: 35,
-            length: 60,
-          }}
-          // colorBlind={true}
-          position={'top-left'}
-        />}
+        {enable && <UpdateCustomData />}
+        <UpdateCustomData />
       </Canvas>
     </>
   ) : null;

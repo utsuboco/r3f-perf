@@ -1,10 +1,17 @@
 import React, { VFC } from 'react';
 import Gui from './gui';
 import { Headless, usePerfFunc } from './headless';
+export { setCustomData, getCustomData } from './headless'
 
 export type chart = {
   length: number;
   hz: number;
+};
+
+export type customData = {
+  name: number;
+  info: number;
+  value: number;
 };
 
 export interface PerfProps {
@@ -18,6 +25,8 @@ export interface PerfProps {
   position?: string;
   chart?: chart;
   deepAnalyze?: boolean;
+  customData?: customData;
+  minimal?: boolean;
 }
 
 /**
@@ -32,12 +41,14 @@ export const Perf: VFC<PerfProps> = ({
   deepAnalyze = false,
   antialias = true,
   openByDefault = true,
+  customData,
   position = 'top-right',
   chart = {
     length: 30,
     hz: 15,
   },
   className,
+  minimal = false,
 }) => {
   return headless ? (
     <Headless chart={chart} deepAnalyze={deepAnalyze} />
@@ -52,6 +63,8 @@ export const Perf: VFC<PerfProps> = ({
       antialias={antialias}
       chart={chart}
       deepAnalyze={deepAnalyze}
+      minimal={minimal}
+      customData={customData}
     />
   );
 };

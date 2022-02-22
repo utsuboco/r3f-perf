@@ -5,7 +5,7 @@ import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import { SplineCurve, Vector3 } from 'three';
-import { chart } from '..';
+import { chart, customData } from '..';
 import { colorsGraph } from '../gui';
 
 export interface graphData {
@@ -20,9 +20,11 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   showGraph?: boolean;
   antialias?: boolean;
   chart?: chart;
+  customData?: customData;
+  minimal?: boolean;
 }
 interface TextHighHZProps {
-  metric: string;
+  metric?: string;
   isPerf?: boolean;
   isMemory?: boolean;
   isShadersInfo?: boolean;
@@ -31,9 +33,11 @@ interface TextHighHZProps {
   color?: string;
   offsetX: number;
   offsetY?: number;
+  customData?: customData;
+  minimal?: boolean;
 }
 
-const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round }) => {
+const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round }) => {
   const { width: w, height: h } = useThree(s=>s.viewport)
   const fpsRef = useRef<any>(null)
   useFrame(() => {
@@ -42,6 +46,11 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, isMemory, isShaders
     
     if (!log || !fpsRef.current) return
 
+    if (customData) {
+      fpsRef.current.text = usePerfStore.getState().customData
+    }
+  
+    if (!metric) return
     let info = log[metric]
     if (isShadersInfo) {
       info = gl.info.programs?.length
@@ -50,18 +59,16 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, isMemory, isShaders
       info = infos[metric]
     }
 
-    fpsRef.current.text = (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
+    fpsRef.current.text = (metric === 'maxMemory' ? '/' : '') + (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
   })
   return (
-    <Text ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color}>
+    <Text textAlign='left' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color}>
       0
     </Text>
   )
 })
 
-
-
-const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind }) => {
+const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
   const [supportMemory] = useState(window.performance.memory)
 
   const fontSize: number = 14
@@ -69,21 +76,27 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind }) => {
     <Suspense fallback={null}>
       <TextHighHZ color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} isPerf metric='fps' fontSize={fontSize} offsetX={140} round={0} />
       <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='mem' fontSize={fontSize} offsetX={80} round={0} />
-      <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='maxMemory' fontSize={9} offsetX={112} offsetY={9} round={0} />
+      <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='maxMemory' fontSize={8} offsetX={112} offsetY={10} round={0} />
       <TextHighHZ color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} isPerf metric='gpu'  fontSize={fontSize} offsetX={10} round={3}/>
-      <TextHighHZ metric='calls'  fontSize={fontSize} offsetX={200} round={0}/>
-      <TextHighHZ metric='triangles'  fontSize={fontSize} offsetX={260} round={0}/>
-      <TextHighHZ isMemory metric='geometries' fontSize={fontSize} offsetY={30} offsetX={0} round={0}/>
-      <TextHighHZ isMemory metric='textures'  fontSize={fontSize} offsetY={30} offsetX={80} round={0}/>
-      <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0}/>
-      <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0}/>
-      <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0}/>
+      {!minimal ? (
+          <>
+           <TextHighHZ metric='calls' fontSize={fontSize} offsetX={200} round={0} />
+           <TextHighHZ metric='triangles'  fontSize={fontSize} offsetX={260} round={0}/>
+           <TextHighHZ isMemory metric='geometries' fontSize={fontSize} offsetY={30} offsetX={0} round={0}/>
+           <TextHighHZ isMemory metric='textures'  fontSize={fontSize} offsetY={30} offsetX={80} round={0}/>
+           <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0}/>
+           <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0}/>
+           <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0}/>
+          </>
+       ) : null}
+     
+      {customData && <TextHighHZ color={`rgb(${colorsGraph(colorBlind).custom.toString()})`}  customData={customData} fontSize={fontSize} offsetY={0} offsetX={minimal ? 200 : 320} round={0}/>}
     </Suspense>
   );
 };
 
 
-const ChartCurve:FC<PerfUIProps> = ({colorBlind, chart= {length: 30, hz: 15}}) => {
+const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz: 15}}) => {
   
   // Create a viewport. Units are in pixels.
   // console.log(candyGraph)
@@ -105,15 +118,15 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, chart= {length: 30, hz: 15}}) =
   const memRef= useRef<any>(null)
 
   const dummyVec3 = useMemo(() => new Vector3(0,0,0), [])
-  const updatePoints = useCallback((element: string, factor: number = 1, ref: any, viewport: Viewport) => {
+  const updatePoints = (element: string, factor: number = 1, ref: any, viewport: Viewport) => {
     let maxVal = 0;
     const {width: w, height: h} = viewport
     const chart = usePerfStore.getState().chart.data[element];
     if (!chart || chart.length === 0) {
       return
     }
-    const padding = 6
-    const paddingTop = 50
+    const padding = minimal ? 2 : 6
+    const paddingTop = minimal ? 12 : 50
     let len = chart.length;
     for (let i = 0; i < len; i++) {
       let id = (usePerfStore.getState().chart.circularId + i + 1) % len;
@@ -127,7 +140,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, chart= {length: 30, hz: 15}}) =
     }
     
     ref.attributes.position.needsUpdate = true;
-  }, []);
+  };
 
   const [supportMemory] = useState(window.performance.memory)
   useFrame(({viewport}) => {
@@ -182,8 +195,10 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, chart= {length: 30, hz: 15}}) =
 export const ChartUI: FC<PerfUIProps> = ({
   colorBlind,
   chart,
+  customData,
   showGraph= true,
   antialias= true,
+  minimal,
 }) => {
   const canvas = useRef<any>(undefined);
 
@@ -192,7 +207,8 @@ export const ChartUI: FC<PerfUIProps> = ({
     <Graph
       style={{
         display: 'flex',
-        height: showGraph ? '100px' : '60px'
+        height: `${minimal ? 37 : showGraph ? 100 : 60 }px`,
+        minWidth: `${minimal ? '100px' : customData ? '370px' : '310px'}`
       }}
     >
       <Canvas
@@ -211,14 +227,15 @@ export const ChartUI: FC<PerfUIProps> = ({
           position: 'relative',
           pointerEvents: 'none',
           background: 'transparent !important',
-          height: showGraph ? '100px' : '60px'
+          height: `${minimal ? 37 : showGraph ? 100 : 60 }px`
         }}
       >
         {!paused ? (
           <>
-            <TextsHighHZ />
+            <TextsHighHZ customData={customData} minimal={minimal} />
             {showGraph && <ChartCurve
               colorBlind={colorBlind}
+              minimal={minimal}
               chart={chart}
             />}
           </>

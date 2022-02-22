@@ -1,6 +1,6 @@
 import React, { FC, useRef } from 'react';
 import { ChartUI } from './ui/graph';
-import { ActivityLogIcon, BarChartIcon, Crosshair1Icon, DotIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, PaddingIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
+import { ActivityLogIcon, BarChartIcon, Crosshair1Icon, DotIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, MixIcon, PaddingIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
 import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
@@ -27,6 +27,7 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
     fps: colorBlind ? '100, 143, 255' : '238,38,110',
     mem: colorBlind ? '254, 254, 98' : '66,226,46',
     gpu: colorBlind ? '254,254,254' : '253,151,31',
+    custom: colorBlind ? '86,180,233' : '40,255,255',
   };
   return colors;
 };
@@ -34,6 +35,8 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
 const DynamicUI: FC<PerfProps> = ({
   showGraph,
   colorBlind,
+  customData,
+  minimal,
 }) => {
   const gl = usePerfStore((state) => state.gl);
 
@@ -75,16 +78,29 @@ const DynamicUI: FC<PerfProps> = ({
           FPS
         </PerfB>
       </PerfI>
-      {gl && (
+      {!minimal && gl && (
         <PerfI>
           <TextAlignJustifyIcon />
           <PerfB>{gl.info.render.calls === 1 ? 'call' : 'calls'}</PerfB>
         </PerfI>
       )}
-      {gl && (
+      {!minimal && gl && (
         <PerfI>
           <VercelLogoIcon />
           <PerfB>Triangles</PerfB>
+        </PerfI>
+      )}
+      {customData && (
+        <PerfI>
+          <BarChartIcon />
+          <PerfB
+          style={
+            showGraph ? { color: `rgb(${colorsGraph(colorBlind).custom})` } : {}
+          }
+        >
+          {customData.name}
+          </PerfB>
+          {customData.info && <PerfSmallI>{customData.info}</PerfSmallI>}
         </PerfI>
       )}
     </PerfIContainer>
@@ -95,15 +111,19 @@ const PerfUI: FC<PerfProps> = ({
   showGraph,
   colorBlind,
   deepAnalyze,
+  customData,
   openByDefault,
+  minimal
 }) => {
   return (
     <>
       <DynamicUI
         showGraph={showGraph}
         colorBlind={colorBlind}
+        customData={customData}
+        minimal={minimal}
       />
-      <PerfThree openByDefault={openByDefault} deepAnalyze={deepAnalyze} showGraph={showGraph} />
+      {!minimal && <PerfThree openByDefault={openByDefault} deepAnalyze={deepAnalyze} showGraph={showGraph} />}
     </>
   );
 };
@@ -215,6 +235,8 @@ const Gui: FC<PerfProps> = ({
   chart,
   deepAnalyze,
   antialias,
+  customData,
+  minimal
 }) => {
   const perfContainerRef = useRef(null);
 
@@ -226,9 +248,9 @@ const Gui: FC<PerfProps> = ({
         <PerfS
           className={
             (className ? ' '.concat(className) : ' ') +
-            ` ${position ? position : ''}`
+            ` ${position ? position : ''} ${minimal ? 'minimal' : ''}`
           }
-          style={{minHeight: showGraph ? '100px' : '60px'}}
+          style={{minHeight: minimal ? '37px' : showGraph ? '100px' : '60px'}}
           ref={perfContainerRef}
         >
             <ChartUI
@@ -237,12 +259,16 @@ const Gui: FC<PerfProps> = ({
               chart={chart}
               showGraph={showGraph}
               antialias={antialias}
+              customData={customData}
+              minimal={minimal}
             />
           <PerfUI
             colorBlind={colorBlind}
             showGraph={showGraph}
             deepAnalyze={deepAnalyze}
             openByDefault={openByDefault}
+            customData={customData}
+            minimal={minimal}
           />
         </PerfS>
       </Html>
