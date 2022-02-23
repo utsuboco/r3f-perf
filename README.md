@@ -54,7 +54,9 @@ import { Perf } from 'r3f-perf';
 </Canvas>;
 ```
 
-Usage without interface : headless mode
+#### Usage without interface : headless mode
+
+[Codesandbox Example](https://codesandbox.io/s/perlin-cubes-r3f-perf-headless-mh1jl7?file=/src/App.js)
 
 ```jsx
 import { Canvas } from '@react-three/fiber';
