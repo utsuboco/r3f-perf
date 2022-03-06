@@ -1,5 +1,5 @@
 import React, { useMemo, Suspense } from 'react';
-import { Perf, setCustomData } from 'r3f-perf';
+import { Perf, setCustomData, usePerf } from 'r3f-perf';
 import './index.css';
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { Orbit } from './sandboxes/perf-minimal/src/orbit';
@@ -57,6 +57,11 @@ const Bob = () => {
   );
 };
 
+const PerfHook = () => {
+  const test = usePerf();
+  return null;
+};
+
 const UpdateCustomData = () => {
   // recommended to throttle to 1sec for readability
   const { width } = useThree(s=>s.size)
@@ -67,7 +72,9 @@ const UpdateCustomData = () => {
 
   return <Perf
   className={'override'}
-  showGraph={true}
+    showGraph={true}
+    headless
+    deepAnalyze
   chart={{
     hz: 35,
     length: 60,
@@ -140,6 +147,8 @@ export function App() {
         {enable && <UpdateCustomData />}
         <UpdateCustomData />
       </Canvas>
+      <PerfHook />
+
     </>
   ) : null;
 }
