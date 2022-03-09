@@ -2278,9 +2278,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/drei@npm:^8.14.0":
-  version: 8.14.0
-  resolution: "@react-three/drei@npm:8.14.0"
+"@react-three/drei@npm:^8.16.4":
+  version: 8.16.4
+  resolution: "@react-three/drei@npm:8.16.4"
   dependencies:
     "@babel/runtime": ^7.11.2
     "@react-spring/three": ^9.3.1
@@ -2295,7 +2295,7 @@ __metadata:
     suspend-react: ^0.0.8
     three-mesh-bvh: ^0.5.4
     three-stdlib: ^2.8.7
-    troika-three-text: ^0.46.1
+    troika-three-text: ^0.46.2
     utility-types: ^3.10.0
     zustand: ^3.5.13
   peerDependencies:
@@ -2306,7 +2306,7 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 3cb985bfebd603c3d4784d9cdb72504402647c2f154f0405f2fbfbb76e16a8d65ef58db4157611ec46ef368a3eb1bf892cf38f2319fe99e0f8b1931a0e17c330
+  checksum: 6d053728eaead9389135483e0468bafca9d350501d8273fb34b1dd467b75e03b02ea02180bfe6091c6e2bf2c15ab37ab256be934c151c4766afb0f3b8afd98d2
   languageName: node
   linkType: hard
 
@@ -9859,13 +9859,19 @@ __metadata:
   resolution: "r3f-perf@workspace:packages/r3f-perf"
   dependencies:
     "@radix-ui/react-icons": ^1.0.3
-    "@react-three/drei": ^8.14.0
+    "@react-three/drei": ^8.16.4
     "@react-three/fiber": ^7.0.26
     "@stitches/react": ^1.2.6
     "@types/three": latest
     three: ^0.138.3
     three-stdlib: ^2.8.8
     zustand: ^3.7.1
+  peerDependencies:
+    "@react-three/fiber": "*"
+    react: ">=17.0"
+    react-dom: ">=17.0"
+    three: ">=0.137"
+    three-stdlib: "*"
   languageName: unknown
   linkType: soft
 
@@ -11543,9 +11549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"troika-three-text@npm:^0.46.1":
-  version: 0.46.1
-  resolution: "troika-three-text@npm:0.46.1"
+"troika-three-text@npm:^0.46.2":
+  version: 0.46.2
+  resolution: "troika-three-text@npm:0.46.2"
   dependencies:
     bidi-js: ^1.0.2
     troika-three-utils: ^0.46.0
@@ -11553,7 +11559,7 @@ __metadata:
     webgl-sdf-generator: 1.1.1
   peerDependencies:
     three: ">=0.103.0"
-  checksum: 881e0bca24ca80b0cd27ee745f1628d5fb196709500690c0f1bf64d2164ca86d4e69022d343a9d36de0efffc9e407ad633ed4fb63864c03cb20c0f54b0d38dbf
+  checksum: e122f41a2dbe829fd62fb9581cc787c84f971a338154564c5b0a8acfd944d590ed1ecf59d0b7306e18e66c447ee0995e0cd407c0294ca284b929da209bd28fe9
   languageName: node
   linkType: hard
 
