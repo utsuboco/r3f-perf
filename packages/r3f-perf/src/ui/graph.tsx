@@ -207,6 +207,7 @@ export const ChartUI: FC<PerfUIProps> = ({
     <Graph
       style={{
         display: 'flex',
+        position: 'absolute',
         height: `${minimal ? 37 : showGraph ? 100 : 60 }px`,
         minWidth: `${minimal ? '100px' : customData ? '370px' : '310px'}`
       }}

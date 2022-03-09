@@ -140,6 +140,7 @@ export const Graph = styled('div', {
   margin: '0 auto',
   canvas: {
     background: 'transparent !important',
+    position: 'absolute !important',
   }
 });
 
