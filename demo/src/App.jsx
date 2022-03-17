@@ -66,25 +66,24 @@ const UpdateCustomData = () => {
   // recommended to throttle to 1sec for readability
   const { width } = useThree(s=>s.size)
 
-  useFrame(() => {
-    setCustomData(30 + Math.random() * 5)
-  })
+  // useFrame(() => {
+  //   setCustomData(30 + Math.random() * 5)
+  // })
 
   return <Perf
   className={'override'}
     showGraph={true}
-    headless
     deepAnalyze
   chart={{
     hz: 35,
     length: 60,
   }}
   minimal={width < 712}
-  customData={{
-    value: 30,
-    name: 'physic',
-    info: 'fps'
-  }}
+  // customData={{
+  //   value: 30,
+  //   name: 'physic',
+  //   info: 'fps'
+  // }}
   // colorBlind={true}
   position={'top-left'}
 />
@@ -144,10 +143,10 @@ export function App() {
        
         <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
         <Orbit />
-        {enable && <UpdateCustomData />}
+        {/* {enable && <UpdateCustomData />} */}
         <UpdateCustomData />
       </Canvas>
-      <PerfHook />
+      {/* <PerfHook /> */}
 
     </>
   ) : null;

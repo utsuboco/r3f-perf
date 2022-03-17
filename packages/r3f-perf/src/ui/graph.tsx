@@ -26,6 +26,7 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
 interface TextHighHZProps {
   metric?: string;
   isPerf?: boolean;
+  hasInstance?: boolean;
   isMemory?: boolean;
   isShadersInfo?: boolean;
   fontSize: number;
@@ -37,9 +38,11 @@ interface TextHighHZProps {
   minimal?: boolean;
 }
 
-const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round }) => {
+const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round, hasInstance }) => {
   const { width: w, height: h } = useThree(s=>s.viewport)
   const fpsRef = useRef<any>(null)
+  const fpsInstanceRef = useRef<any>(null)
+
   useFrame(() => {
     const gl:any = usePerfStore.getState().gl
     const log = usePerfStore.getState().log
@@ -60,11 +63,41 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
     }
 
     fpsRef.current.text = (metric === 'maxMemory' ? '/' : '') + (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
+    if (hasInstance) {
+      const infosInstance: any = gl.info.instance
+
+    
+      if (typeof infosInstance === 'undefined') {
+        return
+      }
+
+      const infoInstance = infosInstance[metric]
+     
+      if (infoInstance > 0) {
+
+        fpsRef.current.fontSize = fontSize / 1.15
+        fpsInstanceRef.current.fontSize = info > 0 ? fontSize / 1.4 : fontSize
+        
+        fpsRef.current.position.y = h/2 - offsetY - fontSize / 1.9
+        fpsInstanceRef.current.text = ' ±	' + (Math.round(infoInstance * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
+      } else {
+       
+        fpsRef.current.position.y = h/2 - offsetY - fontSize
+        fpsRef.current.fontSize = fontSize
+      }
+    }
   })
   return (
-    <Text textAlign='left' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color}>
+    <>
+      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color}>
       0
-    </Text>
+      </Text>
+      {hasInstance && (
+         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'}>
+         </Text>
+      )
+      }
+    </>
   )
 })
 
@@ -80,13 +113,13 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
       <TextHighHZ color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} isPerf metric='gpu'  fontSize={fontSize} offsetX={10} round={3}/>
       {!minimal ? (
           <>
-           <TextHighHZ metric='calls' fontSize={fontSize} offsetX={200} round={0} />
-           <TextHighHZ metric='triangles'  fontSize={fontSize} offsetX={260} round={0}/>
-           <TextHighHZ isMemory metric='geometries' fontSize={fontSize} offsetY={30} offsetX={0} round={0}/>
-           <TextHighHZ isMemory metric='textures'  fontSize={fontSize} offsetY={30} offsetX={80} round={0}/>
-           <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0}/>
-           <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0}/>
-           <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0}/>
+           <TextHighHZ metric='calls' fontSize={fontSize} offsetX={200} round={0} hasInstance />
+           <TextHighHZ metric='triangles'  fontSize={fontSize} offsetX={260} round={0} hasInstance/>
+           <TextHighHZ isMemory metric='geometries' fontSize={fontSize} offsetY={30} offsetX={0} round={0} />
+           <TextHighHZ isMemory metric='textures'  fontSize={fontSize} offsetY={30} offsetX={80} round={0} />
+           <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0} />
+           <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0} hasInstance/>
+           <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0} hasInstance/>
           </>
        ) : null}
      
