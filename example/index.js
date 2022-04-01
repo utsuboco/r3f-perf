@@ -1,6 +1,6 @@
 import 'react-app-polyfill/ie11';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom/client';
 import { Perf } from '../dist';
 import './index.css';
 import * as THREE from 'three';
@@ -139,4 +139,7 @@ export default function App() {
     </>
   );
 }
-ReactDOM.render(<App />, document.getElementById('root'));
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+
+root.render(<App />);

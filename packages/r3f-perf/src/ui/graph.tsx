@@ -84,20 +84,21 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
        
         fpsRef.current.position.y = h/2 - offsetY - fontSize
         fpsRef.current.fontSize = fontSize
+
       }
     }
   })
   return (
-    <>
-      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color}>
+    <Suspense fallback={null}>
+      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789">
       0
       </Text>
       {hasInstance && (
-         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'}>
+         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789">
          </Text>
       )
       }
-    </>
+    </Suspense>
   )
 })
 
@@ -106,7 +107,7 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
 
   const fontSize: number = 14
   return (
-    <Suspense fallback={null}>
+    <>
       <TextHighHZ color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} isPerf metric='fps' fontSize={fontSize} offsetX={140} round={0} />
       <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='mem' fontSize={fontSize} offsetX={80} round={0} />
       <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='maxMemory' fontSize={8} offsetX={112} offsetY={10} round={0} />
@@ -124,7 +125,7 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
        ) : null}
      
       {customData && <TextHighHZ color={`rgb(${colorsGraph(colorBlind).custom.toString()})`}  customData={customData} fontSize={fontSize} offsetY={0} offsetX={minimal ? 200 : 320} round={0}/>}
-    </Suspense>
+    </>
   );
 };
 
@@ -132,12 +133,10 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
 const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz: 15}}) => {
   
   // Create a viewport. Units are in pixels.
-  // console.log(candyGraph)
   // const coords = candyGraph.createCartesianCoordinateSystem(
   //   candyGraph.createLinearScale([0, 1], [0, viewport.width - 4]),
   //   candyGraph.createLinearScale([0, 1], [10, viewport.height - 4])
   // );
-  // console.log(coords)
   const curves: any = useMemo(() => {
     return {
       fps: new Float32Array(chart.length * 3),
@@ -167,7 +166,8 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
         if (chart[id] > maxVal) {
           maxVal = chart[id] * factor;
         }
-        dummyVec3.set(padding + i / (len - 1) * (w - padding * 2) - w / 2,(Math.min(100, chart[id]) * factor) / 100 * (h - padding * 2 - paddingTop) - h / 2,0)
+        dummyVec3.set(padding + i / (len - 1) * (w - padding * 2) - w / 2, (Math.min(100, chart[id]) * factor) / 100 * (h - padding * 2 - paddingTop) - h / 2, 0)
+        
         dummyVec3.toArray(ref.attributes.position.array, i * 3)
       }
     }
@@ -188,7 +188,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
       <line>
         <bufferGeometry ref={fpsRef}>
           <bufferAttribute
-              attachObject={['attributes', 'position']}
+              attach={'attributes-position'}
               count={chart.length}
               array={curves.fps}
               itemSize={3}
@@ -200,7 +200,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
       <line>
         <bufferGeometry ref={gpuRef}>
           <bufferAttribute
-              attachObject={['attributes', 'position']}
+              attach={'attributes-position'}
               count={chart.length}
               array={curves.gpu}
               itemSize={3}
@@ -212,7 +212,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
       {supportMemory && <line>
         <bufferGeometry ref={memRef}>
           <bufferAttribute
-            attachObject={['attributes', 'position']}
+            attach={'attributes-position'}
             count={chart.length}
             array={curves.mem}
             itemSize={3}

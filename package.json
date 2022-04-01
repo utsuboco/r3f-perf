@@ -13,7 +13,7 @@
     ]
   },
   "scripts": {
-    "postinstall": "patch-package && preconstruct dev",
+    "postinstall": "husky install && preconstruct dev",
     "build": "preconstruct build",
     "watch": "preconstruct watch",
     "dev": "preconstruct dev",
@@ -43,8 +43,8 @@
     "@size-limit/preset-big-lib": "^4.10.1",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@types/node": "^15.0.2",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
     "@types/styled-components": "^5.1.9",
     "@types/tinycolor2": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
@@ -61,8 +61,8 @@
     "husky": "^7.0.4",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "size-limit": "^7.0.8",
     "tsd": "^0.19.1",
     "typescript": "^4.2.3",
@@ -75,5 +75,8 @@
     "jsxBracketSameLine": true,
     "tabWidth": 2,
     "printWidth": 120
+  },
+  "dependencies": {
+    "three-stdlib": "^2.8.12"
   }
 }

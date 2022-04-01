@@ -18,6 +18,8 @@ const countGeoDrawCalls = (programs: ProgramsPerfs) => {
       let index = geometry.index;
       const position = geometry.attributes.position;
 
+      if (!position) return
+
       let rangeFactor = 1;
 
       if (material.wireframe === true) {

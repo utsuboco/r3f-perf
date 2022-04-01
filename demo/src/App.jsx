@@ -101,12 +101,11 @@ export function App() {
     <>
       {/* frameloop={'demand'}  */}
       <Canvas
-        concurrent
+        concurrent={'true'}
         shadows
         dpr={[1, 2]}
         performance={{ min: 0.2 }}
         orthographic
-        pixelRatio={[1, 2]}
         camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
       >
         <pointLight />
@@ -151,4 +150,3 @@ export function App() {
     </>
   ) : null;
 }
-// ReactDOM.render(<App />, document.getElementById('root'));

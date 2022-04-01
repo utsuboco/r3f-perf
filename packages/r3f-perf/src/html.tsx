@@ -1,10 +1,6 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom/client';
 import { useThree } from '@react-three/fiber';
-
-function _extends(props:any, args:any) {
-  return Object.assign(props, args);
-}
 
 function _objectWithoutPropertiesLoose(source: any, excluded: any) {
   if (source == null) return {};
@@ -41,7 +37,10 @@ const Html = /*#__PURE__*/ React.forwardRef((_ref, ref) => {
     gl,
   }));
 
-  const [el] = React.useState(() => document.createElement('div'));
+
+  const [el] = React.useState(() => document.createElement('div'))
+  const root = React.useMemo(() => ReactDOM.createRoot(el), [el])
+
   const group = React.useRef(null);
   const target =
     (_portal$current = portal == null ? void 0 : portal.current) != null
@@ -51,32 +50,22 @@ const Html = /*#__PURE__*/ React.forwardRef((_ref, ref) => {
   React.useEffect(() => {
     if (group.current) {
       if (target) {
-        target.appendChild(el);
+        target.appendChild(el)
       }
       return () => {
-        if (target) target.removeChild(el);
-        ReactDOM.unmountComponentAtNode(el);
-      };
+        if (target) target.removeChild(el)
+        root.unmount()
+      }
     }
     return undefined;
-  }, [target, el]);
+  }, [target, root]);
 
   React.useLayoutEffect(() => {
-    ReactDOM.render(
-      /*#__PURE__*/ React.createElement('div', {
-        ref: ref,
-        className: className,
-        children: children,
-      }),
-      el
-    );
+    // @ts-ignore
+    root.render(<div ref={ref} className={className} children={children} />)
   });
-  return /*#__PURE__*/ React.createElement(
-    'group',
-    _extends(props, {
-      ref: group,
-    })
-  );
+
+  return <group {...props} ref={group} />
 });
 
 export { Html };

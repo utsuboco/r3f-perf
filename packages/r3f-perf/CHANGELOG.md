@@ -1,5 +1,9 @@
 # R3F-Perf
 
+## 6.0.0:
+- Update r3f-perf to React v18 and R3F v8
+- Fix an issue where the numbers were not getting displayed sometimes.
+
 ## 5.4.0:
 - New `minimal` option. Useful for smartphone and smaller viewports.
 - New `customData` option (See [README](https://github.com/utsuboco/r3f-perf)). Introducing custom data log. Can be useful for logging your physic fps for instance.
