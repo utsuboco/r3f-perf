@@ -1,71 +1,46 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
-import { useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber'
+import { forwardRef, ReactNode, useLayoutEffect, useRef } from 'react'
+import { createRoot, Root } from 'react-dom/client'
 
-function _objectWithoutPropertiesLoose(source: any, excluded: any) {
-  if (source == null) return {};
-  var target: any = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
+interface HtmlProps {
+  portal?: React.MutableRefObject<HTMLElement>
+  className?: string
+  children?: ReactNode
 }
 
-const Html = /*#__PURE__*/ React.forwardRef((_ref, ref) => {
-  var _portal$current;
+const Html = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, children, ...props }, ref) => {
+  const gl = useThree(state => state.gl)
+  const group = useRef(null)
+  const rootRef = useRef<Root | null>(null)
 
-  let {
-      // @ts-ignore
-      portal,
-      // @ts-ignore
-      className,
-      children,
-    } = _ref,
-    props = _objectWithoutPropertiesLoose(_ref, [
-      'portal',
-      'children',
-      'className',
-    ]);
+  const target = portal?.current != null ? portal.current : gl.domElement.parentNode
 
-  const { gl } = useThree(({ gl }) => ({
-    gl,
-  }));
+  useLayoutEffect(() => {
+    if (!group.current || !target) return
 
+    const el = document.createElement('div')
+    const root = (rootRef.current = createRoot(el))
 
-  const [el] = React.useState(() => document.createElement('div'))
-  const root = React.useMemo(() => ReactDOM.createRoot(el), [el])
+    target.appendChild(el)
 
-  const group = React.useRef(null);
-  const target =
-    (_portal$current = portal == null ? void 0 : portal.current) != null
-      ? _portal$current
-      : gl.domElement.parentNode;
-
-  React.useEffect(() => {
-    if (group.current) {
-      if (target) {
-        target.appendChild(el)
-      }
-      return () => {
-        if (target) target.removeChild(el)
-        root.unmount()
-      }
+    return () => {
+      root.unmount()
+      rootRef.current = null
+      target.removeChild(el)
     }
-    return undefined;
-  }, [target, root]);
+  }, [target])
 
-  React.useLayoutEffect(() => {
-    // @ts-ignore
-    root.render(<div ref={ref} className={className} children={children} />)
-  });
+  useLayoutEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    root.render(
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    )
+  })
 
   return <group {...props} ref={group} />
-});
+})
 
-export { Html };
+export { Html }
