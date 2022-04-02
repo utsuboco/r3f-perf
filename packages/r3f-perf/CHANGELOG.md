@@ -1,5 +1,10 @@
 # R3F-Perf
 
+## 6.0.1:
+- Enable jsx runtime #31
+- Simplify logic in <Html> (remove babel generated code + move React root creation inside effect)
+
+Thanks @alexandernanberg
 ## 6.0.0:
 - Update r3f-perf to React v18 and R3F v8
 - Fix an issue where the numbers were not getting displayed sometimes.
