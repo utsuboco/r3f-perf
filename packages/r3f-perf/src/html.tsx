@@ -1,5 +1,5 @@
 import { useThree } from '@react-three/fiber'
-import { forwardRef, ReactNode, useLayoutEffect, useRef } from 'react'
+import React, { forwardRef, ReactNode, useLayoutEffect, useRef } from 'react'
 import { createRoot, Root } from 'react-dom/client'
 
 interface HtmlProps {
