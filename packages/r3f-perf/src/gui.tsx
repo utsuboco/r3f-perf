@@ -1,6 +1,6 @@
 import React, { FC, useRef } from 'react';
 import { ChartUI } from './ui/graph';
-import { ActivityLogIcon, BarChartIcon, Crosshair1Icon, DotIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, MixIcon, PaddingIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
+import { ActivityLogIcon, BarChartIcon, DotIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
 import { Html } from './html';
 import { usePerfStore, Headless } from './headless';

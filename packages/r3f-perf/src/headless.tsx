@@ -6,8 +6,8 @@ import {
   addTail,
 } from '@react-three/fiber';
 import GLPerf from './perf';
-import create, { GetState, SetState } from 'zustand';
-import { customData, PerfProps } from '.';
+import create from 'zustand';
+import { PerfProps } from '.';
 import {
   Material,
   Mesh,

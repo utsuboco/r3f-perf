@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import Gui from './gui';
 import { Headless, usePerfFunc } from './headless';
 export { setCustomData, getCustomData } from './headless'

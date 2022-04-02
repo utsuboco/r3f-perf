@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, memo, Suspense, useCallback, useMemo, useRef, useState } from 'react';
+import { FC, HTMLAttributes, memo, Suspense, useMemo, useRef, useState } from 'react';
 import { usePerfStore } from '../headless';
 import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
