@@ -54,6 +54,7 @@ const Boxes = ({ scale: s = 1, ...props }) => {
 
   const vec = new THREE.Vector3();
   useFrame(() => {
+    ref.current.updateMatrixWorld()
     let id = 0;
     for (let z = -NUM / 2; z < NUM / 2; z += 1) {
       for (let y = -NUM / 2; y < NUM / 2; y += 1) {

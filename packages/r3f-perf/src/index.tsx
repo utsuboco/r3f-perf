@@ -26,6 +26,7 @@ export interface PerfProps {
   chart?: chart;
   deepAnalyze?: boolean;
   customData?: customData;
+  matrixUpdate?: boolean;
   minimal?: boolean;
 }
 
@@ -42,6 +43,7 @@ export const Perf: VFC<PerfProps> = ({
   antialias = true,
   openByDefault = true,
   customData,
+  matrixUpdate = false,
   position = 'top-right',
   chart = {
     length: 30,
@@ -51,7 +53,7 @@ export const Perf: VFC<PerfProps> = ({
   minimal = false,
 }) => {
   return headless ? (
-    <Headless chart={chart} deepAnalyze={deepAnalyze} />
+    <Headless chart={chart} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
   ) : (
     <Gui
       colorBlind={colorBlind}
@@ -65,6 +67,7 @@ export const Perf: VFC<PerfProps> = ({
       deepAnalyze={deepAnalyze}
       minimal={minimal}
       customData={customData}
+      matrixUpdate={matrixUpdate}
     />
   );
 };

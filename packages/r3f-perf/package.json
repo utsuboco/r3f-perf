@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.3",
-    "@react-three/drei": "^9.0.1",
-    "@react-three/fiber": "^8.0.6",
+    "@react-three/drei": "^9.7.1",
+    "@react-three/fiber": "^8.0.13",
     "@stitches/react": "^1.2.6",
     "three": "^0.139.2",
     "three-stdlib": "^2.8.12",

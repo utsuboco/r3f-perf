@@ -1,6 +1,6 @@
 import React, { FC, useRef } from 'react';
 import { ChartUI } from './ui/graph';
-import { ActivityLogIcon, BarChartIcon, DotIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
+import { ActivityLogIcon, BarChartIcon, DotIcon, DropdownMenuIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
 import { Html } from './html';
 import { usePerfStore, Headless } from './headless';
@@ -112,6 +112,7 @@ const PerfUI: FC<PerfProps> = ({
   colorBlind,
   deepAnalyze,
   customData,
+  matrixUpdate,
   openByDefault,
   minimal
 }) => {
@@ -123,12 +124,12 @@ const PerfUI: FC<PerfProps> = ({
         customData={customData}
         minimal={minimal}
       />
-      {!minimal && <PerfThree openByDefault={openByDefault} deepAnalyze={deepAnalyze} showGraph={showGraph} />}
+      {!minimal && <PerfThree  matrixUpdate={matrixUpdate} openByDefault={openByDefault} deepAnalyze={deepAnalyze} showGraph={showGraph} />}
     </>
   );
 };
 
-const InfoUI: FC<PerfProps> = () => {
+const InfoUI: FC<PerfProps> = ({matrixUpdate}) => {
   return (
     <div>
       <PerfI>
@@ -155,6 +156,12 @@ const InfoUI: FC<PerfProps> = () => {
         <DotIcon />
         <PerfB>Points</PerfB>
       </PerfI>
+      {matrixUpdate && (
+        <PerfI>
+          <DropdownMenuIcon />
+          <PerfB>Matrices</PerfB>
+        </PerfI>
+      )}
     </div>
   );
 };
@@ -173,14 +180,14 @@ const ToggleEl = ({ tab, title, set }: any) => {
     </Toggle>
   );
 };
-const PerfThree: FC<PerfProps> = ({ openByDefault, showGraph, deepAnalyze }) => {
+const PerfThree: FC<PerfProps> = ({ openByDefault, showGraph, deepAnalyze, matrixUpdate }) => {
   const [show, set] = React.useState(openByDefault);
 
   // const initialDpr = useThree((state) => state.viewport.initialDpr)
 
   return (
     <span>
-      <TabContainers show={show} showGraph={showGraph} />
+      <TabContainers show={show} showGraph={showGraph} matrixUpdate={matrixUpdate} />
       {openByDefault && !deepAnalyze ? null :
         <ToggleContainer className={'__perf_toggle'}>
           {/* <ToggleEl tab="inspector" title="Inspector" set={set} /> */}
@@ -207,12 +214,12 @@ const PerfThree: FC<PerfProps> = ({ openByDefault, showGraph, deepAnalyze }) => 
   );
 };
 
-const TabContainers = ({ show, showGraph }: any) => {
+const TabContainers = ({ show, showGraph, matrixUpdate }: any) => {
   const tab = usePerfStore((state) => state.tab);
 
   return (
     <>
-      <InfoUI />
+      <InfoUI matrixUpdate={matrixUpdate} />
       {show && (
         <div>
           <ContainerScroll style={{marginTop: showGraph? '38px' : 0}}>
@@ -236,13 +243,14 @@ const Gui: FC<PerfProps> = ({
   deepAnalyze,
   antialias,
   customData,
+  matrixUpdate,
   minimal
 }) => {
   const perfContainerRef = useRef(null);
 
   return (
     <>
-      <Headless chart={chart} deepAnalyze={deepAnalyze} />
+      <Headless chart={chart} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
       {/* @ts-ignore */}
       <Html transform={false}>
         <PerfS
@@ -261,6 +269,7 @@ const Gui: FC<PerfProps> = ({
               antialias={antialias}
               customData={customData}
               minimal={minimal}
+              matrixUpdate={matrixUpdate}
             />
           <PerfUI
             colorBlind={colorBlind}
@@ -268,6 +277,7 @@ const Gui: FC<PerfProps> = ({
             deepAnalyze={deepAnalyze}
             openByDefault={openByDefault}
             customData={customData}
+            matrixUpdate={matrixUpdate}
             minimal={minimal}
           />
         </PerfS>

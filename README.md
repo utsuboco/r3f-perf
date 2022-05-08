@@ -34,6 +34,7 @@ customData?: {
   name: '' // name to show
   info: '' // additional information about the data (fps/ms for instance)
 }
+matrixUpdate?: false // count the number of time matrixWorldUpdate is called per frame
 chart?: {
   hz: 60, // graphs refresh frequency parameter
   length: 120, // number of values shown on the monitor

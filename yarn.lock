@@ -2376,6 +2376,76 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-three/drei@npm:^9.7.1":
+  version: 9.7.1
+  resolution: "@react-three/drei@npm:9.7.1"
+  dependencies:
+    "@babel/runtime": ^7.11.2
+    "@react-spring/three": ^9.3.1
+    "@types/nanoid": ^3.0.0
+    "@use-gesture/react": ^10.2.0
+    detect-gpu: ^4.0.19
+    glsl-noise: ^0.0.0
+    lodash.omit: ^4.5.0
+    lodash.pick: ^4.4.0
+    meshline: ^2.0.4
+    nanoid: ^3.3.3
+    react-composer: ^5.0.3
+    react-merge-refs: ^1.1.0
+    stats.js: ^0.17.0
+    suspend-react: ^0.0.8
+    three-mesh-bvh: ^0.5.10
+    three-stdlib: ^2.10.1
+    troika-three-text: ^0.46.4
+    utility-types: ^3.10.0
+    zustand: ^3.5.13
+  peerDependencies:
+    "@react-three/fiber": ">=8.0"
+    react: ">=18.0"
+    react-dom: ">=18.0"
+    three: ">=0.137"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 2f2796ec092a4a2cd717b5869d66ed6fcc1618702c3f4686fac01a2a9da0c20d12c4c6dc2c311a4bc9861ecf23c3d2ec24065f025bedbf9194c0d38d435a31a7
+  languageName: node
+  linkType: hard
+
+"@react-three/fiber@npm:^8.0.13":
+  version: 8.0.13
+  resolution: "@react-three/fiber@npm:8.0.13"
+  dependencies:
+    "@babel/runtime": ^7.17.8
+    "@types/react-reconciler": ^0.26.6
+    react-merge-refs: ^1.1.0
+    react-reconciler: ^0.27.0
+    react-use-measure: ^2.1.1
+    scheduler: ^0.21.0
+    suspend-react: ^0.0.8
+    zustand: ^3.7.1
+  peerDependencies:
+    expo: ">=43.0"
+    expo-asset: ">=8.4"
+    expo-gl: ">=11.0"
+    react: ">=18.0"
+    react-dom: ">=18.0"
+    react-native: ">=0.64"
+    three: ">=0.133"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+    expo-asset:
+      optional: true
+    expo-gl:
+      optional: true
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 34027edde0f3e544beeabe2251cebb137342247eb1ead25029dbb315081fd4528f6169cb12c6bea839372be26605be67164a3b7c8da6af9d969d656bd2741bc2
+  languageName: node
+  linkType: hard
+
 "@react-three/fiber@npm:^8.0.6":
   version: 8.0.6
   resolution: "@react-three/fiber@npm:8.0.6"
@@ -2686,6 +2756,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/nanoid@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/nanoid@npm:3.0.0"
+  dependencies:
+    nanoid: "*"
+  checksum: 6e84d71ce2b8a2e23b20a018249a2e6a1c36b4ea0f45ff0265e8db514010ccf13141d87d6892f35b8e50ca5832d1d04ddc27062b5e69f91db2d5b3c5321c8c56
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 17.0.18
   resolution: "@types/node@npm:17.0.18"
@@ -2736,6 +2815,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 5ebb72f8aa70824b69030ae7f4c21828c0fb5c1cc5873a606eb7f7ac50cf5dd52502edcd32bf1eead2f149d076ee1798c86f1ffaebfa8b31d523343368d351e0
+  languageName: node
+  linkType: hard
+
+"@types/react-reconciler@npm:^0.26.6":
+  version: 0.26.6
+  resolution: "@types/react-reconciler@npm:0.26.6"
+  dependencies:
+    "@types/react": "*"
+  checksum: 5c96f40338f2ccc544018610b42f467945450a8448b042ce5a052a3a45820ccd028b1fb65157c99f5889a10cd1e17093252c54c56a002bc64acadd6d5a9e4b08
   languageName: node
   linkType: hard
 
@@ -5078,6 +5166,15 @@ __metadata:
   dependencies:
     webgl-constants: ^1.1.1
   checksum: 1ada47d1b1bfe4e167161028f1f87e8b6292e55e4329dbb9c6af03d3030516c1823e37f8ab8d8471369b196ee1697c4d79ad9081dbf365f7a694dbf732f0eacd
+  languageName: node
+  linkType: hard
+
+"detect-gpu@npm:^4.0.19":
+  version: 4.0.21
+  resolution: "detect-gpu@npm:4.0.21"
+  dependencies:
+    webgl-constants: ^1.1.1
+  checksum: de32e9b622202b29d980a596566cbda573eaf25852e6a13f1370f3731646c38dc1e5e8399e0204338e62e0594294dd36a001f123756f834156c0862d2c00b5fb
   languageName: node
   linkType: hard
 
@@ -8522,6 +8619,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:*, nanoid@npm:^3.3.3":
+  version: 3.3.4
+  resolution: "nanoid@npm:3.3.4"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 2fddd6dee994b7676f008d3ffa4ab16035a754f4bb586c61df5a22cf8c8c94017aadd360368f47d653829e0569a92b129979152ff97af23a558331e47e37cd9c
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:^3.1.23, nanoid@npm:^3.2.0":
   version: 3.3.1
   resolution: "nanoid@npm:3.3.1"
@@ -10009,16 +10115,14 @@ __metadata:
   resolution: "r3f-perf@workspace:packages/r3f-perf"
   dependencies:
     "@radix-ui/react-icons": ^1.0.3
-    "@react-three/drei": ^9.0.1
-    "@react-three/fiber": ^8.0.6
+    "@react-three/drei": ^9.7.1
+    "@react-three/fiber": ^8.0.13
     "@stitches/react": ^1.2.6
     "@types/three": latest
     three: ^0.139.2
     three-stdlib: ^2.8.12
     zustand: ^3.7.1
   peerDependencies:
-    "@react-three/drei": "*"
-    "@react-three/fiber": "*"
     react: ">=18.0"
     react-dom: ">=18.0"
     three: ">=0.137"
@@ -10082,6 +10186,17 @@ __metadata:
   peerDependencies:
     react: ^15.0.0 || ^16.0.0 || ^17.0.0
   checksum: 0b7b5741dc5b56d32e16df99a3f6674b5249868719b648f469a5e9bb888e3b0c261c54958826a934558c6ee575e53e7f3b6ea30984880695aee2167eb493f1ba
+  languageName: node
+  linkType: hard
+
+"react-composer@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "react-composer@npm:5.0.3"
+  dependencies:
+    prop-types: ^15.6.0
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: ef7c52dc61588233ec7f70b3bae8a2325562e2eff3648e7bc6962162568c36d7e27f165d4639f8bfa18fadb09585577858e35273ce0039ac02e87c9debfd268e
   languageName: node
   linkType: hard
 
@@ -11483,12 +11598,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"three-mesh-bvh@npm:^0.5.10":
+  version: 0.5.10
+  resolution: "three-mesh-bvh@npm:0.5.10"
+  peerDependencies:
+    three: ">= 0.123.0"
+  checksum: 01d55f9eda69d1f3258f1ccba699099f28b497eeff1e32581712f84e84333e26c04c26c975e9227f4fa4305dc8c4172ed4efdcdd088e05ba9793831c0c3c459b
+  languageName: node
+  linkType: hard
+
 "three-mesh-bvh@npm:^0.5.7":
   version: 0.5.8
   resolution: "three-mesh-bvh@npm:0.5.8"
   peerDependencies:
     three: ">= 0.123.0"
   checksum: 434bf554428fb711eb4f269b786c31598d70490c9ce153ca88747370046efc0ea6cdb05b85200d9c953df37487911b0e2aebc43d8139da022231e3b20d37fa81
+  languageName: node
+  linkType: hard
+
+"three-stdlib@npm:^2.10.1":
+  version: 2.10.1
+  resolution: "three-stdlib@npm:2.10.1"
+  dependencies:
+    "@babel/runtime": ^7.16.7
+    "@webgpu/glslang": ^0.0.15
+    chevrotain: ^10.1.2
+    draco3d: ^1.4.1
+    fflate: ^0.6.9
+    ktx-parse: ^0.2.1
+    mmd-parser: ^1.0.4
+    opentype.js: ^1.3.3
+    potpack: ^1.0.1
+    zstddec: ^0.0.2
+  peerDependencies:
+    three: ">=0.122.0"
+  checksum: a3f0a83f786abeb8bf9d8e1f66169ff9f70657b9e8a3028b3051780d69e6a905fe010fca02c178b614418f821942376a59f527bc10daf7042f8e99bf4eaca555
   languageName: node
   linkType: hard
 
@@ -11659,7 +11803,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"troika-three-text@npm:^0.46.3":
+"troika-three-text@npm:^0.46.3, troika-three-text@npm:^0.46.4":
   version: 0.46.4
   resolution: "troika-three-text@npm:0.46.4"
   dependencies:

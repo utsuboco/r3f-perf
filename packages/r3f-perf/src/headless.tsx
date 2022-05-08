@@ -8,15 +8,29 @@ import {
 import GLPerf from './perf';
 import create from 'zustand';
 import { PerfProps } from '.';
-import {
-  Material,
-  Mesh,
-  Points,
-  Scene,
-  WebGLProgram,
-  WebGLRenderer,
-} from 'three';
+import * as THREE from 'three';
 import countGeoDrawCalls from './helpers/countGeoDrawCalls';
+
+// @ts-ignore
+Function.prototype.clone = function() {
+  var that = this;
+  // @ts-ignore
+  var temp = function temporary() { return that.apply(this, arguments); };
+  for(var key in this) {
+    if (this.hasOwnProperty(key)) {
+        // @ts-ignore
+        temp[key] = this[key];
+    }
+  }
+  return temp;
+};
+
+// cameras from r3f-perf scene
+let matriceCount = -2
+
+// @ts-ignore
+const updateMatrixTemp = THREE.Object3D.prototype.updateMatrixWorld.clone();
+
 
 type drawCount = {
   type: string;
@@ -30,9 +44,9 @@ export type drawCounts = {
 
 export type ProgramsPerf = {
   meshes?: {
-    [index: string]: Mesh[];
+    [index: string]: THREE.Mesh[];
   };
-  material: Material;
+  material: THREE.Material;
   program?: WebGLProgram;
   visible: boolean;
   drawCounts: drawCounts;
@@ -53,7 +67,8 @@ const isUUID = (uuid: string) => {
   return true;
 };
 
-const addMuiPerfID = (material: Material, currentObjectWithMaterials: any) => {
+
+const addMuiPerfID = (material: THREE.Material, currentObjectWithMaterials: any) => {
   if (!material.defines) {
     material.defines = {};
   }
@@ -74,8 +89,6 @@ const addMuiPerfID = (material: Material, currentObjectWithMaterials: any) => {
     material.needsUpdate = true;
   }
   material.needsUpdate = false;
-  // console.log(material);
-  // debugger;
   return uuid;
 };
 
@@ -90,10 +103,10 @@ export type State = {
     };
     circularId: number;
   };
-  gl: WebGLRenderer | undefined;
-  scene: Scene | undefined;
+  gl: THREE.WebGLRenderer | undefined;
+  scene: THREE.Scene | undefined;
   programs: ProgramsPerfs;
-  objectWithMaterials: Mesh[] | null;
+  objectWithMaterials: THREE.Mesh[] | null;
   tab: 'infos' | 'programs' | 'data';
 };
 
@@ -159,7 +172,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
+export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUpdate }) => {
   const { gl, scene } = useThree();
 
   usePerfStore.setState({ gl, scene });
@@ -181,12 +194,22 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
           fps: logger.fps,
           totalTime: logger.duration,
           frameCount: logger.frameCount,
+          matriceCount: matriceCount
         },
       });
     },
   }), [])
 
   useEffect(() => {
+
+    if (matrixUpdate) {
+
+      THREE.Object3D.prototype.updateMatrixWorld = function () {
+        matriceCount++
+        return updateMatrixTemp.call(this, ...arguments);
+      }
+
+    }
 
     gl.info.autoReset = false;
     let effectSub: any = null
@@ -198,11 +221,13 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
       if (usePerfStore.getState().paused) {
         usePerfStore.setState({ paused: false });
       }
+      matriceCount = -2
       if (PerfLib && gl.info) {
         gl.info.reset();
         PerfLib.begin('profiler');
       }
     });
+
     afterEffectSub = addAfterEffect(() => {
       if (PerfLib) {
         PerfLib.end('profiler');
@@ -213,7 +238,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
       const programs: ProgramsPerfs = new Map();
 
         scene.traverse(function (object) {
-          if (object instanceof Mesh || object instanceof Points) {
+          if (object instanceof THREE.Mesh || object instanceof THREE.Points) {
             if (object.material) {
               let uuid = object.material.uuid;
               // troika generate and attach 2 materials
@@ -277,10 +302,20 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
         window.cancelAnimationFrame(PerfLib.rafId);
         window.cancelAnimationFrame(PerfLib.checkQueryId);
       }
+
+      if (matrixUpdate) {
+
+
+        THREE.Object3D.prototype.updateMatrixWorld = function () {
+          return updateMatrixTemp.call(this, ...arguments);
+        }
+  
+      }
+  
       effectSub();
       afterEffectSub();
     };
-  }, [PerfLib, gl, trackCPU, chart]);
+  }, [PerfLib, gl, trackCPU, chart, matrixUpdate]);
 
   useEffect(() => {
     const unsub = addTail(() => {
@@ -295,6 +330,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze }) => {
             fps: 0,
             totalTime: 0,
             frameCount: 0,
+            matriceCount: matriceCount
           },
         });
       }

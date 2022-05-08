@@ -71,29 +71,31 @@ const UpdateCustomData = () => {
   // })
 
   return <Perf
-  className={'override'}
+    className={'override'}
     showGraph={true}
     deepAnalyze
-  chart={{
-    hz: 35,
-    length: 60,
-  }}
-  minimal={width < 712}
-  // customData={{
-  //   value: 30,
-  //   name: 'physic',
-  //   info: 'fps'
-  // }}
-  // colorBlind={true}
-  position={'top-left'}
+    chart={{
+      hz: 35,
+      length: 60,
+    }}
+    minimal={width < 712}
+    // customData={{
+    //   value: 30,
+    //   name: 'physic',
+    //   info: 'fps'
+    // }}
+    matrixUpdate={true}
+    // colorBlind={true}
+    position={'top-left'}
 />
 }
 
 export function App() {
-  const {enable, mountCanvas, minimal} = useControls({
+  const {enable, mountCanvas, minimal, boxes} = useControls({
     enable: true,
     mountCanvas: true,
-    minimal: true
+    minimal: true,
+    boxes: true,
   })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
 
@@ -104,6 +106,7 @@ export function App() {
         concurrent={'true'}
         shadows
         dpr={[1, 2]}
+        onCreated={({scene}) =>scene.autoUpdate =false}
         performance={{ min: 0.2 }}
         orthographic
         camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
@@ -132,7 +135,7 @@ export function App() {
         </Suspense>
 
         <Sphere position-x={2} position-y={2} material={mat} />
-        <Cylinder position-x={2} position-y={0} material={mat} />
+        {/* <Cylinder position-x={2} position-y={0} material={mat} />
         {/* <Cylinder position-x={4} position-y={2}>
             <meshPhysicalMaterial />
           </Cylinder> */}
@@ -140,7 +143,7 @@ export function App() {
             <meshBasicMaterial />
           </Sphere> */}
        
-        <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />
+        {boxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />}
         <Orbit />
         {/* {enable && <UpdateCustomData />} */}
         <UpdateCustomData />

@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react';
 import { ProgramsPerf, usePerfStore } from '../headless';
-import { Texture } from 'three';
 
 import {
   ProgramGeo,
@@ -19,6 +18,7 @@ import {
 import { PerfProps } from '..';
 import { estimateBytesUsed } from 'three-stdlib';
 import { ActivityLogIcon, ButtonIcon, CubeIcon, EyeNoneIcon, EyeOpenIcon, ImageIcon, LayersIcon, RocketIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons';
+import * as THREE from 'three';
 
 const addTextureUniforms = (id: string, texture: any) => {
   const repeatType = (wrap: number) => {
@@ -123,7 +123,7 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
             if (key.includes('uTroika')) {
               return;
             }
-            if (value instanceof Texture) {
+            if (value instanceof THREE.Texture) {
               TexCount++;
               data.value = addTextureUniforms(key, value);
             } else {

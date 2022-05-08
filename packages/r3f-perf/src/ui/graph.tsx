@@ -4,12 +4,11 @@ import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
-import { SplineCurve, Vector3 } from 'three';
 import { chart, customData } from '..';
 import { colorsGraph } from '../gui';
-
+import * as THREE from 'three';
 export interface graphData {
-  curve: SplineCurve;
+  curve: THREE.SplineCurve;
   maxVal: number;
   element: string;
 }
@@ -22,6 +21,7 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   chart?: chart;
   customData?: customData;
   minimal?: boolean;
+  matrixUpdate?: boolean;
 }
 interface TextHighHZProps {
   metric?: string;
@@ -61,7 +61,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
       const infos: any = isMemory? gl.info.memory : gl.info.render
       info = infos[metric]
     }
-
+   
     fpsRef.current.text = (metric === 'maxMemory' ? '/' : '') + (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
     if (hasInstance) {
       const infosInstance: any = gl.info.instance
@@ -87,10 +87,11 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
 
       }
     }
+
   })
   return (
     <Suspense fallback={null}>
-      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789">
+      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789" onUpdate={self=>self.updateMatrixWorld()}>
       0
       </Text>
       {hasInstance && (
@@ -102,9 +103,10 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
   )
 })
 
-const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
-  const [supportMemory] = useState(window.performance.memory)
-
+const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal, matrixUpdate }) => {
+  // const [supportMemory] = useState(window.performance.memory)
+  const supportMemory = false
+  
   const fontSize: number = 14
   return (
     <>
@@ -121,6 +123,7 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal }) => {
            <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0} />
            <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0} hasInstance/>
            <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0} hasInstance/>
+            {matrixUpdate && <TextHighHZ isPerf metric='matriceCount' fontSize={fontSize} offsetY={30} offsetX={320} round={0} />}
           </>
        ) : null}
      
@@ -149,7 +152,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   const gpuRef= useRef<any>(null)
   const memRef= useRef<any>(null)
 
-  const dummyVec3 = useMemo(() => new Vector3(0,0,0), [])
+  const dummyVec3 = useMemo(() => new THREE.Vector3(0,0,0), [])
   const updatePoints = (element: string, factor: number = 1, ref: any, viewport: Viewport) => {
     let maxVal = 0;
     const {width: w, height: h} = viewport
@@ -229,6 +232,7 @@ export const ChartUI: FC<PerfUIProps> = ({
   colorBlind,
   chart,
   customData,
+  matrixUpdate,
   showGraph= true,
   antialias= true,
   minimal,
@@ -255,6 +259,7 @@ export const ChartUI: FC<PerfUIProps> = ({
           stencil: false,
           depth: false,
         }}
+        onCreated={({scene}) => scene.autoUpdate=false}
         flat={true}
         style={{
           marginBottom: `-42px`,
@@ -266,7 +271,7 @@ export const ChartUI: FC<PerfUIProps> = ({
       >
         {!paused ? (
           <>
-            <TextsHighHZ customData={customData} minimal={minimal} />
+            <TextsHighHZ customData={customData} minimal={minimal} matrixUpdate={matrixUpdate} />
             {showGraph && <ChartCurve
               colorBlind={colorBlind}
               minimal={minimal}
