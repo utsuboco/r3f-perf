@@ -95,7 +95,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
       0
       </Text>
       {hasInstance && (
-         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789">
+         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789" onUpdate={self=>self.updateMatrixWorld()}>
          </Text>
       )
       }
