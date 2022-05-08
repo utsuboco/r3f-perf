@@ -39,7 +39,8 @@ interface TextHighHZProps {
 }
 
 const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round, hasInstance }) => {
-  const { width: w, height: h } = useThree(s=>s.viewport)
+  const { width: w, height: h } = useThree(s => s.viewport)
+  const subMatriceCount = usePerfStore(s=>s.subMatriceCount)
   const fpsRef = useRef<any>(null)
   const fpsInstanceRef = useRef<any>(null)
 
@@ -54,9 +55,12 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
     }
   
     if (!metric) return
+
     let info = log[metric]
     if (isShadersInfo) {
       info = gl.info.programs?.length
+    } else if (metric === 'matriceCount') {
+      info = usePerfStore.getState().matriceCount
     } else if (!isPerf && gl.info.render) {
       const infos: any = isMemory? gl.info.memory : gl.info.render
       info = infos[metric]
@@ -86,7 +90,11 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
         fpsRef.current.fontSize = fontSize
 
       }
+  
     }
+
+    subMatriceCount()
+    fpsRef.current.updateMatrixWorld()
 
   })
   return (

@@ -26,7 +26,6 @@ Function.prototype.clone = function() {
 };
 
 // cameras from r3f-perf scene
-let matriceCount = -2
 
 // @ts-ignore
 const updateMatrixTemp = THREE.Object3D.prototype.updateMatrixWorld.clone();
@@ -97,6 +96,9 @@ export type State = {
   paused: boolean;
   triggerProgramsUpdate: number;
   customData: number;
+  matriceCount: number;
+  addMatriceCount: any;
+  subMatriceCount: any;
   chart: {
     data: {
       [index: string]: number[];
@@ -131,11 +133,18 @@ type Chart = {
 
 const getMUIIndex = (muid: string) => muid === 'muiPerf';
 
-export const usePerfStore = create<State>(() => ({
+export const usePerfStore = create<State>((set) => ({
   log: null,
   paused: false,
   triggerProgramsUpdate: 0,
   customData: 0,
+  matriceCount: -1,
+  addMatriceCount: () => {
+    set( state => ({matriceCount: state.matriceCount + 1 }))
+  },
+  subMatriceCount: () => {
+    set( state => ({matriceCount: state.matriceCount - 1 }))
+  },
   chart: {
     data: {
       fps: [],
@@ -175,6 +184,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUpdate }) => {
   const { gl, scene } = useThree();
 
+  const addMatriceCount = usePerfStore(s=>s.addMatriceCount)
   usePerfStore.setState({ gl, scene });
 
   const PerfLib = useMemo(() => new GLPerf({
@@ -193,8 +203,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
           mem: logger.mem,
           fps: logger.fps,
           totalTime: logger.duration,
-          frameCount: logger.frameCount,
-          matriceCount: matriceCount
+          frameCount: logger.frameCount
         },
       });
     },
@@ -205,7 +214,8 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
     if (matrixUpdate) {
 
       THREE.Object3D.prototype.updateMatrixWorld = function () {
-        matriceCount++
+        addMatriceCount()
+
         return updateMatrixTemp.call(this, ...arguments);
       }
 
@@ -221,7 +231,9 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       if (usePerfStore.getState().paused) {
         usePerfStore.setState({ paused: false });
       }
-      matriceCount = -2
+      // matriceCount = -2
+      usePerfStore.setState({matriceCount: -1})
+
       if (PerfLib && gl.info) {
         gl.info.reset();
         PerfLib.begin('profiler');
@@ -330,7 +342,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
             fps: 0,
             totalTime: 0,
             frameCount: 0,
-            matriceCount: matriceCount
+            matriceCount: -1
           },
         });
       }
