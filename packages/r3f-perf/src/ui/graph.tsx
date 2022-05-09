@@ -1,5 +1,5 @@
 import { FC, HTMLAttributes, memo, Suspense, useMemo, useRef, useState } from 'react';
-import { usePerfStore } from '../headless';
+import { matriceCount, usePerfStore } from '../headless';
 import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
@@ -40,7 +40,6 @@ interface TextHighHZProps {
 
 const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round, hasInstance }) => {
   const { width: w, height: h } = useThree(s => s.viewport)
-  const subMatriceCount = usePerfStore(s=>s.subMatriceCount)
   const fpsRef = useRef<any>(null)
   const fpsInstanceRef = useRef<any>(null)
 
@@ -60,7 +59,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
     if (isShadersInfo) {
       info = gl.info.programs?.length
     } else if (metric === 'matriceCount') {
-      info = usePerfStore.getState().matriceCount
+      info = matriceCount.value
     } else if (!isPerf && gl.info.render) {
       const infos: any = isMemory? gl.info.memory : gl.info.render
       info = infos[metric]
@@ -93,7 +92,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
   
     }
 
-    subMatriceCount()
+    matriceCount.value -= 1
     fpsRef.current.updateMatrixWorld()
 
   })
