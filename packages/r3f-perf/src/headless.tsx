@@ -192,8 +192,9 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
     if (matrixUpdate) {
 
       THREE.Object3D.prototype.updateMatrixWorld = function () {
-        matriceCount.value ++
-        return updateMatrixTemp.call(this, ...arguments);
+        matriceCount.value++
+        updateMatrixTemp.apply(this, arguments)
+
       }
 
     }
