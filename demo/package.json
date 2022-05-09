@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.2",
-    "@react-three/drei": "^9.0.1",
-    "@react-three/fiber": "^8.0.6",
+    "@react-three/drei": "latest",
+    "@react-three/fiber": "latest",
     "@stitches/react": "^1.1.0",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",

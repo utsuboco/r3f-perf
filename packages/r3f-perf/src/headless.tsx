@@ -11,24 +11,11 @@ import { PerfProps } from '.';
 import * as THREE from 'three';
 import countGeoDrawCalls from './helpers/countGeoDrawCalls';
 
-// @ts-ignore
-Function.prototype.clone = function() {
-  var that = this;
-  // @ts-ignore
-  var temp = function temporary() { return that.apply(this, arguments); };
-  for(var key in this) {
-    if (this.hasOwnProperty(key)) {
-        // @ts-ignore
-        temp[key] = this[key];
-    }
-  }
-  return temp;
-};
 
 // cameras from r3f-perf scene
 
 // @ts-ignore
-const updateMatrixTemp = THREE.Object3D.prototype.updateMatrixWorld.clone();
+const updateMatrixTemp = THREE.Object3D.prototype.updateMatrixWorld;
 
 
 type drawCount = {
@@ -317,10 +304,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
 
       if (matrixUpdate) {
 
-
-        THREE.Object3D.prototype.updateMatrixWorld = function () {
-          return updateMatrixTemp.call(this, ...arguments);
-        }
+        THREE.Object3D.prototype.updateMatrixWorld = updateMatrixTemp
   
       }
   

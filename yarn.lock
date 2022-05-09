@@ -2343,40 +2343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/drei@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "@react-three/drei@npm:9.0.1"
-  dependencies:
-    "@babel/runtime": ^7.11.2
-    "@react-spring/three": ^9.3.1
-    "@use-gesture/react": ^10.2.0
-    detect-gpu: ^4.0.14
-    glsl-noise: ^0.0.0
-    lodash.omit: ^4.5.0
-    lodash.pick: ^4.4.0
-    meshline: ^2.0.4
-    react-composer: ^5.0.2
-    react-merge-refs: ^1.1.0
-    stats.js: ^0.17.0
-    suspend-react: ^0.0.8
-    three-mesh-bvh: ^0.5.7
-    three-stdlib: ^2.8.12
-    troika-three-text: ^0.46.3
-    utility-types: ^3.10.0
-    zustand: ^3.5.13
-  peerDependencies:
-    "@react-three/fiber": ">=8.0"
-    react: ">=18.0"
-    react-dom: ">=18.0"
-    three: ">=0.137"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-  checksum: 682885c9406d13cb29044ba1694787f6665241d9fb27514bff9592cae3dcfa0dd990add6749723d11deaa5e24e2fc9cd618648cc7dd22c55a75f410befe505d7
-  languageName: node
-  linkType: hard
-
-"@react-three/drei@npm:^9.7.1":
+"@react-three/drei@npm:latest":
   version: 9.7.1
   resolution: "@react-three/drei@npm:9.7.1"
   dependencies:
@@ -2411,7 +2378,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/fiber@npm:^8.0.13":
+"@react-three/fiber@npm:latest":
   version: 8.0.13
   resolution: "@react-three/fiber@npm:8.0.13"
   dependencies:
@@ -2443,41 +2410,6 @@ __metadata:
     react-native:
       optional: true
   checksum: 34027edde0f3e544beeabe2251cebb137342247eb1ead25029dbb315081fd4528f6169cb12c6bea839372be26605be67164a3b7c8da6af9d969d656bd2741bc2
-  languageName: node
-  linkType: hard
-
-"@react-three/fiber@npm:^8.0.6":
-  version: 8.0.6
-  resolution: "@react-three/fiber@npm:8.0.6"
-  dependencies:
-    "@babel/runtime": ^7.17.8
-    "@types/react-reconciler": ^0.26.4
-    react-merge-refs: ^1.1.0
-    react-reconciler: ^0.27.0
-    react-use-measure: ^2.1.1
-    scheduler: ^0.21.0
-    suspend-react: ^0.0.8
-    zustand: ^3.7.1
-  peerDependencies:
-    expo: ">=43.0"
-    expo-asset: ">=8.4"
-    expo-gl: ">=11.0"
-    react: ">=18.0"
-    react-dom: ">=18.0"
-    react-native: ">=0.64"
-    three: ">=0.133"
-  peerDependenciesMeta:
-    expo:
-      optional: true
-    expo-asset:
-      optional: true
-    expo-gl:
-      optional: true
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 36d2e5339d0aa86e3947675567d8caf5cee3838073d73709823ef24e73699c79d4b47ffb3afd937caf92347e41c80a38a3e04ff72fabed7176a5576cba715495
   languageName: node
   linkType: hard
 
@@ -2806,15 +2738,6 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: b54cd0ef573236b3d87fe7493e6d1c36d8b4ca37a3b46364272a5c91ac178e3296b68ea1aeb299ce68f12ad663c5720ee890d0539b14881c6754bdcbdb0befa0
-  languageName: node
-  linkType: hard
-
-"@types/react-reconciler@npm:^0.26.4":
-  version: 0.26.4
-  resolution: "@types/react-reconciler@npm:0.26.4"
-  dependencies:
-    "@types/react": "*"
-  checksum: 5ebb72f8aa70824b69030ae7f4c21828c0fb5c1cc5873a606eb7f7ac50cf5dd52502edcd32bf1eead2f149d076ee1798c86f1ffaebfa8b31d523343368d351e0
   languageName: node
   linkType: hard
 
@@ -5105,8 +5028,8 @@ __metadata:
   resolution: "demo@workspace:demo"
   dependencies:
     "@radix-ui/react-icons": ^1.0.2
-    "@react-three/drei": ^9.0.1
-    "@react-three/fiber": ^8.0.6
+    "@react-three/drei": latest
+    "@react-three/fiber": latest
     "@stitches/react": ^1.1.0
     "@types/react": ^17.0.43
     "@types/react-dom": ^17.0.14
@@ -5157,15 +5080,6 @@ __metadata:
   version: 1.0.4
   resolution: "destroy@npm:1.0.4"
   checksum: da9ab4961dc61677c709da0c25ef01733042614453924d65636a7db37308fef8a24cd1e07172e61173d471ca175371295fbc984b0af5b2b4ff47cd57bd784c03
-  languageName: node
-  linkType: hard
-
-"detect-gpu@npm:^4.0.14":
-  version: 4.0.15
-  resolution: "detect-gpu@npm:4.0.15"
-  dependencies:
-    webgl-constants: ^1.1.1
-  checksum: 1ada47d1b1bfe4e167161028f1f87e8b6292e55e4329dbb9c6af03d3030516c1823e37f8ab8d8471369b196ee1697c4d79ad9081dbf365f7a694dbf732f0eacd
   languageName: node
   linkType: hard
 
@@ -10115,17 +10029,15 @@ __metadata:
   resolution: "r3f-perf@workspace:packages/r3f-perf"
   dependencies:
     "@radix-ui/react-icons": ^1.0.3
-    "@react-three/drei": ^9.7.1
-    "@react-three/fiber": ^8.0.13
     "@stitches/react": ^1.2.6
     "@types/three": latest
-    three: ^0.139.2
-    three-stdlib: ^2.8.12
     zustand: ^3.7.1
   peerDependencies:
+    "@react-three/drei": "*"
+    "@react-three/fiber": "*"
     react: ">=18.0"
     react-dom: ">=18.0"
-    three: ">=0.137"
+    three: "*"
     three-stdlib: "*"
   languageName: unknown
   linkType: soft
@@ -10175,17 +10087,6 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: e60811781716e57f0990379eff20d6f22d4d35b9e858c47ecf857c1dc1c1a2274c924ded7248bad5f1e2fbf2aab06e59b12852910c8dee5e6850f8e4df293670
-  languageName: node
-  linkType: hard
-
-"react-composer@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "react-composer@npm:5.0.2"
-  dependencies:
-    prop-types: ^15.6.0
-  peerDependencies:
-    react: ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: 0b7b5741dc5b56d32e16df99a3f6674b5249868719b648f469a5e9bb888e3b0c261c54958826a934558c6ee575e53e7f3b6ea30984880695aee2167eb493f1ba
   languageName: node
   linkType: hard
 
@@ -11607,15 +11508,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three-mesh-bvh@npm:^0.5.7":
-  version: 0.5.8
-  resolution: "three-mesh-bvh@npm:0.5.8"
-  peerDependencies:
-    three: ">= 0.123.0"
-  checksum: 434bf554428fb711eb4f269b786c31598d70490c9ce153ca88747370046efc0ea6cdb05b85200d9c953df37487911b0e2aebc43d8139da022231e3b20d37fa81
-  languageName: node
-  linkType: hard
-
 "three-stdlib@npm:^2.10.1":
   version: 2.10.1
   resolution: "three-stdlib@npm:2.10.1"
@@ -11803,7 +11695,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"troika-three-text@npm:^0.46.3, troika-three-text@npm:^0.46.4":
+"troika-three-text@npm:^0.46.4":
   version: 0.46.4
   resolution: "troika-three-text@npm:0.46.4"
   dependencies:

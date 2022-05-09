@@ -1,4 +1,4 @@
-import React, { useMemo, Suspense } from 'react';
+import React, { useMemo, Suspense, useEffect, useRef, useState } from 'react';
 import { Perf, setCustomData, usePerf } from 'r3f-perf';
 import './index.css';
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
@@ -8,7 +8,7 @@ import Boxes from './sandboxes/perf-minimal/src/boxes';
 import Fireflies from './fire';
 import { useControls } from 'leva'
 
-import { Box, Cylinder, Text, Sphere, useTexture } from '@react-three/drei';
+import { Box, Cylinder, Text, Sphere, useTexture, Instances, Instance } from '@react-three/drei';
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -90,6 +90,59 @@ const UpdateCustomData = () => {
 />
 }
 
+
+const color = new THREE.Color()
+const randomVector = (r) => [r / 2 - Math.random() * r, r / 2 - Math.random() * r, r / 2 - Math.random() * r]
+const randomEuler = () => [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI]
+const randomData = Array.from({ length: 5000 }, (r = 10) => ({
+  random: Math.random(),
+  position: randomVector(r),
+  rotation: randomEuler(),
+}))
+
+function Shoes() {
+  const scene = useThree((s) => s.scene)
+  const { range, autoUpdate } = useControls({ autoUpdate: false, range: { value: 500, min: 0, max: 5000, step: 10 } })
+
+  useEffect(() => {
+    scene.autoUpdate = autoUpdate
+    scene.updateMatrixWorld()
+    //   // basically what it does
+    //   if (autoUpdate) {
+    //     scene.traverse((obj) => (obj.matrixAutoUpdate = true))
+    //   } else {
+    //     scene.traverse((obj) => (obj.matrixAutoUpdate = false))
+    //   }
+  }, [scene, autoUpdate])
+
+  return (
+    <Instances range={range}>
+      <boxBufferGeometry args={[0.3, 0.3, 0.3, 10, 10]} />
+      <meshPhongMaterial />
+      {randomData.map((props, i) => (
+        <Shoe key={i} {...props} />
+      ))}
+    </Instances>
+  )
+}
+
+function Shoe({ random, ...props }) {
+  const ref = useRef()
+  const [hovered, setHover] = useState(false)
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime() + random * 10000
+    ref.current.rotation.set(Math.cos(t / 4) / 2, Math.sin(t / 4) / 2, Math.cos(t / 1.5) / 2)
+    ref.current.position.y = Math.sin(t / 1.5) / 2
+    ref.current.scale.x = ref.current.scale.y = ref.current.scale.z = THREE.MathUtils.lerp(ref.current.scale.z, hovered ? 1.4 : 1, 0.1)
+    ref.current.color.lerp(color.set(hovered ? 'red' : 'white'), hovered ? 1 : 0.1)
+  })
+  return (
+    <group {...props}>
+      <Instance ref={ref} />
+    </group>
+  )
+}
+
 export function App() {
   const {enable, mountCanvas, minimal, boxes} = useControls({
     enable: true,
@@ -143,7 +196,8 @@ export function App() {
             <meshBasicMaterial />
           </Sphere> */}
        
-        {boxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />}
+        {/* {boxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />} */}
+        {boxes && <Shoes />}
         <Orbit />
         {/* {enable && <UpdateCustomData />} */}
         <UpdateCustomData />
