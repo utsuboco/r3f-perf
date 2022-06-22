@@ -165,40 +165,75 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
 
   usePerfStore.setState({ gl, scene });
 
-  const PerfLib = useMemo(() => new GLPerf({
-    trackGPU: true,
-    chartLen: chart ? chart.length : 120,
-    chartHz: chart ? chart.hz : 60,
-    gl: gl.getContext(),
-    chartLogger: (chart: Chart) => {
-      usePerfStore.setState({ chart });
-    },
-    paramLogger: (logger: Logger) => {
-      usePerfStore.setState({
-        log: {
-          maxMemory: logger.maxMemory,
-          gpu: logger.gpu,
-          mem: logger.mem,
-          fps: logger.fps,
-          totalTime: logger.duration,
-          frameCount: logger.frameCount
+  
+  const PerfLib = useMemo(() => {
+    
+      const PerfLib = new GLPerf({
+      trackGPU: true,
+      chartLen: chart ? chart.length : 120,
+      chartHz: chart ? chart.hz : 60,
+      gl: gl.getContext(),
+      chartLogger: (chart: Chart) => {
+        usePerfStore.setState({ chart });
+      },
+      paramLogger: (logger: Logger) => {
+        usePerfStore.setState({
+          log: {
+            maxMemory: logger.maxMemory,
+            gpu: logger.gpu,
+            mem: logger.mem,
+            fps: logger.fps,
+            totalTime: logger.duration,
+            frameCount: logger.frameCount
+          },
+        });
+      },
+      })
+
+      const callbacks = new Map()
+      const callbacksAfter = new Map()
+      Object.defineProperty(THREE.Scene.prototype, 'onBeforeRender', {
+        get() {
+          return (...args) => {
+            if (PerfLib) {
+              PerfLib.begin('profiler');
+            }
+            callbacks.get(this)?.(...args)
+          }
         },
-      });
-    },
-  }), [])
+        set(callback) {
+          callbacks.set(this, callback)
+        }
+      })
+      
+
+      Object.defineProperty(THREE.Scene.prototype, 'onAfterRender', {
+        get() {
+          return (...args) => {
+            if (PerfLib) {
+              PerfLib.end('profiler');
+            }
+            callbacksAfter.get(this)?.(...args)
+          }
+        },
+        set(callback) {
+          callbacksAfter.set(this, callback)
+        }
+      })
+    
+      return PerfLib
+    }, [])
 
   useEffect(() => {
-
     if (matrixUpdate) {
-
       THREE.Object3D.prototype.updateMatrixWorld = function () {
         matriceCount.value++
         updateMatrixTemp.apply(this, arguments)
 
       }
-
     }
 
+      
     gl.info.autoReset = false;
     let effectSub: any = null
     let afterEffectSub: any = null
@@ -211,15 +246,13 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       }
       matriceCount.value = -1
 
-      if (PerfLib && gl.info) {
+      if (gl.info) {
         gl.info.reset();
-        PerfLib.begin('profiler');
       }
     });
 
     afterEffectSub = addAfterEffect(() => {
-      if (PerfLib) {
-        PerfLib.end('profiler');
+      if (PerfLib && !PerfLib.paused) {
         PerfLib.nextFrame(window.performance.now());
       }
       if (deepAnalyze) {
@@ -284,6 +317,8 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
           });
         }
       }
+
+
     });
 
     return () => {

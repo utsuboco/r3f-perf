@@ -14,7 +14,10 @@ export default class GLPerf {
   finished: any[] = [];
   gl: any;
   extension: any;
+  query: any;
   paused: boolean = false;
+  queryHasResult: boolean = false;
+  queryCreated: boolean = false;
   isWebGL2: boolean = true;
   memAccums: number[] = [];
   gpuAccums: number[] = [];
@@ -63,7 +66,9 @@ export default class GLPerf {
     this.uuid = MathUtils.generateUUID()
     if (this.gl) {
       this.isWebGL2 = true;
-      this.extension = this.gl.getExtension('EXT_disjoint_timer_query_webgl2');
+      if (!this.extension) {
+        this.extension = this.gl.getExtension('EXT_disjoint_timer_query_webgl2');
+      }
       if (this.extension === null) {
         this.isWebGL2 = false;
       }
@@ -113,7 +118,7 @@ export default class GLPerf {
       this.paramFrame = this.frameId;
       this.paramTime = t;
     } else {
-      if ( t >= this.paramTime + 1000 ) {
+      if ( t >= this.paramTime + 200 ) {
       // if (duration >= 60) {
         this.maxMemory =  window.performance.memory ? window.performance.memory.jsHeapSizeLimit / 1048576 : 0
         const frameCount = this.frameId - this.paramFrame;
@@ -129,8 +134,8 @@ export default class GLPerf {
               : 0
           );
           this.paramLogger({
-            i,
             gpu,
+            i,
             mem: this.currentMem,
             maxMemory: this.maxMemory,
             fps: fps,
@@ -175,7 +180,6 @@ export default class GLPerf {
           this.memChart[this.circularId % this.chartLen] = memS;
         }
         for (let i = 0; i < this.names.length; i++) {
-          // console.log( window.performance.memory.jsHeapSizeLimit / 1048576)
           this.chartLogger({
             i,
             data: {
@@ -193,67 +197,48 @@ export default class GLPerf {
     }
   }
 
+  
   startGpu() {
     const gl = this.gl;
     const ext = this.extension;
 
-    // create the query object
-    let query: any;
+    if (!gl || !ext) return
     if (this.isWebGL2) {
-      query = gl.createQuery();
-      if (query instanceof WebGLQuery) {
-        gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
-      }
-    } else {
-      return;
-    }
+      let available = false;
+      let disjoint: any, ns: any;
 
-    if (!query) {
-      return;
-    }
-
-    this.activeQueries++;
-
-    if (this.checkQueryId) {
-      window.cancelAnimationFrame(this.checkQueryId);
-    }
-    const checkQuery = () => {
-      if (!query || !this.isWebGL2) {
-        return;
-      }
-      // check if the query is available and valid
-      let available, disjoint, ns;
-      if (this.isWebGL2) {
+      if (this.query) {
+        this.queryHasResult = false
+        let query = this.query
+        // console.log())
+        // console.log(gl.getParameter(ext.TIMESTAMP_EXT))
         available = gl.getQueryParameter(query, gl.QUERY_RESULT_AVAILABLE);
         disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
-        ns = gl.getQueryParameter(query, gl.QUERY_RESULT);
-      } else {
-        available = ext.getQueryObjectEXT(
-          query,
-          ext.QUERY_RESULT_AVAILABLE_EXT
-        );
-        disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
-        ns = ext.getQueryObjectEXT(query, ext.QUERY_RESULT_EXT);
-      }
 
-      const ms = ns * 1e-6;
+        if (available && !disjoint) {
+          ns = gl.getQueryParameter(this.query, gl.QUERY_RESULT);
+          const ms = ns * 1e-6;
 
-      if (available) {
-        // update the display if it is valid
-        if (!disjoint) {
-          this.activeAccums.forEach((_active: any, i: any) => {
-            this.gpuAccums[i] = ms;
-          });
+          if (available && ms > 0) {
+            // update the display if it is valid
+            if (!disjoint) {
+              this.activeAccums.forEach((_active: any, i: any) => {
+                this.gpuAccums[i] = ms;
+              });
+            }
+          }
         }
-
-        this.activeQueries--;
-      } else {
-        // otherwise try again the next frame
-        this.checkQueryId = window.requestAnimationFrame(checkQuery);
       }
-    };
+     
+      if (available || !this.query) {
+        this.queryCreated = true
+        this.query = gl.createQuery();
+        
+        gl.beginQuery(ext.TIME_ELAPSED_EXT, this.query);
+      }
 
-    this.checkQueryId = window.requestAnimationFrame(checkQuery);
+   
+    }
   }
 
   endGpu() {
@@ -261,18 +246,9 @@ export default class GLPerf {
     const ext = this.extension;
     const gl = this.gl;
 
-    if (ext === null || !this.isWebGL2) {
-      return;
-    }
+    if (this.isWebGL2 && this.queryCreated) {
 
-    if (this.isWebGL2 && ext.TIME_ELAPSED_EXT) {
       gl.endQuery(ext.TIME_ELAPSED_EXT);
-      // manually flush after timing
-      gl.flush();
-    } else if (ext.TIME_ELAPSED_EXT) {
-      ext.endQueryEXT(ext.TIME_ELAPSED_EXT);
-      // manually flush after timing
-      gl.flush();
     }
   }
 

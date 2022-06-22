@@ -14,7 +14,7 @@
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.2",
     "@react-three/drei": "latest",
-    "@react-three/fiber": "latest",
+    "@react-three/fiber": "^8.0.27",
     "@stitches/react": "^1.1.0",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
@@ -26,7 +26,7 @@
     "r3f-perf": "*",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "three": "^0.139.2",
+    "three": "^0.141.0",
     "three-stdlib": "^2.8.12",
     "wouter": "^2.7.4"
   },
