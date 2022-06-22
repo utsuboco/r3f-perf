@@ -30,9 +30,9 @@ deepAnalyze?: false, // More detailed informations about gl programs
 showGraph?: true // show the graphs
 minimal?: false // condensed version with the most important informations (gpu/memory/fps/custom data)
 customData?: {
-  value: 0 // initial value,
-  name: '' // name to show
-  info: '' // additional information about the data (fps/ms for instance)
+  value: 0, // initial value,
+  name: '', // name to show
+  info: '', // additional information about the data (fps/ms for instance)
 }
 matrixUpdate?: false // count the number of time matrixWorldUpdate is called per frame
 chart?: {
