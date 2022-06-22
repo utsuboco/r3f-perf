@@ -203,7 +203,8 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
         },
         set(callback) {
           callbacks.set(this, callback)
-        }
+        },
+        configurable: true
       })
       
 
@@ -218,7 +219,8 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
         },
         set(callback) {
           callbacksAfter.set(this, callback)
-        }
+        },
+        configurable: true
       })
     
       return PerfLib
