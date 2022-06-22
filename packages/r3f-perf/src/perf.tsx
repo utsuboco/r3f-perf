@@ -246,8 +246,7 @@ export default class GLPerf {
     const ext = this.extension;
     const gl = this.gl;
 
-    if (this.isWebGL2 && this.queryCreated) {
-
+    if (this.isWebGL2 && this.queryCreated && gl.getQuery(ext.TIME_ELAPSED_EXT, gl.CURRENT_QUERY)) {
       gl.endQuery(ext.TIME_ELAPSED_EXT);
     }
   }
