@@ -40,8 +40,9 @@ chart?: {
   length: 120, // number of values shown on the monitor
 }
 colorBlind?: false // Color blind colors for accessibility
-className?: false // override CSS class
-position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // override position, default is top-right
+className?: '' // override CSS class
+style?: {} // override style
+position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // quickly set the position, default is top-right
 ```
 
 ## Usage

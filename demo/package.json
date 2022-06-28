@@ -27,7 +27,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "three": "^0.141.0",
-    "three-stdlib": "^2.8.12",
+    "three-stdlib": "^2.12.1",
     "wouter": "^2.7.4"
   },
   "devDependencies": {

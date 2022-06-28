@@ -21,7 +21,8 @@ export interface PerfProps {
   antialias?: boolean;
   trackCPU?: boolean;
   openByDefault?: boolean;
-  className?: any;
+  className?: string;
+  style?: object;
   position?: string;
   chart?: chart;
   deepAnalyze?: boolean;
@@ -50,7 +51,8 @@ export const Perf: VFC<PerfProps> = ({
     hz: 15,
   },
   className,
-  minimal = false,
+  style,
+  minimal = false
 }) => {
   return headless ? (
     <Headless chart={chart} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
@@ -61,6 +63,7 @@ export const Perf: VFC<PerfProps> = ({
       trackCPU={trackCPU}
       openByDefault={openByDefault}
       className={className}
+      style={style}
       position={position}
       antialias={antialias}
       chart={chart}

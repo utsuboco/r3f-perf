@@ -79,6 +79,10 @@ const UpdateCustomData = () => {
       length: 60,
     }}
     minimal={width < 712}
+    style={{
+      left: '40px',
+      top: '210px'
+    }}
     // customData={{
     //   value: 30,
     //   name: 'physic',

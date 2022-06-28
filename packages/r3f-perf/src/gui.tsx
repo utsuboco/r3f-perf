@@ -238,6 +238,7 @@ const Gui: FC<PerfProps> = ({
   colorBlind,
   openByDefault,
   className,
+  style,
   position,
   chart,
   deepAnalyze,
@@ -258,7 +259,7 @@ const Gui: FC<PerfProps> = ({
             (className ? ' '.concat(className) : ' ') +
             ` ${position ? position : ''} ${minimal ? 'minimal' : ''}`
           }
-          style={{minHeight: minimal ? '37px' : showGraph ? '100px' : '60px'}}
+          style={{minHeight: minimal ? '37px' : showGraph ? '100px' : '60px', ...style}}
           ref={perfContainerRef}
         >
             <ChartUI

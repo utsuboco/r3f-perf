@@ -1,5 +1,10 @@
 # R3F-Perf
 
+## 6.4.2:
+- Added the ability to override the style
+- Fix issue GPU Monitor was losing context sometimes
+
+
 ## 6.0.1:
 - Enable jsx runtime #31
 - Simplify logic in <Html> (remove babel generated code + move React root creation inside effect)

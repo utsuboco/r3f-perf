@@ -5044,7 +5044,7 @@ __metadata:
     react: ^18.0.0
     react-dom: ^18.0.0
     three: ^0.141.0
-    three-stdlib: ^2.8.12
+    three-stdlib: ^2.12.1
     typescript: ^4.5.5
     vite: ^2.9.1
     wouter: ^2.7.4
@@ -11524,6 +11524,26 @@ __metadata:
   peerDependencies:
     three: ">=0.122.0"
   checksum: a3f0a83f786abeb8bf9d8e1f66169ff9f70657b9e8a3028b3051780d69e6a905fe010fca02c178b614418f821942376a59f527bc10daf7042f8e99bf4eaca555
+  languageName: node
+  linkType: hard
+
+"three-stdlib@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "three-stdlib@npm:2.12.1"
+  dependencies:
+    "@babel/runtime": ^7.16.7
+    "@webgpu/glslang": ^0.0.15
+    chevrotain: ^10.1.2
+    draco3d: ^1.4.1
+    fflate: ^0.6.9
+    ktx-parse: ^0.2.1
+    mmd-parser: ^1.0.4
+    opentype.js: ^1.3.3
+    potpack: ^1.0.1
+    zstddec: ^0.0.2
+  peerDependencies:
+    three: ">=0.122.0"
+  checksum: 00a77cd22bc7ee59d985ca665104ee47f9380e78c9b1dc9b701126a7736764909c32119bf11497229d4d2363484d3cf41143a1931873284eca056172921c772d
   languageName: node
   linkType: hard
 
