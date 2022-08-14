@@ -1,5 +1,5 @@
 import { FC, HTMLAttributes, memo, Suspense, useMemo, useRef, useState } from 'react';
-import { matriceCount, usePerfStore } from '../headless';
+import { matriceCount, matriceWorldCount, usePerfStore } from '../headless';
 import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
@@ -70,11 +70,16 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
       const infosInstance: any = gl.info.instance
 
     
-      if (typeof infosInstance === 'undefined') {
+      if (typeof infosInstance === 'undefined' && metric !== 'matriceCount') {
         return
       }
 
-      const infoInstance = infosInstance[metric]
+      let infoInstance
+      if(metric === 'matriceCount') {
+        infoInstance = matriceWorldCount.value
+      }else{
+        infoInstance = infosInstance[metric]
+      }
      
       if (infoInstance > 0) {
 
@@ -87,22 +92,42 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
        
         fpsRef.current.position.y = h/2 - offsetY - fontSize
         fpsRef.current.fontSize = fontSize
-
+        fpsInstanceRef.current.text = ' ±	' + '0'
       }
   
     }
 
     matriceCount.value -= 1
-    fpsRef.current.updateMatrixWorld()
-
+    matriceWorldCount.value -= 1
+    fpsRef.current.updateMatrix()
+    fpsRef.current.updateWorldMatrix(false,false)
   })
   return (
     <Suspense fallback={null}>
-      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789" onUpdate={self=>self.updateMatrixWorld()}>
+      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789" 
+        onUpdate={self=>{
+          self.traverse((obj)=>{
+            obj.matrixAutoUpdate=false
+          }) 
+          matriceCount.value -= 1
+          self.updateMatrix(); 
+          matriceWorldCount.value -= 1
+          self.updateWorldMatrix(false,false)
+        }}
+      >
       0
       </Text>
       {hasInstance && (
-         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789" onUpdate={self=>self.updateMatrixWorld()}>
+         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789" onUpdate={self=>{
+          self.traverse((obj)=>{
+            obj.matrixAutoUpdate=false
+          }) 
+          matriceCount.value -= 1
+          self.updateMatrix(); 
+          matriceWorldCount.value -= 1
+          self.updateWorldMatrix(false,false)
+        }}
+      >
          </Text>
       )
       }
@@ -130,7 +155,7 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal, matrixU
            <TextHighHZ isShadersInfo metric='programs'  fontSize={fontSize} offsetY={30} offsetX={140} round={0} />
            <TextHighHZ metric='lines'  fontSize={fontSize} offsetY={30} offsetX={200} round={0} hasInstance/>
            <TextHighHZ metric='points'  fontSize={fontSize} offsetY={30} offsetX={260} round={0} hasInstance/>
-            {matrixUpdate && <TextHighHZ isPerf metric='matriceCount' fontSize={fontSize} offsetY={30} offsetX={320} round={0} />}
+            {matrixUpdate && <TextHighHZ isPerf metric='matriceCount' fontSize={fontSize} offsetY={30} offsetX={320} round={0} hasInstance/>}
           </>
        ) : null}
      
@@ -266,7 +291,12 @@ export const ChartUI: FC<PerfUIProps> = ({
           stencil: false,
           depth: false,
         }}
-        onCreated={({scene}) => scene.autoUpdate=false}
+        onCreated={({scene}) => {
+          scene.autoUpdate=false
+          scene.traverse((obj)=>{
+            obj.matrixAutoUpdate=false
+          })
+        }}
         flat={true}
         style={{
           marginBottom: `-42px`,

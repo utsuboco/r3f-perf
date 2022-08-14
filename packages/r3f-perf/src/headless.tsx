@@ -15,10 +15,15 @@ import countGeoDrawCalls from './helpers/countGeoDrawCalls';
 // cameras from r3f-perf scene
 
 // @ts-ignore
-const updateMatrixTemp = THREE.Object3D.prototype.updateMatrixWorld;
+const updateMatrixWorldTemp = THREE.Object3D.prototype.updateMatrixWorld;
+const updateWorldMatrixTemp = THREE.Object3D.prototype.updateWorldMatrix;
+const updateMatrixTemp = THREE.Object3D.prototype.updateMatrix;
 
+export let matriceWorldCount = {
+  value: 0
+}
 export let matriceCount = {
-  value: -1
+  value: 0
 }
 type drawCount = {
   type: string;
@@ -229,9 +234,18 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
   useEffect(() => {
     if (matrixUpdate) {
       THREE.Object3D.prototype.updateMatrixWorld = function () {
-        matriceCount.value++
+        matriceWorldCount.value++
         updateMatrixTemp.apply(this, arguments)
 
+      }
+      THREE.Object3D.prototype.updateWorldMatrix = function () {
+        matriceWorldCount.value++
+        updateWorldMatrixTemp.apply(this, arguments)
+
+      }
+      THREE.Object3D.prototype.updateMatrix = function () {
+        matriceCount.value++
+        updateMatrixTemp.apply(this, arguments)
       }
     }
 
@@ -246,7 +260,8 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       if (usePerfStore.getState().paused) {
         usePerfStore.setState({ paused: false });
       }
-      matriceCount.value = -1
+      matriceWorldCount.value = 0
+      matriceCount.value = 0
 
       if (gl.info) {
         gl.info.reset();
@@ -344,7 +359,8 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
     const unsub = addTail(() => {
       if (PerfLib) {
         PerfLib.paused = true;
-        matriceCount.value = -1
+        matriceCount.value = 0
+        matriceWorldCount.value = 0
         usePerfStore.setState({
           paused: true,
           log: {
