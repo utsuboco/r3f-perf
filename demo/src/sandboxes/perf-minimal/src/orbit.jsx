@@ -12,7 +12,7 @@ export function Orbit() {
   const ref = useRef();
   useEffect(() => {
     const onChange = () => {
-      advance()
+      // advance()
     };
     ref.current?.connect(gl.domElement);
     ref.current?.addEventListener('change', onChange);
