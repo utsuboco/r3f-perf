@@ -1,5 +1,7 @@
 # R3F-Perf
 
+## 6.4.4:
+- Manually update matrixworld in r3f-perf
 ## 6.4.3:
 - Allow r3f-perf to be rendered when `scene.autoUpdate = false`
 
