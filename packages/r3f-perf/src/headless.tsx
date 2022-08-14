@@ -234,7 +234,9 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
   useEffect(() => {
     if (matrixUpdate) {
       THREE.Object3D.prototype.updateMatrixWorld = function () {
-        matriceWorldCount.value++
+        if( this.matrixWorldNeedsUpdate || arguments[0]/*force*/ ){
+          matriceWorldCount.value++
+        }
         // @ts-ignore
         updateMatrixWorldTemp.apply(this, arguments)
 
@@ -243,7 +245,6 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
         matriceWorldCount.value++
         // @ts-ignore
         updateWorldMatrixTemp.apply(this, arguments)
-
       }
       THREE.Object3D.prototype.updateMatrix = function () {
         matriceCount.value++

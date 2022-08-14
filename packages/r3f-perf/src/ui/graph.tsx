@@ -94,10 +94,6 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
         fpsRef.current.fontSize = fontSize
       }
 
-      if(metric === 'matriceCount') {
-        window.fpsRef = fpsRef
-        window.fpsInstanceRef = fpsInstanceRef
-      }
     }
     matriceCount.value -= 1
     fpsRef.current.updateMatrix()
