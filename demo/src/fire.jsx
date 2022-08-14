@@ -25,13 +25,13 @@ export default function Fireflies({ count = 40 }) {
     <points key={count}>
       <bufferGeometry>
         <bufferAttribute
-          attachObject={['attributes', 'position']}
+          attach={'attributes-position'}
           count={count}
           array={positionArray}
           itemSize={3}
         />
         <bufferAttribute
-          attachObject={['attributes', 'aScale']}
+          attach={'attributes-aScale'}
           count={count}
           array={scaleArray}
           itemSize={1}

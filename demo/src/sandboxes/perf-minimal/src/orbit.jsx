@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { extend, useThree } from '@react-three/fiber';
+import { advance, extend, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three-stdlib';
 
 extend({ OrbitControls });
@@ -11,7 +11,9 @@ export function Orbit() {
   const regress = useThree((state) => state.performance.regress);
   const ref = useRef();
   useEffect(() => {
-    const onChange = () => (invalidate(), regress());
+    const onChange = () => {
+      advance()
+    };
     ref.current?.connect(gl.domElement);
     ref.current?.addEventListener('change', onChange);
     return () => {
