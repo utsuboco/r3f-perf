@@ -299,7 +299,6 @@ export const ChartUI: FC<PerfUIProps> = ({
       >
         {!paused ? (
           <>
-            <Renderer />
             <TextsHighHZ customData={customData} minimal={minimal} matrixUpdate={matrixUpdate} />
             {showGraph && <ChartCurve
               colorBlind={colorBlind}
@@ -317,19 +316,3 @@ export const ChartUI: FC<PerfUIProps> = ({
     </Graph>
   );
 };
-
-const Renderer = () =>{
-
-  useFrame(({gl, scene, camera},delta) => {
-    camera.updateMatrix()
-    matriceCount.value -= 1
-    camera.matrixWorld.copy(camera.matrix)
-    camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
-    gl.render(scene,camera)
-    matriceWorldCount.value = 0
-    matriceCount.value = 0
-  }, Infinity)
-
-  
-  return null
-}

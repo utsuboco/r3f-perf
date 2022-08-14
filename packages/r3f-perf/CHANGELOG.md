@@ -1,5 +1,9 @@
 # R3F-Perf
 
+## 6.4.3:
+- Allow r3f-perf to be rendered when `scene.autoUpdate = false`
+
+
 ## 6.4.2:
 - Added the ability to override the style
 - Fix issue GPU Monitor was losing context sometimes

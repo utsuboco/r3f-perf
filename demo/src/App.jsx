@@ -86,7 +86,7 @@ const UpdateCustomData = () => {
     //   name: 'physic',
     //   info: 'fps'
     // }}
-    // matrixUpdate={true}
+    matrixUpdate={true}
     // colorBlind={true}
     position={'top-left'}
 />

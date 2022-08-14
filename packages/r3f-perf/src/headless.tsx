@@ -265,6 +265,10 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
         usePerfStore.setState({ paused: false });
       }
 
+      matriceCount.value -= 1
+      matriceWorldCount.value = 0
+      matriceCount.value = 0
+
       if (gl.info) {
         gl.info.reset();
       }
