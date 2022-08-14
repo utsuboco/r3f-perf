@@ -236,7 +236,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       THREE.Object3D.prototype.updateMatrixWorld = function () {
         matriceWorldCount.value++
         // @ts-ignore
-        updateMatrixTemp.apply(this, arguments)
+        updateMatrixWorldTemp.apply(this, arguments)
 
       }
       THREE.Object3D.prototype.updateWorldMatrix = function () {
@@ -263,8 +263,6 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       if (usePerfStore.getState().paused) {
         usePerfStore.setState({ paused: false });
       }
-      matriceWorldCount.value = 0
-      matriceCount.value = 0
 
       if (gl.info) {
         gl.info.reset();

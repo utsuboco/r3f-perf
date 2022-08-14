@@ -92,42 +92,35 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
        
         fpsRef.current.position.y = h/2 - offsetY - fontSize
         fpsRef.current.fontSize = fontSize
-        fpsInstanceRef.current.text = ' ±	' + '0'
       }
-  
-    }
 
+      if(metric === 'matriceCount') {
+        window.fpsRef = fpsRef
+        window.fpsInstanceRef = fpsInstanceRef
+      }
+    }
     matriceCount.value -= 1
-    matriceWorldCount.value -= 1
     fpsRef.current.updateMatrix()
-    fpsRef.current.updateWorldMatrix(false,false)
+    fpsRef.current.matrixWorld.copy(fpsRef.current.matrix)
   })
   return (
     <Suspense fallback={null}>
-      <Text textAlign='justify' ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789" 
-        onUpdate={self=>{
-          self.traverse((obj)=>{
-            obj.matrixAutoUpdate=false
-          }) 
-          matriceCount.value -= 1
-          self.updateMatrix(); 
-          matriceWorldCount.value -= 1
-          self.updateWorldMatrix(false,false)
-        }}
+      <Text textAlign='justify'  matrixAutoUpdate={false} ref={fpsRef} fontSize={fontSize} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize,0 ]} color={color} characters="0123456789" 
+      onUpdate={(self)=>{
+        self.updateMatrix()
+        matriceCount.value -= 1
+        self.matrixWorld.copy(self.matrix)
+      }}
       >
       0
       </Text>
       {hasInstance && (
-         <Text textAlign='justify' ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789" onUpdate={self=>{
-          self.traverse((obj)=>{
-            obj.matrixAutoUpdate=false
-          }) 
+         <Text textAlign='justify' matrixAutoUpdate={false} ref={fpsInstanceRef} fontSize={8} position={[-w / 2 + (offsetX) + fontSize,h/2 - offsetY - fontSize * 1.15,0 ]} color={'lightgrey'} characters="0123456789"
+         onUpdate={(self)=>{
+          self.updateMatrix()
           matriceCount.value -= 1
-          self.updateMatrix(); 
-          matriceWorldCount.value -= 1
-          self.updateWorldMatrix(false,false)
-        }}
-      >
+          self.matrixWorld.copy(self.matrix)
+        }} >
          </Text>
       )
       }
@@ -294,6 +287,8 @@ export const ChartUI: FC<PerfUIProps> = ({
         onCreated={({scene}) => {
           scene.autoUpdate=false
           scene.traverse((obj)=>{
+            //@ts-ignore
+            obj.autoUpdate=false
             obj.matrixAutoUpdate=false
           })
         }}
@@ -308,6 +303,7 @@ export const ChartUI: FC<PerfUIProps> = ({
       >
         {!paused ? (
           <>
+            <Renderer />
             <TextsHighHZ customData={customData} minimal={minimal} matrixUpdate={matrixUpdate} />
             {showGraph && <ChartCurve
               colorBlind={colorBlind}
@@ -325,3 +321,19 @@ export const ChartUI: FC<PerfUIProps> = ({
     </Graph>
   );
 };
+
+const Renderer = () =>{
+
+  useFrame(({gl, scene, camera},delta) => {
+    camera.updateMatrix()
+    matriceCount.value -= 1
+    camera.matrixWorld.copy(camera.matrix)
+    camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+    gl.render(scene,camera)
+    matriceWorldCount.value = 0
+    matriceCount.value = 0
+  }, Infinity)
+
+  
+  return null
+}
