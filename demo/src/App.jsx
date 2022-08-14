@@ -80,8 +80,6 @@ const UpdateCustomData = () => {
     }}
     minimal={width < 712}
     style={{
-      left: '40px',
-      top: '210px'
     }}
     // customData={{
     //   value: 30,
