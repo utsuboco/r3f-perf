@@ -102,15 +102,6 @@ The tool work with any server side rendering framework. You can try with Next an
 https://github.com/pmndrs/react-three-next
 
 
-
-## Feature ideas todo :
-
-- Buffer frame and Forward rendering differenciation in the "calls" section of the UI <-- PR WebGLInfos in Threejs
-- Postprocess shaders differenciation
-- Lights informations in the scene
-- Show the number of items receiving and casting shadow in the scene
-- Add an diagnostic button to find what consume the most CPU/GPU in the app for every loop
-
 ### Maintainers :
 
 - [`twitter 🐈‍⬛ @onirenaud`](https://twitter.com/onirenaud)
