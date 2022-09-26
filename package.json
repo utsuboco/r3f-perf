@@ -78,6 +78,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "^1.3.0",
+    "three": "latest",
     "three-stdlib": "^2.8.12"
   }
 }

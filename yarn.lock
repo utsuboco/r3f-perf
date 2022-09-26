@@ -1970,6 +1970,7 @@ __metadata:
     react: ^18.0.0
     react-dom: ^18.0.0
     size-limit: ^7.0.8
+    three: latest
     three-stdlib: ^2.8.12
     tsd: ^0.19.1
     typescript: ^4.2.3

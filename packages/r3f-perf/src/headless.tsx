@@ -199,7 +199,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       const callbacksAfter = new Map()
       Object.defineProperty(THREE.Scene.prototype, 'onBeforeRender', {
         get() {
-          return (...args) => {
+          return (...args: any) => {
             if (PerfLib) {
               PerfLib.begin('profiler');
             }
@@ -215,7 +215,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
 
       Object.defineProperty(THREE.Scene.prototype, 'onAfterRender', {
         get() {
-          return (...args) => {
+          return (...args: any) => {
             if (PerfLib) {
               PerfLib.end('profiler');
             }
@@ -260,7 +260,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
     if (!gl.info) return
 
     
-    effectSub = addEffect(() => {
+    effectSub = addEffect(function preRafR3FPerf() {
       if (usePerfStore.getState().paused) {
         usePerfStore.setState({ paused: false });
       }
@@ -274,7 +274,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       }
     });
 
-    afterEffectSub = addAfterEffect(() => {
+    afterEffectSub = addAfterEffect(function postRafR3FPerf() {
       if (PerfLib && !PerfLib.paused) {
         PerfLib.nextFrame(window.performance.now());
       }
@@ -282,7 +282,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       const currentObjectWithMaterials: any = {};
       const programs: ProgramsPerfs = new Map();
 
-        scene.traverse(function (object) {
+        scene.traverse(function deepAnalyzeR3FPerf(object) {
           if (object instanceof THREE.Mesh || object instanceof THREE.Points) {
             if (object.material) {
               let uuid = object.material.uuid;
@@ -362,7 +362,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
   }, [PerfLib, gl, trackCPU, chart, matrixUpdate]);
 
   useEffect(() => {
-    const unsub = addTail(() => {
+    const unsub = addTail(function postRafTailR3FPerf() {
       if (PerfLib) {
         PerfLib.paused = true;
         matriceCount.value = 0

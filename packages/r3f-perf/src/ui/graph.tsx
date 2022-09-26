@@ -43,7 +43,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
   const fpsRef = useRef<any>(null)
   const fpsInstanceRef = useRef<any>(null)
 
-  useFrame(() => {
+  useFrame(function updateR3FPerfText() {
     const gl:any = usePerfStore.getState().gl
     const log = usePerfStore.getState().log
     
@@ -281,10 +281,9 @@ export const ChartUI: FC<PerfUIProps> = ({
           depth: false,
         }}
         onCreated={({scene}) => {
-          scene.autoUpdate=false
-          scene.traverse((obj)=>{
+          scene.traverse((obj: THREE.Object3D)=>{
             //@ts-ignore
-            obj.autoUpdate=false
+            obj.matrixWorldAutoUpdate=false
             obj.matrixAutoUpdate=false
           })
         }}
@@ -320,7 +319,7 @@ export const ChartUI: FC<PerfUIProps> = ({
 
 const Renderer = () =>{
 
-  useFrame(function updateR3fPerf ({gl, scene, camera}){
+  useFrame(function updateR3FPerf({ gl, scene, camera }) {
     camera.updateMatrix()
     matriceCount.value -= 1
     camera.matrixWorld.copy(camera.matrix)
