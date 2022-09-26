@@ -320,7 +320,7 @@ export const ChartUI: FC<PerfUIProps> = ({
 
 const Renderer = () =>{
 
-  useFrame(({gl, scene, camera}) => {
+  useFrame(function updateR3fPerf ({gl, scene, camera}){
     camera.updateMatrix()
     matriceCount.value -= 1
     camera.matrixWorld.copy(camera.matrix)
