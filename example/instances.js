@@ -29,7 +29,7 @@ export const Instances = ({row}) => {
   })
   return (
     <instancedMesh ref={ref} args={[null, null, row * row * row]} onPointerMove={e => setHover(e.instanceId)} onPointerOut={e => setHover(undefined)}>
-      <boxBufferGeometry attach="geometry" args={[0.7, 0.7, 0.7]} />
+      <boxGeometry attach="geometry" args={[0.7, 0.7, 0.7]} />
       <meshNormalMaterial attach="material" />
     </instancedMesh>
   )
