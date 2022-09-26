@@ -1,5 +1,8 @@
 # R3F-Perf
 
+## 6.5.0:
+- Improved the names of the functions for debugging in the profiler (updated some anonymous functions)
+
 ## 6.4.4:
 - Manually update matrixworld in r3f-perf
 ## 6.4.3:
