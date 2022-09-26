@@ -200,7 +200,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   };
 
   const [supportMemory] = useState(window.performance.memory)
-  useFrame(({viewport}) => {
+  useFrame(function updateChartCurve({viewport}) {
     updatePoints('fps', 1, fpsRef.current, viewport)
     updatePoints('gpu', 5, gpuRef.current, viewport)
     if (supportMemory) {

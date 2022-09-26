@@ -119,7 +119,7 @@ function Shoes() {
 
   return (
     <Instances range={range}>
-      <boxBufferGeometry args={[0.3, 0.3, 0.3, 10, 10]} />
+      <boxGeometry args={[0.3, 0.3, 0.3, 10, 10]} />
       <meshPhongMaterial />
       {randomData.map((props, i) => (
         <Shoe key={i} {...props} />
