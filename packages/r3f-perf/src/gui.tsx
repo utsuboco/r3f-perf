@@ -32,6 +32,12 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
   return colors;
 };
 
+const DynamicUIPerf: FC<PerfProps> = () => {
+  const overclockingFps = usePerfStore(s=>s.overclockingFps)
+
+  return (<>FPS {overclockingFps ? '🚀' : ''}</>)
+}
+
 const DynamicUI: FC<PerfProps> = ({
   showGraph,
   colorBlind,
@@ -75,7 +81,7 @@ const DynamicUI: FC<PerfProps> = ({
             showGraph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}
           }
         >
-          FPS
+          <DynamicUIPerf />
         </PerfB>
       </PerfI>
       {!minimal && gl && (

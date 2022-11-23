@@ -5,7 +5,7 @@ import {
   useThree,
   addTail,
 } from '@react-three/fiber';
-import GLPerf from './perf';
+import GLPerf, { overLimitFps } from './perf';
 import create from 'zustand';
 import { PerfProps } from '.';
 import * as THREE from 'three';
@@ -88,6 +88,7 @@ const addMuiPerfID = (material: THREE.Material, currentObjectWithMaterials: any)
 export type State = {
   log: any;
   paused: boolean;
+  overclockingFps: boolean;
   triggerProgramsUpdate: number;
   customData: number;
   chart: {
@@ -129,6 +130,7 @@ export const usePerfStore = create<State>((set) => ({
   paused: false,
   triggerProgramsUpdate: 0,
   customData: 0,
+  overclockingFps: false,
   chart: {
     data: {
       fps: [],
@@ -170,7 +172,6 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
 
   usePerfStore.setState({ gl, scene });
 
-  
   const PerfLib = useMemo(() => {
     
       const PerfLib = new GLPerf({
@@ -277,6 +278,15 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
     afterEffectSub = addAfterEffect(function postRafR3FPerf() {
       if (PerfLib && !PerfLib.paused) {
         PerfLib.nextFrame(window.performance.now());
+
+        if (typeof window.requestIdleCallback !== 'undefined') {
+          if (overLimitFps.isOverLimit > 0) {
+            overLimitFps.isOverLimit--;
+          } else if (usePerfStore.getState().overclockingFps) {
+            usePerfStore.setState({overclockingFps: false})
+          }
+          PerfLib.idleCbId = requestIdleCallback(PerfLib.nextFps);
+        }
       }
       if (deepAnalyze) {
       const currentObjectWithMaterials: any = {};
@@ -346,6 +356,9 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
 
     return () => {
       if (PerfLib) {
+        if (typeof window.cancelIdleCallback !== 'undefined') {
+          window.cancelIdleCallback(PerfLib.idleCbId);
+        }
         window.cancelAnimationFrame(PerfLib.rafId);
         window.cancelAnimationFrame(PerfLib.checkQueryId);
       }

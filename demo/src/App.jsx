@@ -73,7 +73,7 @@ const UpdateCustomData = () => {
   return <Perf
     className={'override'}
     showGraph={true}
-    deepAnalyze
+    // deepAnalyze
     chart={{
       hz: 35,
       length: 60,
@@ -96,7 +96,7 @@ const UpdateCustomData = () => {
 const color = new THREE.Color()
 const randomVector = (r) => [r / 2 - Math.random() * r, r / 2 - Math.random() * r, r / 2 - Math.random() * r]
 const randomEuler = () => [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI]
-const randomData = Array.from({ length: 5000 }, (r = 10) => ({
+const randomData = Array.from({ length: 2000 }, (r = 10) => ({
   random: Math.random(),
   position: randomVector(r),
   rotation: randomEuler(),
@@ -104,7 +104,7 @@ const randomData = Array.from({ length: 5000 }, (r = 10) => ({
 
 function Shoes() {
   const scene = useThree((s) => s.scene)
-  const { range, autoUpdate } = useControls({ autoUpdate: false, range: { value: 500, min: 0, max: 5000, step: 10 } })
+  const { range, autoUpdate } = useControls({ autoUpdate: false, range: { value: 800, min: 0, max: 2000, step: 10 } })
 
   useEffect(() => {
     scene.autoUpdate = autoUpdate
@@ -146,11 +146,13 @@ function Shoe({ random, ...props }) {
 }
 
 export function App() {
-  const {enable, mountCanvas, minimal, boxes} = useControls({
+  const {otherboxes, mountCanvas, aa, boxes} = useControls({
     enable: true,
     mountCanvas: true,
     minimal: true,
     boxes: true,
+    otherboxes: true,
+    aa: false,
   })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
 
@@ -159,15 +161,15 @@ export function App() {
       {/* frameloop={'demand'}  */}
       <Canvas
         concurrent={'true'}
-        shadows
-        dpr={[1, 2]}
+        antialias={aa}
+        dpr={1}
         onCreated={({scene}) =>scene.autoUpdate =false}
         performance={{ min: 0.2 }}
         orthographic
         camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
       >
         <pointLight />
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <Bob />
           <Fireflies count={30} />
           <Text
@@ -187,9 +189,9 @@ export function App() {
           >
             Some 3D Text
           </Text>
-        </Suspense>
+        </Suspense> */}
 
-        <Sphere position-x={2} position-y={2} material={mat} />
+        {/* <Sphere position-x={2} position-y={2} material={mat} /> */}
         {/* <Cylinder position-x={2} position-y={0} material={mat} />
         {/* <Cylinder position-x={4} position-y={2}>
             <meshPhysicalMaterial />
@@ -198,8 +200,9 @@ export function App() {
             <meshBasicMaterial />
           </Sphere> */}
        
-        {/* {boxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />} */}
+        {/* {otherboxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />} */}
         {boxes && <Shoes />}
+        {otherboxes && <Shoes />}
         <Orbit />
         {/* {enable && <UpdateCustomData />} */}
         <UpdateCustomData />

@@ -1,5 +1,8 @@
 # R3F-Perf
 
+## 6.6.0:
+- The Fps metric is not limited anymore by the framerate of the monitor on Chrome and Firefox.
+
 ## 6.5.0:
 - Improved the names of the functions for debugging in the profiler (updated some anonymous functions)
 

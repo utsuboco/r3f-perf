@@ -1,4 +1,5 @@
 import { MathUtils } from "three";
+import { usePerfStore } from "./headless";
 
 declare global {
   interface Window {
@@ -9,6 +10,11 @@ declare global {
   }
 }
 
+export const overLimitFps = {
+  value: 0,
+  fpsLimit: 60,
+  isOverLimit: 0
+}
 export default class GLPerf {
   names: string[] = [''];
   finished: any[] = [];
@@ -39,6 +45,7 @@ export default class GLPerf {
   detected: number = 0;
   frameId: number = 0;
   rafId: number = 0;
+  idleCbId: number = 0;
   checkQueryId: number = 0;
   uuid: string|undefined = undefined;
   currentMem: number = 0;
@@ -104,6 +111,19 @@ export default class GLPerf {
     }
   }
 
+  nextFps(d: any) {
+
+    const goal = 1000 / 60;
+    const elapsed = goal - d.timeRemaining();
+    const fps = goal * overLimitFps.fpsLimit / elapsed;
+    if (fps < 0) return
+    overLimitFps.value = fps;
+    if (overLimitFps.isOverLimit < 25) {
+      overLimitFps.isOverLimit++;
+    } else {
+      usePerfStore.setState({overclockingFps: true})
+    }
+  }
   /**
    * Increase frameID
    * @param { any | undefined } now
@@ -123,6 +143,9 @@ export default class GLPerf {
         this.maxMemory =  window.performance.memory ? window.performance.memory.jsHeapSizeLimit / 1048576 : 0
         const frameCount = this.frameId - this.paramFrame;
         const fps = (frameCount * 1000) / (duration);
+
+        overLimitFps.fpsLimit = fps
+
         for (let i = 0; i < this.names.length; i++) {
           gpu = this.isWebGL2
             ? this.gpuAccums[i]
@@ -132,13 +155,13 @@ export default class GLPerf {
             window.performance && window.performance.memory
               ? window.performance.memory.usedJSHeapSize / 1048576
               : 0
-          );
+            );
           this.paramLogger({
             gpu,
             i,
             mem: this.currentMem,
             maxMemory: this.maxMemory,
-            fps: fps,
+            fps: overLimitFps.isOverLimit > 0 ? overLimitFps.value : fps,
             duration: Math.round(duration),
             frameCount,
           });

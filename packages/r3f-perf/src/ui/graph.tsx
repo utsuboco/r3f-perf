@@ -66,6 +66,8 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
     }
    
     fpsRef.current.text = (metric === 'maxMemory' ? '/' : '') + (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
+         
+
     if (hasInstance) {
       const infosInstance: any = gl.info.instance
 
@@ -80,7 +82,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
       }else{
         infoInstance = infosInstance[metric]
       }
-     
+
       if (infoInstance > 0) {
 
         fpsRef.current.fontSize = fontSize / 1.15
