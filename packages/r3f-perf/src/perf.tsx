@@ -161,7 +161,6 @@ export default class GLPerf {
         this.maxMemory =  window.performance.memory ? window.performance.memory.jsHeapSizeLimit / 1048576 : 0
         const frameCount = this.frameId - this.paramFrame;
         const fpsFixed = (frameCount * 1000) / (duration);
-
         const fps = usePerfStore.getState().overclockingFps ? overLimitFps.value : fpsFixed;
 
         gpu = this.isWebGL2
@@ -232,9 +231,9 @@ export default class GLPerf {
       let hz = (this.chartHz * timespan) / 1e3;
       while (--hz > 0 && this.detected) {
         const frameCount = this.frameId - this.chartFrame;
-        const fps = (frameCount / timespan) * 1e3;
-        const fpsOver = this.overClock ? (frameCount / (fps - overLimitFps.value)) * 1e3 : 0;
-        this.fpsChart[this.circularId % this.chartLen] = fps + fpsOver;
+        const fpsFixed = (frameCount / timespan) * 1e3;
+        const fps = usePerfStore.getState().overclockingFps ? overLimitFps.value : fpsFixed;
+        this.fpsChart[this.circularId % this.chartLen] = fps;
         // this.fpsChart[this.circularId % this.chartLen] = ((overLimitFps.isOverLimit > 0 ? overLimitFps.value : fps) / overLimitFps.fpsLimit) * 60;
         const memS = 1000 / this.currentMem;
         const gpuS =

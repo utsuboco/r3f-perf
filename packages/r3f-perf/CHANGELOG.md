@@ -1,5 +1,8 @@
 # R3F-Perf
 
+## 6.6.2:
+- Fixed over clocked graph fps displaying wrong value
+
 ## 6.6.1:
 - Made the over clocked fps monitor more precise
 - Improved the UI regarding over clocked UI
