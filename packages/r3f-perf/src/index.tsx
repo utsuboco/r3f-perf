@@ -17,6 +17,7 @@ export type customData = {
 export interface PerfProps {
   headless?: boolean;
   showGraph?: boolean;
+  overClock?: boolean;
   colorBlind?: boolean;
   antialias?: boolean;
   trackCPU?: boolean;
@@ -38,6 +39,7 @@ export interface PerfProps {
 export const Perf: VFC<PerfProps> = ({
   headless = false,
   colorBlind = false,
+  overClock = false,
   showGraph = true,
   trackCPU = false,
   deepAnalyze = false,
@@ -55,7 +57,7 @@ export const Perf: VFC<PerfProps> = ({
   minimal = false
 }) => {
   return headless ? (
-    <Headless chart={chart} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
+    <Headless chart={chart} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} overClock={overClock} />
   ) : (
     <Gui
       colorBlind={colorBlind}
@@ -64,6 +66,7 @@ export const Perf: VFC<PerfProps> = ({
       openByDefault={openByDefault}
       className={className}
       style={style}
+      overClock={overClock}
       position={position}
       antialias={antialias}
       chart={chart}

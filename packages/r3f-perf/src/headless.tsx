@@ -89,6 +89,7 @@ export type State = {
   log: any;
   paused: boolean;
   overclockingFps: boolean;
+  fpsLimit: number;
   triggerProgramsUpdate: number;
   customData: number;
   chart: {
@@ -130,6 +131,7 @@ export const usePerfStore = create<State>((set) => ({
   paused: false,
   triggerProgramsUpdate: 0,
   customData: 0,
+  fpsLimit: 60,
   overclockingFps: false,
   chart: {
     data: {
@@ -167,33 +169,33 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUpdate }) => {
+export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyze, matrixUpdate }) => {
   const { gl, scene } = useThree();
-
   usePerfStore.setState({ gl, scene });
 
   const PerfLib = useMemo(() => {
     
       const PerfLib = new GLPerf({
-      trackGPU: true,
-      chartLen: chart ? chart.length : 120,
-      chartHz: chart ? chart.hz : 60,
-      gl: gl.getContext(),
-      chartLogger: (chart: Chart) => {
-        usePerfStore.setState({ chart });
-      },
-      paramLogger: (logger: Logger) => {
-        usePerfStore.setState({
-          log: {
-            maxMemory: logger.maxMemory,
-            gpu: logger.gpu,
-            mem: logger.mem,
-            fps: logger.fps,
-            totalTime: logger.duration,
-            frameCount: logger.frameCount
-          },
-        });
-      },
+        trackGPU: true,
+        overClock: overClock,
+        chartLen: chart ? chart.length : 120,
+        chartHz: chart ? chart.hz : 60,
+        gl: gl.getContext(),
+        chartLogger: (chart: Chart) => {
+          usePerfStore.setState({ chart });
+        },
+        paramLogger: (logger: Logger) => {
+          usePerfStore.setState({
+            log: {
+              maxMemory: logger.maxMemory,
+              gpu: logger.gpu,
+              mem: logger.mem,
+              fps: logger.fps,
+              totalTime: logger.duration,
+              frameCount: logger.frameCount
+            },
+          });
+        },
       })
 
       const callbacks = new Map()
@@ -231,6 +233,19 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
     
       return PerfLib
     }, [])
+
+  useEffect(() => {
+    if (PerfLib) {
+      PerfLib.overClock = overClock || false
+      if (overClock === false) {
+        usePerfStore.setState({ overclockingFps: false })
+        overLimitFps.value = 0
+        overLimitFps.isOverLimit = 0
+      }
+      PerfLib.chartHz = chart?.hz || 60
+      PerfLib.chartLen = chart?.length || 120
+    }
+  }, [overClock, PerfLib, chart?.length, chart?.hz])
 
   useEffect(() => {
     if (matrixUpdate) {
@@ -279,12 +294,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, chart, deepAnalyze, matrixUp
       if (PerfLib && !PerfLib.paused) {
         PerfLib.nextFrame(window.performance.now());
 
-        if (typeof window.requestIdleCallback !== 'undefined') {
-          if (overLimitFps.isOverLimit > 0) {
-            overLimitFps.isOverLimit--;
-          } else if (usePerfStore.getState().overclockingFps) {
-            usePerfStore.setState({overclockingFps: false})
-          }
+        if (overClock && typeof window.requestIdleCallback !== 'undefined') {
           PerfLib.idleCbId = requestIdleCallback(PerfLib.nextFps);
         }
       }

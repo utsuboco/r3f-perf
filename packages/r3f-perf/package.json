@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "6.6.0",
+  "version": "6.6.1",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.3",
-    "@stitches/react": "^1.2.6",
-    "zustand": "^3.7.1"
+    "@stitches/react": "^1.2.8",
+    "zustand": "^4.1.5"
   },
   "devDependencies": {
     "@types/three": "latest"

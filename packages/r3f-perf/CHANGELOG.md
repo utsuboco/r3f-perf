@@ -1,5 +1,11 @@
 # R3F-Perf
 
+## 6.6.1:
+- Made the over clocked fps monitor more precise
+- Improved the UI regarding over clocked UI
+- `overClock = false` Made the over clocked fps monitor optional, disabled by default 
+- `overClock` and `chart` setting are now reactive
+
 ## 6.6.0:
 - The Fps metric is not limited anymore by the framerate of the monitor on Chrome and Firefox.
 

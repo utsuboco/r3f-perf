@@ -7,6 +7,7 @@ import { Text } from '@react-three/drei';
 import { chart, customData } from '..';
 import { colorsGraph } from '../gui';
 import * as THREE from 'three';
+import { overLimitFps } from '../perf';
 export interface graphData {
   curve: THREE.SplineCurve;
   maxVal: number;
@@ -25,6 +26,7 @@ interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
 }
 interface TextHighHZProps {
   metric?: string;
+  colorBlind?: boolean;
   isPerf?: boolean;
   hasInstance?: boolean;
   isMemory?: boolean;
@@ -38,7 +40,7 @@ interface TextHighHZProps {
   minimal?: boolean;
 }
 
-const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round, hasInstance }) => {
+const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customData, isMemory, isShadersInfo, metric, fontSize,offsetY=0, offsetX, round, hasInstance }) => {
   const { width: w, height: h } = useThree(s => s.viewport)
   const fpsRef = useRef<any>(null)
   const fpsInstanceRef = useRef<any>(null)
@@ -65,6 +67,9 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, customData, isMemor
       info = infos[metric]
     }
    
+    if (metric === 'fps') {
+      fpsRef.current.color = usePerfStore.getState().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`
+    }
     fpsRef.current.text = (metric === 'maxMemory' ? '/' : '') + (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
          
 
@@ -133,7 +138,7 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal, matrixU
   const fontSize: number = 14
   return (
     <>
-      <TextHighHZ color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} isPerf metric='fps' fontSize={fontSize} offsetX={140} round={0} />
+      <TextHighHZ colorBlind={colorBlind} color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} isPerf metric='fps' fontSize={fontSize} offsetX={140} round={0} />
       <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='mem' fontSize={fontSize} offsetX={80} round={0} />
       <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='maxMemory' fontSize={8} offsetX={112} offsetY={10} round={0} />
       <TextHighHZ color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} isPerf metric='gpu'  fontSize={fontSize} offsetX={10} round={3}/>
@@ -172,6 +177,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   }, [chart])
 
   const fpsRef= useRef<any>(null)
+  const fpsMatRef= useRef<any>(null)
   const gpuRef= useRef<any>(null)
   const memRef= useRef<any>(null)
 
@@ -203,7 +209,11 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
 
   const [supportMemory] = useState(window.performance.memory)
   useFrame(function updateChartCurve({viewport}) {
+    
     updatePoints('fps', 1, fpsRef.current, viewport)
+    if (fpsMatRef.current) {
+      fpsMatRef.current.color.set(usePerfStore.getState().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`)
+    }
     updatePoints('gpu', 5, gpuRef.current, viewport)
     if (supportMemory) {
       updatePoints('mem', 1, memRef.current, viewport)
@@ -218,10 +228,11 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
               count={chart.length}
               array={curves.fps}
               itemSize={3}
+              usage={THREE.DynamicDrawUsage}
               needsUpdate={true}
             />
         </bufferGeometry>
-        <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} transparent opacity={0.5} />
+        <lineBasicMaterial ref={fpsMatRef} color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} transparent opacity={0.5} />
       </line>
       <line>
         <bufferGeometry ref={gpuRef}>
@@ -230,6 +241,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
               count={chart.length}
               array={curves.gpu}
               itemSize={3}
+              usage={THREE.DynamicDrawUsage}
               needsUpdate={true}
             />
         </bufferGeometry>
@@ -242,6 +254,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
             count={chart.length}
             array={curves.mem}
             itemSize={3}
+            usage={THREE.DynamicDrawUsage}
             needsUpdate={true}
           />
         </bufferGeometry>

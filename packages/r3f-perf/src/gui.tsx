@@ -24,6 +24,7 @@ interface colors {
 
 export const colorsGraph = (colorBlind: boolean | undefined) => {
   const colors: colors = {
+    overClock: `#ff6eff`,
     fps: colorBlind ? '100, 143, 255' : '238,38,110',
     mem: colorBlind ? '254, 254, 98' : '66,226,46',
     gpu: colorBlind ? '254,254,254' : '253,151,31',
@@ -32,10 +33,15 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
   return colors;
 };
 
-const DynamicUIPerf: FC<PerfProps> = () => {
+const DynamicUIPerf: FC<PerfProps> = ({showGraph, colorBlind}) => {
   const overclockingFps = usePerfStore(s=>s.overclockingFps)
+  const fpsLimit = usePerfStore(s=>s.fpsLimit)
 
-  return (<>FPS {overclockingFps ? '🚀' : ''}</>)
+  return (<PerfB
+    style={
+      showGraph ? { color: overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps})` } : {}
+    }
+  >FPS {overclockingFps ? `${fpsLimit}🚀` : ''}</PerfB>)
 }
 
 const DynamicUI: FC<PerfProps> = ({
@@ -76,13 +82,7 @@ const DynamicUI: FC<PerfProps> = ({
       </PerfI>
       <PerfI>
         <LapTimerIcon />
-        <PerfB
-          style={
-            showGraph ? { color: `rgb(${colorsGraph(colorBlind).fps})` } : {}
-          }
-        >
-          <DynamicUIPerf />
-        </PerfB>
+        <DynamicUIPerf showGraph={showGraph} colorBlind={colorBlind} />
       </PerfI>
       {!minimal && gl && (
         <PerfI>
@@ -244,6 +244,7 @@ const Gui: FC<PerfProps> = ({
   colorBlind,
   openByDefault,
   className,
+  overClock,
   style,
   position,
   chart,
@@ -257,7 +258,7 @@ const Gui: FC<PerfProps> = ({
 
   return (
     <>
-      <Headless chart={chart} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
+      <Headless chart={chart} overClock={overClock} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
       {/* @ts-ignore */}
       <Html transform={false}>
         <PerfS

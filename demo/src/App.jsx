@@ -72,7 +72,8 @@ const UpdateCustomData = () => {
 
   return <Perf
     className={'override'}
-    showGraph={true}
+    showGraph
+    overClock={true}
     // deepAnalyze
     chart={{
       hz: 35,
@@ -88,7 +89,7 @@ const UpdateCustomData = () => {
     // }}
     matrixUpdate={true}
     // colorBlind={true}
-    position={'top-left'}
+    position={'bottom-left'}
 />
 }
 
@@ -107,7 +108,7 @@ function Shoes() {
   const { range, autoUpdate } = useControls({ autoUpdate: false, range: { value: 800, min: 0, max: 2000, step: 10 } })
 
   useEffect(() => {
-    scene.autoUpdate = autoUpdate
+    scene.matrixWorldAutoUpdate = autoUpdate
     scene.updateMatrixWorld()
     //   // basically what it does
     //   if (autoUpdate) {
@@ -151,7 +152,7 @@ export function App() {
     mountCanvas: true,
     minimal: true,
     boxes: true,
-    otherboxes: true,
+    otherboxes: false,
     aa: false,
   })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
@@ -161,9 +162,11 @@ export function App() {
       {/* frameloop={'demand'}  */}
       <Canvas
         concurrent={'true'}
-        antialias={aa}
+        gl={{
+          antialias: aa
+        }}
         dpr={1}
-        onCreated={({scene}) =>scene.autoUpdate =false}
+        onCreated={({scene}) =>scene.matrixWorldAutoUpdate =false}
         performance={{ min: 0.2 }}
         orthographic
         camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
@@ -202,7 +205,15 @@ export function App() {
        
         {/* {otherboxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />} */}
         {boxes && <Shoes />}
-        {otherboxes && <Shoes />}
+        {otherboxes && (
+          <>
+            <Shoes />
+            <Shoes />
+            <Shoes />
+            <Shoes />
+            <Shoes />
+          </>
+        )}
         <Orbit />
         {/* {enable && <UpdateCustomData />} */}
         <UpdateCustomData />
