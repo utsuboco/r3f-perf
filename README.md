@@ -26,6 +26,7 @@ yarn add --dev r3f-perf
 ```jsx
 antialias?: true, // Take a bit more performances but render the text with antialiasing
 headless?: false, // Without UI. See Headless section
+overClock?: false, // Disable the limitation of the monitor refresh rate for the fps
 deepAnalyze?: false, // More detailed informations about gl programs
 showGraph?: true // show the graphs
 minimal?: false // condensed version with the most important informations (gpu/memory/fps/custom data)
