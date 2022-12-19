@@ -7,7 +7,7 @@ import { Text } from '@react-three/drei';
 import { chart, customData } from '..';
 import { colorsGraph } from '../gui';
 import * as THREE from 'three';
-import { overLimitFps } from '../perf';
+
 export interface graphData {
   curve: THREE.SplineCurve;
   maxVal: number;
@@ -115,6 +115,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customD
         self.matrixWorld.copy(self.matrix)
       }}
       >
+        <meshBasicMaterial blending={THREE.NormalBlending} />
       0
       </Text>
       {hasInstance && (
@@ -123,7 +124,8 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customD
           self.updateMatrix()
           matriceCount.value -= 1
           self.matrixWorld.copy(self.matrix)
-        }} >
+          }} >
+            <meshBasicMaterial blending={THREE.NormalBlending} />
          </Text>
       )
       }

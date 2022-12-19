@@ -1,5 +1,8 @@
 # R3F-Perf
 
+## 6.6.3:
+- Blend default material to NormalBlending
+- Max Hz is now dynamic and more solid (calculated on a 2 seconds range)
 ## 6.6.2:
 - Fixed over clocked graph fps displaying wrong value
 

@@ -54,6 +54,7 @@ export default class GLPerf {
   chartLen: number = 60;
   maxMemory: number = 1500;
   chartHz: number = 10;
+  lastCalculateFixed: number = 0;
   chartFrame: number = 0;
   gpuTimeProcess: number = 0;
   chartTime: number = 0;
@@ -206,16 +207,25 @@ export default class GLPerf {
             frameCount,
           });
 
-          overLimitFps.fpsLimit = Math.round(average(this.logsAccums.fpsFixed) / 10) * 100
-          usePerfStore.setState({fpsLimit: overLimitFps.fpsLimit / 10})
-
           this.logsAccums.mem = []
           this.logsAccums.fps = []
-          this.logsAccums.fpsFixed = []
           this.logsAccums.gpu = []
 
           this.paramFrame = this.frameId;
           this.paramTime = t;
+        }
+
+        if (this.overClock) {
+          // calculate the max framerate every two seconds
+          if ( t - this.lastCalculateFixed >= 2*1000 ) {
+            this.lastCalculateFixed = now;
+            overLimitFps.fpsLimit = Math.round(average(this.logsAccums.fpsFixed) / 10) * 100
+            usePerfStore.setState({fpsLimit: overLimitFps.fpsLimit / 10})
+            this.logsAccums.fpsFixed = []
+
+            this.paramFrame = this.frameId;
+            this.paramTime = t;
+        }
         }
       }
         
