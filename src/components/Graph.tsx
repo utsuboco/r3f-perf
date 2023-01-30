@@ -1,11 +1,11 @@
 import { FC, HTMLAttributes, memo, Suspense, useMemo, useRef } from 'react';
-import { matriceCount, matriceWorldCount } from '../perfheadless';
+import { matriceCount, matriceWorldCount } from './PerfHeadless';
 import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import { getPerf, usePerf } from '..';
-import { colorsGraph } from '../perfgui';
+import { colorsGraph } from './Perf';
 import * as THREE from 'three';
 import { chart, customData } from '../typings';
 

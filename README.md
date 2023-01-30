@@ -57,13 +57,13 @@ import { Perf } from 'r3f-perf';
 </Canvas>;
 ```
 
-#### Usage without interface : PerfMetrics
+#### Usage without interface : PerfHeadless
 
 [Codesandbox Example](https://codesandbox.io/s/perlin-cubes-r3f-perf-headless-mh1jl7?file=/src/App.js)
 
 ```jsx
 import { Canvas } from '@react-three/fiber';
-import { PerfMetrics, usePerf } from 'r3f-perf';
+import { PerfHeadless, usePerf } from 'r3f-perf';
 
 const PerfHook = () => {
   // getPerf() is also available for non-reactive way or to access values outside react
@@ -75,7 +75,7 @@ const PerfHook = () => {
 export default function App() {
   return (
     <Canvas>
-      <PerfMetrics />
+      <PerfHeadless />
       <PerfHook />
     </Canvas>
   );

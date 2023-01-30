@@ -1,9 +1,12 @@
 # R3F-Perf
 
 ## 7.0.0:
+*Complete refactor for headless mode, new CPU metric fot the loop duration in ms, switches to Vite for bundling and uses Rollup's preserveModules option to create subentry targets. Also publishes sourcemaps for debug and browser profiling.*
+
+- refactor: use Vite, preserveModules subentries #39
 - feat: Introduce new `Cpu` value which translates to the duration the r3f render loop takes each frame.
-- feat: Introducing `<PerfMetrics />` which is the new lighter headless mode usable in production. See the #PerfMetrics section in the README.md
-- feat: A new `getReport()` method, available through the store `const getReport = usePerf(s=> s.getReport)` will give you a complete report of the average performances since when the `<Perf />` or `<PerfMetrics />` was mounted.
+- feat: Introducing `<PerfHeadless />` which is the new lighter headless mode usable in production. See the #PerfHeadless section in the README.md
+- feat: A new `getReport()` method, available through the store `const getReport = usePerf(s=> s.getReport)` will give you a complete report of the average performances since when the `<Perf />` or `<PerfHeadless />` was mounted.
 - feat: `getPerf`, `setPerf` and `usePerf` are now shallowed exposed shortcuts of the internal store.
 - feat: New report of the current session of the user accessible via the Perf store `const { perf} = getPerf()`
 - feat: customData has a new `round` property define a change the float precision (0.00 by default).

@@ -1,11 +1,11 @@
 import { FC, HTMLAttributes, useEffect, useMemo } from 'react'
 import { addEffect, addAfterEffect, useThree, addTail } from '@react-three/fiber'
-import { overLimitFps, GLPerf } from './perf'
+import { overLimitFps, GLPerf } from '../internal'
 
 import * as THREE from 'three'
-import { countGeoDrawCalls } from './helpers/countGeoDrawCalls'
-import { getPerf, ProgramsPerfs, setPerf } from './store'
-import { PerfProps } from './typings'
+import { countGeoDrawCalls } from '../helpers/countGeoDrawCalls'
+import { getPerf, ProgramsPerfs, setPerf } from '../store'
+import { PerfProps } from '../typings'
 
 // cameras from r3f-perf scene
 
@@ -73,7 +73,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, matrixUpdate }) => {
+export const PerfHeadless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, matrixUpdate }) => {
   const { gl, scene } = useThree()
   setPerf({ gl, scene })
 

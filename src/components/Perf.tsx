@@ -1,9 +1,9 @@
 import React, { FC, useRef } from 'react';
-import { ChartUI } from './ui/graph';
+import { ChartUI } from './Graph';
 import { ActivityLogIcon, BarChartIcon, DotIcon, DropdownMenuIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
-import { Html } from './html';
-import { Headless } from './perfheadless';
+import { Html } from './HtmlMinimal';
+import { PerfHeadless } from './PerfHeadless';
 
 import {
   Toggle,
@@ -14,10 +14,10 @@ import {
   ToggleContainer,
   ContainerScroll,
   PerfSmallI,
-} from './styles';
-import { ProgramsUI } from './ui/program';
-import { setPerf, usePerf } from './store';
-import { PerfPropsGui } from './typings';
+} from '../styles';
+import { ProgramsUI } from './Program';
+import { setPerf, usePerf } from '../store';
+import { PerfPropsGui } from '../typings';
 
 interface colors {
   [index: string]: string;
@@ -252,7 +252,7 @@ const TabContainers = ({ show, showGraph, matrixUpdate }: any) => {
 /**
  * Performance profiler component
  */
-export const Gui: FC<PerfPropsGui> = ({
+export const Perf: FC<PerfPropsGui> = ({
   showGraph = true,
   colorBlind = false,
   openByDefault = true,
@@ -271,7 +271,7 @@ export const Gui: FC<PerfPropsGui> = ({
 
   return (
     <>
-      <Headless chart={chart} overClock={overClock} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
+      <PerfHeadless chart={chart} overClock={overClock} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
       {/* @ts-ignore */}
       <Html transform={false}>
         <PerfS

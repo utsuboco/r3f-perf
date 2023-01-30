@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import * as path from 'node:path'
 import react from '@vitejs/plugin-react'
+// import visualizer from 'rollup-plugin-visualizer'
 
-const entries = ['./src/index.ts', './src/headless.ts']
+const entries = ['./src/index.ts']
 
 export default defineConfig({
   root: process.argv[2] ? undefined : 'demo',
@@ -21,6 +22,13 @@ export default defineConfig({
       fileName: '[name]',
     },
     rollupOptions: {
+      // plugins: [
+      //   visualizer({
+      //     emitFile: false,
+      //     open: true,
+      //     sourcemap: true
+      //   }),
+      // ],
       external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
       treeshake: false,
       input: entries,

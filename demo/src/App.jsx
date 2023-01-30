@@ -8,8 +8,7 @@ import Fireflies from './fire'
 import { useControls } from 'leva'
 
 import { Box, Cylinder, Text, Sphere, useTexture, Instances, Instance } from '@react-three/drei'
-import { Perf } from 'r3f-perf'
-import { PerfHeadless, usePerf, setCustomData } from 'r3f-perf/headless'
+import { PerfHeadless, Perf, usePerf, setCustomData } from 'r3f-perf'
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -81,6 +80,7 @@ const UpdateCustomData = () => {
         hz: 35,
         length: 60,
       }}
+      position='bottom-left'
       minimal={width < 712}
       style={{}}
       customData={{

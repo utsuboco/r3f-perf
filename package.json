@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "7.0.0",
+  "version": "7.0.0.beta.0",
   "description": "Easily monitor your ThreeJS performances.",
   "keywords": [
     "react",
@@ -51,6 +51,7 @@
     "leva": "^0.9.34",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rollup-plugin-visualizer": "^5.9.0",
     "three": "^0.149.0",
     "typescript": "^4.9.4",
     "vite": "^4.0.4"
