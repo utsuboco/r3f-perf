@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { ProgramsPerf, usePerfStore } from '../headless';
 
 import {
   ProgramGeo,
@@ -15,10 +14,11 @@ import {
   ProgramsGeoLi,
   ProgramsContainer,
 } from '../styles';
-import { PerfProps } from '..';
+import { usePerf } from '..';
 import { estimateBytesUsed } from 'three-stdlib';
 import { ActivityLogIcon, ButtonIcon, CubeIcon, EyeNoneIcon, EyeOpenIcon, ImageIcon, LayersIcon, RocketIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons';
-import * as THREE from 'three';
+import { ProgramsPerf } from '../store';
+import { PerfProps } from '../typings';
 
 const addTextureUniforms = (id: string, texture: any) => {
   const repeatType = (wrap: number) => {
@@ -60,13 +60,13 @@ const addTextureUniforms = (id: string, texture: any) => {
     name: id,
     url: texture.image.currentSrc,
     encoding: encodingType(texture.encoding),
-    wrapT: repeatType(texture.image.wrapT),
+    wrapT: repeatType(texture.wrapT),
     flipY: texture.flipY.toString(),
   };
 };
 
 const UniformsGL = ({ program, material, setTexNumber }: any) => {
-  const gl = usePerfStore((state) => state.gl);
+  const gl = usePerf((state) => state.gl);
   const [uniforms, set] = useState<any | null>(null);
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const UniformsGL = ({ program, material, setTexNumber }: any) => {
             if (key.includes('uTroika')) {
               return;
             }
-            if (value instanceof THREE.Texture) {
+            if (value.isTexture) {
               TexCount++;
               data.value = addTextureUniforms(key, value);
             } else {
@@ -208,8 +208,8 @@ type ProgramUIProps = {
 };
 
 const DynamicDrawCallInfo = ({ el }: any) => {
-  usePerfStore((state) => state.log);
-  const gl = usePerfStore((state) => state.gl);
+  usePerf((state) => state.log);
+  const gl: any = usePerf((state) => state.gl);
 
   const getVal = (el: any) => {
     if (!gl) return 0;
@@ -397,12 +397,12 @@ const ProgramUI: FC<ProgramUIProps> = ({ el }) => {
 };
 
 export const ProgramsUI: FC<PerfProps> = () => {
-  usePerfStore((state) => state.triggerProgramsUpdate);
-  const programs = usePerfStore((state) => state.programs);
+  usePerf((state) => state.triggerProgramsUpdate);
+  const programs:any = usePerf((state) => state.programs);
   return (
     <ProgramsContainer>
       {programs &&
-        Array.from(programs.values()).map((el: ProgramsPerf) => {
+        Array.from(programs.values()).map((el: any) => {
           if (!el) {
             return null;
           }

@@ -1,4 +1,4 @@
-import { drawCounts, ProgramsPerfs } from '../headless';
+import { drawCounts, ProgramsPerfs } from "../store";
 
 const countGeoDrawCalls = (programs: ProgramsPerfs) => {
   programs.forEach((program, _pkey) => {

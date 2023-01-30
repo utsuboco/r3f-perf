@@ -1,5 +1,5 @@
 import { MathUtils } from "three";
-import { usePerfStore } from "./headless";
+import { getPerf, setPerf } from "./store";
 
 declare global {
   interface Window {
@@ -19,6 +19,7 @@ export const overLimitFps = {
 interface LogsAccums {
   mem: number[],
   gpu: number[],
+  cpu: number[],
   fps: number[],
   fpsFixed: number[],
 }
@@ -42,11 +43,13 @@ export default class GLPerf {
   logsAccums: LogsAccums = {
     mem: [],
     gpu: [],
+    cpu: [],
     fps: [],
     fpsFixed:[],
   };
   fpsChart: number[] = [];
   gpuChart: number[] = [];
+  cpuChart: number[] = [];
   memChart: number[] = [];
   paramLogger: any = () => {};
   glFinish: any = () => {};
@@ -54,6 +57,7 @@ export default class GLPerf {
   chartLen: number = 60;
   maxMemory: number = 1500;
   chartHz: number = 10;
+  startCpuProfiling: boolean = false;
   lastCalculateFixed: number = 0;
   chartFrame: number = 0;
   gpuTimeProcess: number = 0;
@@ -66,6 +70,7 @@ export default class GLPerf {
   idleCbId: number = 0;
   checkQueryId: number = 0;
   uuid: string|undefined = undefined;
+  currentCpu: number = 0;
   currentMem: number = 0;
   paramFrame: number = 0;
   paramTime: number = 0;
@@ -79,6 +84,7 @@ export default class GLPerf {
 
     this.fpsChart = new Array(this.chartLen).fill(0);
     this.gpuChart = new Array(this.chartLen).fill(0);
+    this.cpuChart = new Array(this.chartLen).fill(0);
     this.memChart = new Array(this.chartLen).fill(0);
     this.now = () =>
       window.performance && window.performance.now
@@ -99,7 +105,6 @@ export default class GLPerf {
       }
     }
   }
-
   /**
    * 120hz device detection
    */
@@ -140,7 +145,7 @@ export default class GLPerf {
     if (overLimitFps.isOverLimit < 25) {
       overLimitFps.isOverLimit++;
     } else {
-      usePerfStore.setState({overclockingFps: true})
+      setPerf({overclockingFps: true})
     }
   }
   /**
@@ -162,7 +167,7 @@ export default class GLPerf {
         this.maxMemory =  window.performance.memory ? window.performance.memory.jsHeapSizeLimit / 1048576 : 0
         const frameCount = this.frameId - this.paramFrame;
         const fpsFixed = (frameCount * 1000) / (duration);
-        const fps = usePerfStore.getState().overclockingFps ? overLimitFps.value : fpsFixed;
+        const fps = getPerf().overclockingFps ? overLimitFps.value : fpsFixed;
 
         gpu = this.isWebGL2
         ? this.gpuAccums[0]
@@ -183,6 +188,19 @@ export default class GLPerf {
           : 0
         );
 
+        if (window.performance && this.startCpuProfiling) {
+          window.performance.mark("cpu-finished");
+          const cpuMeasure = performance.measure(
+            "cpu-duration",
+            "cpu-started",
+            "cpu-finished"
+          );
+          this.currentCpu = cpuMeasure.duration
+
+          this.logsAccums.cpu.push(this.currentCpu)
+          // make sure the measure has started and ended
+          this.startCpuProfiling = false
+        }
 
         this.logsAccums.mem.push(this.currentMem)
         this.logsAccums.fpsFixed.push(fpsFixed)
@@ -192,13 +210,14 @@ export default class GLPerf {
         if (this.overClock && typeof window.requestIdleCallback !== 'undefined') {
           if (overLimitFps.isOverLimit > 0 && fps > fpsFixed) {
             overLimitFps.isOverLimit--;
-          } else if (usePerfStore.getState().overclockingFps) {
-            usePerfStore.setState({overclockingFps: false})
+          } else if (getPerf().overclockingFps) {
+            setPerf({overclockingFps: false})
           }
         }
         // TODO 200 to settings
         if ( t >= this.paramTime + 180 ) {
           this.paramLogger({
+            cpu: average(this.logsAccums.cpu),
             gpu: average(this.logsAccums.gpu),
             mem: average(this.logsAccums.mem),
             fps: average(this.logsAccums.fps),
@@ -210,6 +229,7 @@ export default class GLPerf {
           this.logsAccums.mem = []
           this.logsAccums.fps = []
           this.logsAccums.gpu = []
+          this.logsAccums.cpu = []
 
           this.paramFrame = this.frameId;
           this.paramTime = t;
@@ -220,7 +240,7 @@ export default class GLPerf {
           if ( t - this.lastCalculateFixed >= 2*1000 ) {
             this.lastCalculateFixed = now;
             overLimitFps.fpsLimit = Math.round(average(this.logsAccums.fpsFixed) / 10) * 100
-            usePerfStore.setState({fpsLimit: overLimitFps.fpsLimit / 10})
+            setPerf({fpsLimit: overLimitFps.fpsLimit / 10})
             this.logsAccums.fpsFixed = []
 
             this.paramFrame = this.frameId;
@@ -242,16 +262,20 @@ export default class GLPerf {
       while (--hz > 0 && this.detected) {
         const frameCount = this.frameId - this.chartFrame;
         const fpsFixed = (frameCount / timespan) * 1e3;
-        const fps = usePerfStore.getState().overclockingFps ? overLimitFps.value : fpsFixed;
+        const fps = getPerf().overclockingFps ? overLimitFps.value : fpsFixed;
         this.fpsChart[this.circularId % this.chartLen] = fps;
         // this.fpsChart[this.circularId % this.chartLen] = ((overLimitFps.isOverLimit > 0 ? overLimitFps.value : fps) / overLimitFps.fpsLimit) * 60;
         const memS = 1000 / this.currentMem;
+        const cpuS = this.currentCpu;
         const gpuS =
           (this.isWebGL2
             ? this.gpuAccums[1] * 2
             : Math.round((this.gpuAccums[1] / duration) * 100)) + 4;
         if (gpuS > 0) {
           this.gpuChart[this.circularId % this.chartLen] = gpuS;
+        }
+        if (cpuS > 0) {
+          this.cpuChart[this.circularId % this.chartLen] = cpuS;
         }
         if (memS > 0) {
           this.memChart[this.circularId % this.chartLen] = memS;
@@ -262,6 +286,7 @@ export default class GLPerf {
             data: {
               fps: this.fpsChart,
               gpu: this.gpuChart,
+              cpu: this.cpuChart,
               mem: this.memChart,
             },
             circularId: this.circularId,

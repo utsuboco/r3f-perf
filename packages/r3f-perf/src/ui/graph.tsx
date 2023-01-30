@@ -1,12 +1,13 @@
-import { FC, HTMLAttributes, memo, Suspense, useMemo, useRef, useState } from 'react';
-import { matriceCount, matriceWorldCount, usePerfStore } from '../headless';
+import { FC, HTMLAttributes, memo, Suspense, useMemo, useRef } from 'react';
+import { matriceCount, matriceWorldCount } from '../perfheadless';
 import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
 import { Canvas, useFrame, useThree, Viewport } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
-import { chart, customData } from '..';
-import { colorsGraph } from '../gui';
+import { getPerf, usePerf } from '..';
+import { colorsGraph } from '../perfgui';
 import * as THREE from 'three';
+import { chart, customData } from '../typings';
 
 export interface graphData {
   curve: THREE.SplineCurve;
@@ -46,13 +47,13 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customD
   const fpsInstanceRef = useRef<any>(null)
 
   useFrame(function updateR3FPerfText() {
-    const gl:any = usePerfStore.getState().gl
-    const log = usePerfStore.getState().log
+    const gl:any = getPerf().gl
+    const log = getPerf().log
     
     if (!log || !fpsRef.current) return
 
     if (customData) {
-      fpsRef.current.text = usePerfStore.getState().customData
+      fpsRef.current.text = (Math.round(getPerf().customData * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
     }
   
     if (!metric) return
@@ -68,9 +69,9 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customD
     }
    
     if (metric === 'fps') {
-      fpsRef.current.color = usePerfStore.getState().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`
+      fpsRef.current.color = getPerf().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`
     }
-    fpsRef.current.text = (metric === 'maxMemory' ? '/' : '') + (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
+    fpsRef.current.text = (Math.round(info * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
          
 
     if (hasInstance) {
@@ -96,7 +97,8 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customD
         fpsRef.current.position.y = h/2 - offsetY - fontSize / 1.9
         fpsInstanceRef.current.text = ' ±	' + (Math.round(infoInstance * Math.pow(10, round)) / Math.pow(10, round)).toFixed(round)
       } else {
-       
+        if (fpsInstanceRef.current.text) fpsInstanceRef.current.text = ''
+
         fpsRef.current.position.y = h/2 - offsetY - fontSize
         fpsRef.current.fontSize = fontSize
       }
@@ -135,14 +137,14 @@ const TextHighHZ: FC<TextHighHZProps> = memo(({isPerf,color, colorBlind, customD
 
 const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal, matrixUpdate }) => {
   // const [supportMemory] = useState(window.performance.memory)
-  const supportMemory = false
+  // const supportMemory = false
   
   const fontSize: number = 14
   return (
     <>
       <TextHighHZ colorBlind={colorBlind} color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} isPerf metric='fps' fontSize={fontSize} offsetX={140} round={0} />
-      <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='mem' fontSize={fontSize} offsetX={80} round={0} />
-      <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).mem.toString()})` : ''} isPerf metric='maxMemory' fontSize={8} offsetX={112} offsetY={10} round={0} />
+      <TextHighHZ color={`rgb(${colorsGraph(colorBlind).cpu.toString()})`} isPerf metric='cpu' fontSize={fontSize} offsetX={72} round={3} />
+      {/* <TextHighHZ color={supportMemory ? `rgb(${colorsGraph(colorBlind).cpu.toString()})` : ''} isPerf metric='maxMemory' fontSize={8} offsetX={112} offsetY={10} round={0} /> */}
       <TextHighHZ color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} isPerf metric='gpu'  fontSize={fontSize} offsetX={10} round={3}/>
       {!minimal ? (
           <>
@@ -157,7 +159,7 @@ const TextsHighHZ: FC<PerfUIProps> = ({ colorBlind, customData, minimal, matrixU
           </>
        ) : null}
      
-      {customData && <TextHighHZ color={`rgb(${colorsGraph(colorBlind).custom.toString()})`}  customData={customData} fontSize={fontSize} offsetY={0} offsetX={minimal ? 200 : 320} round={0}/>}
+      {customData && <TextHighHZ color={`rgb(${colorsGraph(colorBlind).custom.toString()})`}  customData={customData} fontSize={fontSize} offsetY={0} offsetX={minimal ? 200 : 320} round={customData.round || 2}/>}
     </>
   );
 };
@@ -173,7 +175,8 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   const curves: any = useMemo(() => {
     return {
       fps: new Float32Array(chart.length * 3),
-      mem: new Float32Array(chart.length * 3),
+      cpu: new Float32Array(chart.length * 3),
+      // mem: new Float32Array(chart.length * 3),
       gpu: new Float32Array(chart.length * 3)
     }
   }, [chart])
@@ -181,13 +184,13 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   const fpsRef= useRef<any>(null)
   const fpsMatRef= useRef<any>(null)
   const gpuRef= useRef<any>(null)
-  const memRef= useRef<any>(null)
+  const cpuRef= useRef<any>(null)
 
   const dummyVec3 = useMemo(() => new THREE.Vector3(0,0,0), [])
   const updatePoints = (element: string, factor: number = 1, ref: any, viewport: Viewport) => {
     let maxVal = 0;
     const {width: w, height: h} = viewport
-    const chart = usePerfStore.getState().chart.data[element];
+    const chart = getPerf().chart.data[element];
     if (!chart || chart.length === 0) {
       return
     }
@@ -195,7 +198,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
     const paddingTop = minimal ? 12 : 50
     let len = chart.length;
     for (let i = 0; i < len; i++) {
-      let id = (usePerfStore.getState().chart.circularId + i + 1) % len;
+      let id = (getPerf().chart.circularId + i + 1) % len;
       if (chart[id] !== undefined) {
         if (chart[id] > maxVal) {
           maxVal = chart[id] * factor;
@@ -209,17 +212,17 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
     ref.attributes.position.needsUpdate = true;
   };
 
-  const [supportMemory] = useState(window.performance.memory)
+  // const [supportMemory] = useState(window.performance.memory)
   useFrame(function updateChartCurve({viewport}) {
     
     updatePoints('fps', 1, fpsRef.current, viewport)
     if (fpsMatRef.current) {
-      fpsMatRef.current.color.set(usePerfStore.getState().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`)
+      fpsMatRef.current.color.set(getPerf().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`)
     }
     updatePoints('gpu', 5, gpuRef.current, viewport)
-    if (supportMemory) {
-      updatePoints('mem', 1, memRef.current, viewport)
-    }
+    // if (supportMemory) {
+      updatePoints('cpu', 5, cpuRef.current, viewport)
+    // }
   })
   return (
     <>
@@ -249,19 +252,19 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
         </bufferGeometry>
         <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} transparent opacity={0.5} />
       </line>
-      {supportMemory && <line>
-        <bufferGeometry ref={memRef}>
+      <line>
+        <bufferGeometry ref={cpuRef}>
           <bufferAttribute
             attach={'attributes-position'}
             count={chart.length}
-            array={curves.mem}
+            array={curves.cpu}
             itemSize={3}
             usage={THREE.DynamicDrawUsage}
             needsUpdate={true}
           />
         </bufferGeometry>
-        <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).mem.toString()})`} transparent opacity={0.5} />
-      </line>}
+        <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).cpu.toString()})`} transparent opacity={0.5} />
+      </line>
     </>
   );
 };
@@ -277,7 +280,7 @@ export const ChartUI: FC<PerfUIProps> = ({
 }) => {
   const canvas = useRef<any>(undefined);
 
-  const paused = usePerfStore((state) => state.paused);
+  const paused = usePerf((state) => state.paused);
   return (
     <Graph
       style={{

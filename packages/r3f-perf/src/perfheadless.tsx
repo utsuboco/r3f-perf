@@ -6,11 +6,11 @@ import {
   addTail,
 } from '@react-three/fiber';
 import GLPerf, { overLimitFps } from './perf';
-import create from 'zustand';
-import { PerfProps } from '.';
+
 import * as THREE from 'three';
 import countGeoDrawCalls from './helpers/countGeoDrawCalls';
-
+import { getPerf, ProgramsPerfs, setPerf } from './store';
+import { PerfProps } from './typings';
 
 // cameras from r3f-perf scene
 
@@ -19,34 +19,15 @@ const updateMatrixWorldTemp = THREE.Object3D.prototype.updateMatrixWorld;
 const updateWorldMatrixTemp = THREE.Object3D.prototype.updateWorldMatrix;
 const updateMatrixTemp = THREE.Object3D.prototype.updateMatrix;
 
+const maxGl = ['calls', 'triangles', 'points', 'lines'];
+const maxLog = ['gpu', 'cpu', 'mem', 'fps'];
+
 export let matriceWorldCount = {
   value: 0
 }
 export let matriceCount = {
   value: 0
 }
-type drawCount = {
-  type: string;
-  drawCount: number;
-};
-export type drawCounts = {
-  total: number;
-  type: string;
-  data: drawCount[];
-};
-
-export type ProgramsPerf = {
-  meshes?: {
-    [index: string]: THREE.Mesh[];
-  };
-  material: THREE.Material;
-  program?: WebGLProgram;
-  visible: boolean;
-  drawCounts: drawCounts;
-  expand: boolean;
-};
-
-export type ProgramsPerfs = Map<string, ProgramsPerf>;
 
 const isUUID = (uuid: string) => {
   let s: any = '' + uuid;
@@ -85,36 +66,7 @@ const addMuiPerfID = (material: THREE.Material, currentObjectWithMaterials: any)
   return uuid;
 };
 
-export type State = {
-  log: any;
-  paused: boolean;
-  overclockingFps: boolean;
-  fpsLimit: number;
-  triggerProgramsUpdate: number;
-  customData: number;
-  chart: {
-    data: {
-      [index: string]: number[];
-    };
-    circularId: number;
-  };
-  gl: THREE.WebGLRenderer | undefined;
-  scene: THREE.Scene | undefined;
-  programs: ProgramsPerfs;
-  objectWithMaterials: THREE.Mesh[] | null;
-  tab: 'infos' | 'programs' | 'data';
-};
 
-
-type Logger = {
-  i: number;
-  maxMemory: number;
-  gpu: number;
-  mem: number;
-  fps: number;
-  duration: number;
-  frameCount: number;
-};
 
 type Chart = {
   data: {
@@ -126,52 +78,14 @@ type Chart = {
 
 const getMUIIndex = (muid: string) => muid === 'muiPerf';
 
-export const usePerfStore = create<State>((set) => ({
-  log: null,
-  paused: false,
-  triggerProgramsUpdate: 0,
-  customData: 0,
-  fpsLimit: 60,
-  overclockingFps: false,
-  chart: {
-    data: {
-      fps: [],
-      gpu: [],
-      mem: [],
-    },
-    circularId: 0,
-  },
-  gl: undefined,
-  objectWithMaterials: null,
-  scene: undefined,
-  programs: new Map(),
-  sceneLength: undefined,
-  tab: 'infos',
-}));
-
-export const setCustomData = (customData: number) => {
-  usePerfStore.setState({customData})
-}
-export const getCustomData = () => {
-  return usePerfStore.getState().customData
-}
-
-export const usePerfFunc = () => {
-  return {
-    log: usePerfStore((state) => state.log),
-    gl: usePerfStore((state) => state.gl)?.info,
-    programs: usePerfStore((state) => state.programs),
-  };
-};
-
 export interface Props extends HTMLAttributes<HTMLDivElement> {}
 
 /**
  * Performance profiler component
  */
-export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyze, matrixUpdate }) => {
+export const Headless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, matrixUpdate }) => {
   const { gl, scene } = useThree();
-  usePerfStore.setState({ gl, scene });
+  setPerf({ gl, scene });
 
   const PerfLib = useMemo(() => {
     
@@ -182,22 +96,63 @@ export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyz
         chartHz: chart ? chart.hz : 60,
         gl: gl.getContext(),
         chartLogger: (chart: Chart) => {
-          usePerfStore.setState({ chart });
+          setPerf({ chart });
         },
-        paramLogger: (logger: Logger) => {
-          usePerfStore.setState({
+        paramLogger: (logger: any) => {
+          setPerf({
             log: {
               maxMemory: logger.maxMemory,
               gpu: logger.gpu,
+              cpu: logger.cpu,
               mem: logger.mem,
               fps: logger.fps,
               totalTime: logger.duration,
               frameCount: logger.frameCount
             },
           });
+          const { accumulated }: any = getPerf()
+          const glRender: any = gl.info.render
+
+          accumulated.totalFrames++
+          accumulated.gl.calls += glRender.calls
+          accumulated.gl.triangles += glRender.triangles
+          accumulated.gl.points += glRender.points
+          accumulated.gl.lines += glRender.lines
+
+          
+          // calculate max
+          for (let i = 0; i < maxGl.length; i++) {
+            const key = maxGl[i];
+            let prevValue = accumulated.max[key];
+            const value = glRender[key];
+
+            if (value > prevValue) {
+              prevValue = value
+            }
+          }
+
+          for (let i = 0; i < maxLog.length; i++) {
+            const key = maxLog[i];
+            let prevValue = accumulated.max[key];
+            const value = logger[key];
+
+            if (value > prevValue) {
+              prevValue = value
+            }
+          }
+
+          accumulated.log.gpu += logger.gpu
+          accumulated.log.cpu += logger.cpu
+          accumulated.log.mem += logger.mem
+          accumulated.log.fps += logger.fps
+          
+
+          // TODO CONVERT TO OBJECT AND VALUE ALWAYS 0 THIS IS NOT CALL
+          setPerf({ accumulated });
         },
       })
-
+      setPerf({ startTime: window.performance.now() });
+      
       const callbacks = new Map()
       const callbacksAfter = new Map()
       Object.defineProperty(THREE.Scene.prototype, 'onBeforeRender', {
@@ -238,7 +193,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyz
     if (PerfLib) {
       PerfLib.overClock = overClock || false
       if (overClock === false) {
-        usePerfStore.setState({ overclockingFps: false })
+        setPerf({ overclockingFps: false })
         overLimitFps.value = 0
         overLimitFps.isOverLimit = 0
       }
@@ -277,8 +232,13 @@ export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyz
 
     
     effectSub = addEffect(function preRafR3FPerf() {
-      if (usePerfStore.getState().paused) {
-        usePerfStore.setState({ paused: false });
+      if (getPerf().paused) {
+        setPerf({ paused: false });
+      }
+
+      if (window.performance) {
+        window.performance.mark("cpu-started");
+        PerfLib.startCpuProfiling = true
       }
 
       matriceCount.value -= 1
@@ -351,11 +311,11 @@ export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyz
             });
           }
         });
-        if (programs.size !== usePerfStore.getState().programs.size) {
+        if (programs.size !== getPerf().programs.size) {
           countGeoDrawCalls(programs);
-          usePerfStore.setState({
+          setPerf({
             programs: programs,
-            triggerProgramsUpdate: usePerfStore.getState()
+            triggerProgramsUpdate: getPerf()
               .triggerProgramsUpdate++,
           });
         }
@@ -382,7 +342,7 @@ export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyz
       effectSub();
       afterEffectSub();
     };
-  }, [PerfLib, gl, trackCPU, chart, matrixUpdate]);
+  }, [PerfLib, gl, chart, matrixUpdate]);
 
   useEffect(() => {
     const unsub = addTail(function postRafTailR3FPerf() {
@@ -390,12 +350,13 @@ export const Headless: FC<PerfProps> = ({ trackCPU, overClock, chart, deepAnalyz
         PerfLib.paused = true;
         matriceCount.value = 0
         matriceWorldCount.value = 0
-        usePerfStore.setState({
+        setPerf({
           paused: true,
           log: {
             maxMemory: 0,
             gpu: 0,
             mem: 0,
+            cpu: 0,
             fps: 0,
             totalTime: 0,
             frameCount: 0

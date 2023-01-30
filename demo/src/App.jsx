@@ -1,5 +1,4 @@
 import React, { useMemo, Suspense, useEffect, useRef, useState } from 'react';
-import { Perf, setCustomData, usePerf } from 'r3f-perf';
 import './index.css';
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { Orbit } from './sandboxes/perf-minimal/src/orbit';
@@ -9,6 +8,8 @@ import Fireflies from './fire';
 import { useControls } from 'leva'
 
 import { Box, Cylinder, Text, Sphere, useTexture, Instances, Instance } from '@react-three/drei';
+import { Perf, usePerf } from 'r3f-perf';
+import { PerfHeadless, usePerf } from 'r3f-perf/headless';
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -57,40 +58,41 @@ const Bob = () => {
   );
 };
 
-const PerfHook = () => {
-  const test = usePerf();
-  return null;
-};
-
 const UpdateCustomData = () => {
   // recommended to throttle to 1sec for readability
-  const { width } = useThree(s=>s.size)
+  const { width } = useThree(s => s.size)
+  const { noUI } = useControls({ noUI: true })
+  
+  const [getReport] = usePerf(s=>[s.getReport])
 
-  // useFrame(() => {
-  //   setCustomData(30 + Math.random() * 5)
-  // })
+  useFrame(() => {
+    setCustomData(30 + Math.random() * 5)
+  })
 
-  return <Perf
-    className={'override'}
-    showGraph
-    overClock={true}
-    // deepAnalyze
-    chart={{
-      hz: 35,
-      length: 60,
-    }}
+  return noUI ? <PerfHeadless
+    overClock
     minimal={width < 712}
-    style={{
-    }}
-    // customData={{
-    //   value: 30,
-    //   name: 'physic',
-    //   info: 'fps'
-    // }}
-    matrixUpdate={true}
+    matrixUpdate
+  /> : <Perf
+  className={'override'}
+  showGraph
+  overClock={true}
+  deepAnalyze
+  chart={{
+    hz: 35,
+    length: 60,
+  }}
+  minimal={width < 712}
+  style={{
+  }}
+  customData={{
+    value: 30,
+    name: 'physic',
+    info: 'fps',
+  }}
+  matrixUpdate
     // colorBlind={true}
-    position={'bottom-left'}
-/>
+    />
 }
 
 
@@ -156,6 +158,15 @@ export function App() {
     aa: false,
   })
   const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
+
+  // const { average } = usePerf();
+
+  // average = {
+  //   fps: 0,
+  //   loop: 0,
+  //   cpu: 0,
+  //   gpu:  0,
+  // }
 
   return mountCanvas ? (
     <>

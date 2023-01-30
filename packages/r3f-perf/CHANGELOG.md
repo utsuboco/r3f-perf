@@ -1,5 +1,17 @@
 # R3F-Perf
 
+## 7.0.0:
+- feat: Introduce new `Cpu` value which translates to the duration the r3f render loop takes each frame.
+- feat: Introducing `<PerfMetrics />` which is the new lighter headless mode usable in production. See the #PerfMetrics section in the README.md
+- feat: A new `getReport()` method, available through the store `const getReport = usePerf(s=> s.getReport)` will give you a complete report of the average performances since when the `<Perf />` or `<PerfMetrics />` was mounted.
+- feat: `getPerf`, `setPerf` and `usePerf` are now shallowed exposed shortcuts of the internal store.
+- feat: New report of the current session of the user accessible via the Perf store `const { perf} = getPerf()`
+- feat: customData has a new `round` property define a change the float precision (0.00 by default).
+- deprecated: [GUI] Removed `Memory` as the value was only available on Chrome and not relevant and replaced it with `Cpu`.
+- deprecated: Removed unused `trackCPU` parameter
+- deprecated: `usePerf()` is now a `zustand` store and does not return an object anymore.
+- fix: texture informations in `deepAnalyze` mode where showing wrong values.
+
 ## 6.6.3:
 - Blend default material to NormalBlending
 - Max Hz is now dynamic and more solid (calculated on a 2 seconds range)

@@ -3,8 +3,7 @@ import { ChartUI } from './ui/graph';
 import { ActivityLogIcon, BarChartIcon, DotIcon, DropdownMenuIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
 import { Html } from './html';
-import { usePerfStore, Headless } from './headless';
-import { PerfProps } from '.';
+import { Headless } from './perfheadless';
 
 import {
   Toggle,
@@ -17,6 +16,8 @@ import {
   PerfSmallI,
 } from './styles';
 import { ProgramsUI } from './ui/program';
+import { setPerf, usePerf } from './store';
+import { PerfPropsGui } from './typings';
 
 interface colors {
   [index: string]: string;
@@ -26,16 +27,16 @@ export const colorsGraph = (colorBlind: boolean | undefined) => {
   const colors: colors = {
     overClock: `#ff6eff`,
     fps: colorBlind ? '100, 143, 255' : '238,38,110',
-    mem: colorBlind ? '254, 254, 98' : '66,226,46',
+    cpu: colorBlind ? '254, 254, 98' : '66,226,46',
     gpu: colorBlind ? '254,254,254' : '253,151,31',
     custom: colorBlind ? '86,180,233' : '40,255,255',
   };
   return colors;
 };
 
-const DynamicUIPerf: FC<PerfProps> = ({showGraph, colorBlind}) => {
-  const overclockingFps = usePerfStore(s=>s.overclockingFps)
-  const fpsLimit = usePerfStore(s=>s.fpsLimit)
+const DynamicUIPerf: FC<PerfPropsGui> = ({showGraph, colorBlind}) => {
+  const overclockingFps = usePerf((s)=>s.overclockingFps)
+  const fpsLimit = usePerf((s)=>s.fpsLimit)
 
   return (<PerfB
     style={
@@ -44,13 +45,13 @@ const DynamicUIPerf: FC<PerfProps> = ({showGraph, colorBlind}) => {
   >FPS {overclockingFps ? `${fpsLimit}🚀` : ''}</PerfB>)
 }
 
-const DynamicUI: FC<PerfProps> = ({
+const DynamicUI: FC<PerfPropsGui> = ({
   showGraph,
   colorBlind,
   customData,
   minimal,
 }) => {
-  const gl = usePerfStore((state) => state.gl);
+  const gl = usePerf((state) => state.gl);
 
   return gl ? (
     <PerfIContainer>
@@ -74,12 +75,23 @@ const DynamicUI: FC<PerfProps> = ({
         <PerfB  style={
             showGraph
               ? {
-                  color: `rgb(${colorsGraph(colorBlind).mem.toString()})`,
+                  color: `rgb(${colorsGraph(colorBlind).cpu.toString()})`,
+                }
+              : {}
+          }>CPU</PerfB>
+        <PerfSmallI>ms</PerfSmallI>
+      </PerfI>
+      {/* <PerfI>
+        <RulerHorizontalIcon />
+        <PerfB  style={
+            showGraph
+              ? {
+                  color: `rgb(${colorsGraph(colorBlind).cpu.toString()})`,
                 }
               : {}
           }>Memory</PerfB>
         <PerfSmallI>mb</PerfSmallI>
-      </PerfI>
+      </PerfI> */}
       <PerfI>
         <LapTimerIcon />
         <DynamicUIPerf showGraph={showGraph} colorBlind={colorBlind} />
@@ -87,6 +99,7 @@ const DynamicUI: FC<PerfProps> = ({
       {!minimal && gl && (
         <PerfI>
           <TextAlignJustifyIcon />
+          {/* @ts-ignore */}
           <PerfB>{gl.info.render.calls === 1 ? 'call' : 'calls'}</PerfB>
         </PerfI>
       )}
@@ -113,7 +126,7 @@ const DynamicUI: FC<PerfProps> = ({
   ) : null;
 };
 
-const PerfUI: FC<PerfProps> = ({
+const PerfUI: FC<PerfPropsGui> = ({
   showGraph,
   colorBlind,
   deepAnalyze,
@@ -135,7 +148,7 @@ const PerfUI: FC<PerfProps> = ({
   );
 };
 
-const InfoUI: FC<PerfProps> = ({matrixUpdate}) => {
+const InfoUI: FC<PerfPropsGui> = ({matrixUpdate}) => {
   return (
     <div>
       <PerfI>
@@ -173,20 +186,20 @@ const InfoUI: FC<PerfProps> = ({matrixUpdate}) => {
 };
 
 const ToggleEl = ({ tab, title, set }: any) => {
-  const tabStore = usePerfStore((state) => state.tab);
+  const tabStore = usePerf((s: { tab: any; }) => s.tab);
   return (
     <Toggle
       className={`${tabStore === tab ? ' __perf_toggle_tab_active' : ''}`}
       onClick={() => {
         set(true);
-        usePerfStore.setState({ tab: tab });
+        setPerf({ tab: tab });
       }}
     >
       <span>{title}</span>
     </Toggle>
   );
 };
-const PerfThree: FC<PerfProps> = ({ openByDefault, showGraph, deepAnalyze, matrixUpdate }) => {
+const PerfThree: FC<PerfPropsGui> = ({ openByDefault, showGraph, deepAnalyze, matrixUpdate }) => {
   const [show, set] = React.useState(openByDefault);
 
   // const initialDpr = useThree((state) => state.viewport.initialDpr)
@@ -221,7 +234,7 @@ const PerfThree: FC<PerfProps> = ({ openByDefault, showGraph, deepAnalyze, matri
 };
 
 const TabContainers = ({ show, showGraph, matrixUpdate }: any) => {
-  const tab = usePerfStore((state) => state.tab);
+  const tab = usePerf((state) => state.tab);
 
   return (
     <>
@@ -239,17 +252,17 @@ const TabContainers = ({ show, showGraph, matrixUpdate }: any) => {
 /**
  * Performance profiler component
  */
-const Gui: FC<PerfProps> = ({
-  showGraph,
-  colorBlind,
-  openByDefault,
+export const Gui: FC<PerfPropsGui> = ({
+  showGraph = true,
+  colorBlind = false,
+  openByDefault = true,
   className,
-  overClock,
+  overClock = false,
   style,
-  position,
+  position = 'top-right',
   chart,
-  deepAnalyze,
-  antialias,
+  deepAnalyze = false,
+  antialias = true,
   customData,
   matrixUpdate,
   minimal
@@ -294,4 +307,3 @@ const Gui: FC<PerfProps> = ({
   );
 };
 
-export default Gui;

@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "6.6.3",
+  "version": "7.0.0",
   "main": "dist/r3f-perf.cjs.js",
   "module": "dist/r3f-perf.esm.js",
   "types": "dist/r3f-perf.cjs.d.ts",
@@ -23,7 +23,8 @@
   "bugs": "https://github.com/RenaudRohlinger/r3f-perf/issues",
   "preconstruct": {
     "entrypoints": [
-      "index.tsx"
+      "index.ts",
+      "headless.ts"
     ]
   },
   "peerDependencies": {
