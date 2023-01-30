@@ -1,6 +1,3 @@
 {
-  "packages": ["packages/*"],
-  "sandboxes": [
-    "/demo/src/sandboxes/perf-minimal"
-  ]
+  "sandboxes": ["/demo/src/sandboxes/perf-minimal"]
 }
