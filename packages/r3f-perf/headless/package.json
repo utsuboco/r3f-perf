@@ -1,4 +1,0 @@
-{
-  "main": "dist/r3f-perf-headless.cjs.js",
-  "module": "dist/r3f-perf-headless.esm.js"
-}

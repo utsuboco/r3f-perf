@@ -1,15 +1,15 @@
-import React, { useMemo, Suspense, useEffect, useRef, useState } from 'react';
-import './index.css';
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
-import { Orbit } from './sandboxes/perf-minimal/src/orbit';
-import * as THREE from 'three';
-import Boxes from './sandboxes/perf-minimal/src/boxes';
-import Fireflies from './fire';
+import React, { useMemo, Suspense, useEffect, useRef, useState } from 'react'
+import './index.css'
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import { Orbit } from './sandboxes/perf-minimal/src/orbit'
+import * as THREE from 'three'
+import Boxes from './sandboxes/perf-minimal/src/boxes'
+import Fireflies from './fire'
 import { useControls } from 'leva'
 
-import { Box, Cylinder, Text, Sphere, useTexture, Instances, Instance } from '@react-three/drei';
-import { Perf, usePerf } from 'r3f-perf';
-import { PerfHeadless, usePerf } from 'r3f-perf/headless';
+import { Box, Cylinder, Text, Sphere, useTexture, Instances, Instance } from '@react-three/drei'
+import { Perf } from 'r3f-perf'
+import { PerfHeadless, usePerf, setCustomData } from 'r3f-perf/headless'
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -21,7 +21,7 @@ const vertexShader = /* glsl */ `
     pos.xy += + offset;
     gl_Position = projectionMatrix *  modelViewMatrix *  vec4(pos, 1.0);
   }
-`;
+`
 const fragmentShader = /* glsl */ `
   uniform float amount; 
   uniform sampler2D albedo;
@@ -30,7 +30,7 @@ const fragmentShader = /* glsl */ `
   void main() {
     glFrag = vec4(vUv * amount, 0., 1.);
   }
-`;
+`
 
 const MyMaterial = new THREE.ShaderMaterial({
   uniforms: {
@@ -42,10 +42,10 @@ const MyMaterial = new THREE.ShaderMaterial({
   fragmentShader,
   vertexShader,
   glslVersion: THREE.GLSL3,
-});
+})
 
 const Bob = () => {
-  const bob = useTexture('../caveman.png');
+  const bob = useTexture('../caveman.png')
   return (
     <>
       <Box position-x={-3}>
@@ -55,46 +55,44 @@ const Bob = () => {
         <meshPhysicalMaterial map={bob} />
       </Box>
     </>
-  );
-};
+  )
+}
 
 const UpdateCustomData = () => {
   // recommended to throttle to 1sec for readability
-  const { width } = useThree(s => s.size)
+  const { width } = useThree((s) => s.size)
   const { noUI } = useControls({ noUI: true })
-  
-  const [getReport] = usePerf(s=>[s.getReport])
+
+  const [getReport] = usePerf((s) => [s.getReport])
 
   useFrame(() => {
     setCustomData(30 + Math.random() * 5)
   })
 
-  return noUI ? <PerfHeadless
-    overClock
-    minimal={width < 712}
-    matrixUpdate
-  /> : <Perf
-  className={'override'}
-  showGraph
-  overClock={true}
-  deepAnalyze
-  chart={{
-    hz: 35,
-    length: 60,
-  }}
-  minimal={width < 712}
-  style={{
-  }}
-  customData={{
-    value: 30,
-    name: 'physic',
-    info: 'fps',
-  }}
-  matrixUpdate
-    // colorBlind={true}
+  return noUI ? (
+    <PerfHeadless overClock minimal={width < 712} matrixUpdate />
+  ) : (
+    <Perf
+      className={'override'}
+      showGraph
+      overClock={true}
+      deepAnalyze
+      chart={{
+        hz: 35,
+        length: 60,
+      }}
+      minimal={width < 712}
+      style={{}}
+      customData={{
+        value: 30,
+        name: 'physic',
+        info: 'fps',
+      }}
+      matrixUpdate
+      // colorBlind={true}
     />
+  )
 }
-
 
 const color = new THREE.Color()
 const randomVector = (r) => [r / 2 - Math.random() * r, r / 2 - Math.random() * r, r / 2 - Math.random() * r]
@@ -138,7 +136,10 @@ function Shoe({ random, ...props }) {
     const t = state.clock.getElapsedTime() + random * 10000
     ref.current.rotation.set(Math.cos(t / 4) / 2, Math.sin(t / 4) / 2, Math.cos(t / 1.5) / 2)
     ref.current.position.y = Math.sin(t / 1.5) / 2
-    ref.current.scale.x = ref.current.scale.y = ref.current.scale.z = THREE.MathUtils.lerp(ref.current.scale.z, hovered ? 1.4 : 1, 0.1)
+    ref.current.scale.x =
+      ref.current.scale.y =
+      ref.current.scale.z =
+        THREE.MathUtils.lerp(ref.current.scale.z, hovered ? 1.4 : 1, 0.1)
     ref.current.color.lerp(color.set(hovered ? 'red' : 'white'), hovered ? 1 : 0.1)
   })
   return (
@@ -149,7 +150,7 @@ function Shoe({ random, ...props }) {
 }
 
 export function App() {
-  const {otherboxes, mountCanvas, aa, boxes} = useControls({
+  const { otherboxes, mountCanvas, aa, boxes } = useControls({
     enable: true,
     mountCanvas: true,
     minimal: true,
@@ -157,7 +158,7 @@ export function App() {
     otherboxes: false,
     aa: false,
   })
-  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }));
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: 'blue' }))
 
   // const { average } = usePerf();
 
@@ -174,14 +175,13 @@ export function App() {
       <Canvas
         concurrent={'true'}
         gl={{
-          antialias: aa
+          antialias: aa,
         }}
         dpr={1}
-        onCreated={({scene}) =>scene.matrixWorldAutoUpdate =false}
+        onCreated={({ scene }) => (scene.matrixWorldAutoUpdate = false)}
         performance={{ min: 0.2 }}
         orthographic
-        camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}
-      >
+        camera={{ position: [0, 0, 10], near: 1, far: 15, zoom: 50 }}>
         <pointLight />
         {/* <Suspense fallback={null}>
           <Bob />
@@ -213,7 +213,7 @@ export function App() {
         {/* <Sphere position-y={-2}>
             <meshBasicMaterial />
           </Sphere> */}
-       
+
         {/* {otherboxes && <Boxes position={[0, 0, 0]} rotation={[0, 0, Math.PI]} />} */}
         {boxes && <Shoes />}
         {otherboxes && (
@@ -230,7 +230,6 @@ export function App() {
         <UpdateCustomData />
       </Canvas>
       {/* <PerfHook /> */}
-
     </>
-  ) : null;
+  ) : null
 }
