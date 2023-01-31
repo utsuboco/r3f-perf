@@ -10,7 +10,7 @@ Easily monitor the performances of your @react-three/fiber application.
     <td>Add the Perf component anywhere in your Canvas.</td>
     <td>
 <a href="https://wtp9t.csb.app/">
-  <img src="https://user-images.githubusercontent.com/15867665/120879065-bd666680-c5fb-11eb-9c8f-632b7ce09456.png" /></td>
+  <img src="https://user-images.githubusercontent.com/15867665/215722804-3b4ee71c-d205-429b-8cae-f915bf60d56c.png" /></td>
 </a>
   </tr>
 </table>
