@@ -111,28 +111,19 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, mat
         // calculate max
         for (let i = 0; i < maxGl.length; i++) {
           const key = maxGl[i]
-          let prevValue = accumulated.max[key]
           const value = glRender[key]
-
-          if (value > prevValue) {
-            prevValue = value
+          if (value > accumulated.max.gl[key]) {
+            accumulated.max.gl[key] = value
           }
         }
 
         for (let i = 0; i < maxLog.length; i++) {
           const key = maxLog[i]
-          let prevValue = accumulated.max[key]
           const value = logger[key]
-
-          if (value > prevValue) {
-            prevValue = value
+          if (value >  accumulated.max.log[key]) {
+            accumulated.max.log[key] = value
           }
         }
-
-        accumulated.log.gpu += logger.gpu
-        accumulated.log.cpu += logger.cpu
-        accumulated.log.mem += logger.mem
-        accumulated.log.fps += logger.fps
 
         // TODO CONVERT TO OBJECT AND VALUE ALWAYS 0 THIS IS NOT CALL
         setPerf({ accumulated })

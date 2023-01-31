@@ -1,13 +1,11 @@
-import React, { useMemo, Suspense, useEffect, useRef, useState } from 'react'
+import React, { useMemo, useEffect, useRef, useState } from 'react'
 import './index.css'
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Orbit } from './sandboxes/perf-minimal/src/orbit'
 import * as THREE from 'three'
-import Boxes from './sandboxes/perf-minimal/src/boxes'
-import Fireflies from './fire'
 import { useControls } from 'leva'
 
-import { Box, Cylinder, Text, Sphere, useTexture, Instances, Instance } from '@react-three/drei'
+import { Box, useTexture, Instances, Instance } from '@react-three/drei'
 import { PerfHeadless, Perf, usePerf, setCustomData } from 'r3f-perf'
 
 const vertexShader = /* glsl */ `
