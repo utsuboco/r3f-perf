@@ -108,6 +108,10 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, mat
         accumulated.gl.points += glRender.points
         accumulated.gl.lines += glRender.lines
 
+        accumulated.log.gpu += logger.gpu
+        accumulated.log.cpu += logger.cpu
+        accumulated.log.mem += logger.mem
+        accumulated.log.fps += logger.fps
         // calculate max
         for (let i = 0; i < maxGl.length; i++) {
           const key = maxGl[i]

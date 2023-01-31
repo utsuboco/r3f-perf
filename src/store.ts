@@ -89,7 +89,6 @@ export const usePerfImpl = create<State>((set, get) : any => {
       const maxMemory = get().log?.maxMemory
       const { totalFrames, log, gl, max } = accumulated
   
-      
       const glAverage = {
         calls: gl.calls / totalFrames,
         triangles: gl.triangles / totalFrames,
@@ -103,6 +102,7 @@ export const usePerfImpl = create<State>((set, get) : any => {
         mem: log.mem / totalFrames,
         fps: log.fps / totalFrames,
       }
+      console.log(glAverage, logAverage)
   
       const sessionTime = (window.performance.now() - startTime) / 1000
     

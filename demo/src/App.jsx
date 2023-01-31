@@ -62,6 +62,7 @@ const UpdateCustomData = () => {
   const [getReport] = usePerf((s) => [s.getReport])
 
   useFrame(() => {
+    getReport()
     setCustomData(30 + Math.random() * 5)
   })
 
