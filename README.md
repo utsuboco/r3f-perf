@@ -66,7 +66,7 @@ import { Canvas } from '@react-three/fiber';
 import { PerfHeadless, usePerf } from 'r3f-perf';
 
 const PerfHook = () => {
-  // getPerf() is also available for non-reactive way or to access values outside react
+  // getPerf() is also available for non-reactive way
   const [gl, log, getReport] = usePerf(s=> s[s.gl, s.log, s.getReport]);
   console.log(gl, log, getReport());
   return null;
@@ -107,3 +107,4 @@ https://github.com/pmndrs/react-three-next
 ### Maintainers :
 
 - [`twitter 🐈‍⬛ @onirenaud`](https://twitter.com/onirenaud)
+- [`twitter @utsuboco`](https://twitter.com/utsuboco)
