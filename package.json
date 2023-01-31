@@ -1,10 +1,6 @@
 {
   "name": "r3f-perf",
-<<<<<<< HEAD
-  "version": "7.0.0",
-=======
   "version": "7.0.1",
->>>>>>> v7
   "description": "Easily monitor your ThreeJS performances.",
   "keywords": [
     "react",
