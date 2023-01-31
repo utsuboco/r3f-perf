@@ -1,7 +1,7 @@
 ![npm](https://img.shields.io/npm/v/r3f-perf) ![npm](https://img.shields.io/npm/dw/r3f-perf)
 
 # R3F-Perf
-**[Changelog](https://github.com/utsuboco/r3f-perf/blob/main/packages/r3f-perf/CHANGELOG.md)**
+**[Changelog](https://github.com/utsuboco/r3f-perf/blob/main/CHANGELOG.md)**
 
 Easily monitor the performances of your @react-three/fiber application.
 
