@@ -60,6 +60,7 @@ const UpdateCustomData = () => {
   const { noUI } = useControls({ noUI: false })
 
   const [getReport] = usePerf((s) => [s.getReport])
+  getReport()
 
   useFrame(() => {
     setCustomData(30 + Math.random() * 5)

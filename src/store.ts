@@ -89,7 +89,6 @@ export const usePerfImpl = create<State>((set, get) : any => {
       const maxMemory = get().log?.maxMemory
       const { totalFrames, log, gl, max } = accumulated
   
-      
       const glAverage = {
         calls: gl.calls / totalFrames,
         triangles: gl.triangles / totalFrames,

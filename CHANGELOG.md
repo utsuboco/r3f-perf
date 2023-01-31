@@ -1,5 +1,7 @@
 # R3F-Perf
 
+## 7.0.1:
+- fix: `getReport()` average log was not updated
 ## 7.0.0:
 *Complete refactor for headless mode, new CPU metric fot the loop duration in ms, switches to Vite for bundling and uses Rollup's preserveModules option to create subentry targets. Also publishes sourcemaps for debug and browser profiling.*
 
