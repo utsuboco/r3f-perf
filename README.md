@@ -69,13 +69,12 @@ const PerfHook = () => {
   // getPerf() is also available for non-reactive way
   const [gl, log, getReport] = usePerf(s=> s[s.gl, s.log, s.getReport]);
   console.log(gl, log, getReport());
-  return null;
+  return <PerfHeadless />;
 };
 
 export default function App() {
   return (
     <Canvas>
-      <PerfHeadless />
       <PerfHook />
     </Canvas>
   );
