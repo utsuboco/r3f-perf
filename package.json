@@ -1,84 +1,87 @@
 {
-  "name": "@r3f-perf/root",
-  "version": "0.0.0-semantic-released",
-  "license": "MIT",
-  "private": true,
-  "workspaces": [
-    "packages/*",
-    "demo"
+  "name": "r3f-perf",
+  "version": "7.0.0",
+  "description": "Easily monitor your ThreeJS performances.",
+  "keywords": [
+    "react",
+    "three",
+    "benchmark",
+    "performance",
+    "monitor",
+    "analysis",
+    "profiling",
+    "r3f"
   ],
-  "preconstruct": {
-    "packages": [
-      "packages/*"
-    ]
+  "author": "Renaud ROHLINGER (https://github.com/RenaudRohlinger)",
+  "homepage": "https://github.com/utsuboco/r3f-perf",
+  "repository": "https://github.com/utsuboco/r3f-perf",
+  "license": "MIT",
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./headless": {
+      "types": "./dist/headless.d.ts",
+      "require": "./dist/headless.js",
+      "import": "./dist/headless.mjs"
+    }
   },
+  "sideEffects": false,
   "scripts": {
-    "postinstall": "husky install && preconstruct dev",
-    "build": "preconstruct build",
-    "watch": "preconstruct watch",
-    "dev": "preconstruct dev",
-    "release": "yarn build && yarn changeset publish",
-    "validate": "preconstruct validate",
-    "tsc": "tsc --noEmit",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook --quiet",
-    "demo:dev": "yarn workspace demo dev",
-    "demo:build": "yarn workspace demo build",
-    "demo:serve": "yarn workspace demo serve"
+    "dev": "vite",
+    "dev:server": "node demo/server.mjs",
+    "build": "vite build && tsc",
+    "serve": "vite serve"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RenaudRohlinger/r3f-perf.git"
-  },
-  "bugs": "https://github.com/RenaudRohlinger/r3f-perf/issues",
   "devDependencies": {
-    "@babel/core": "^7.17.5",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.13.12",
-    "@babel/preset-react": "^7.12.13",
-    "@babel/preset-typescript": "^7.13.0",
-    "@changesets/cli": "^2.21.0",
-    "@preconstruct/cli": "^2.1.5",
-    "@radix-ui/react-icons": "^1.0.2",
-    "@size-limit/preset-big-lib": "^4.10.1",
-    "@size-limit/preset-small-lib": "^4.10.1",
-    "@types/node": "^15.0.2",
+    "@react-three/fiber": "^8.10.1",
+    "@types/node": "^18.11.18",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
-    "@types/styled-components": "^5.1.9",
-    "@types/tinycolor2": "^1.4.2",
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
-    "babel-eslint": "^10.1.0",
-    "concurrently": "^6.0.0",
-    "eslint": "^8.30.0",
-    "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-flowtype": "^5.4.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.23.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^7.0.4",
-    "patch-package": "^6.4.7",
-    "postinstall-postinstall": "^2.1.0",
+    "@types/three": "^0.148.1",
+    "@vitejs/plugin-react": "^3.0.1",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "leva": "^0.9.34",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "size-limit": "^7.0.8",
-    "tsd": "^0.19.1",
+    "rollup-plugin-visualizer": "^5.9.0",
+    "three": "^0.149.0",
     "typescript": "^4.9.4",
-    "yalc": "^1.0.0-pre.53"
-  },
-  "prettier": {
-    "semi": false,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "jsxBracketSameLine": true,
-    "tabWidth": 2,
-    "printWidth": 120
+    "url": "^0.11.0",
+    "vite": "^4.0.4"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^1.3.0",
-    "three": "latest",
-    "three-stdlib": "^2.20.5"
+    "@radix-ui/react-icons": "^1.0.3",
+    "@react-three/drei": "^9.56.10",
+    "@stitches/react": "^1.2.8",
+    "zustand": "~4.1.5"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": ">=8.0",
+    "react": ">=18.0",
+    "react-dom": ">=18.0",
+    "three": ">=0.133"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "dom": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   }
 }

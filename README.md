@@ -25,7 +25,6 @@ yarn add --dev r3f-perf
 
 ```jsx
 antialias?: true, // Take a bit more performances but render the text with antialiasing
-headless?: false, // Without UI. See Headless section
 overClock?: false, // Disable the limitation of the monitor refresh rate for the fps
 deepAnalyze?: false, // More detailed informations about gl programs
 showGraph?: true // show the graphs
@@ -33,6 +32,7 @@ minimal?: false // condensed version with the most important informations (gpu/m
 customData?: {
   value: 0, // initial value,
   name: '', // name to show
+  round: 2, // precision of the float
   info: '', // additional information about the data (fps/ms for instance)
 }
 matrixUpdate?: false // count the number of time matrixWorldUpdate is called per frame
@@ -57,24 +57,25 @@ import { Perf } from 'r3f-perf';
 </Canvas>;
 ```
 
-#### Usage without interface : headless mode
+#### Usage without interface : PerfHeadless
 
 [Codesandbox Example](https://codesandbox.io/s/perlin-cubes-r3f-perf-headless-mh1jl7?file=/src/App.js)
 
 ```jsx
 import { Canvas } from '@react-three/fiber';
-import { Perf, usePerf } from 'r3f-perf';
+import { PerfHeadless, usePerf } from 'r3f-perf';
 
 const PerfHook = () => {
-  const { gl, log } = usePerf();
-  console.log(gl, log);
+  // getPerf() is also available for non-reactive way
+  const [gl, log, getReport] = usePerf(s=> s[s.gl, s.log, s.getReport]);
+  console.log(gl, log, getReport());
   return null;
 };
 
 export default function App() {
   return (
     <Canvas>
-      <Perf headless />
+      <PerfHeadless />
       <PerfHook />
     </Canvas>
   );
@@ -106,3 +107,4 @@ https://github.com/pmndrs/react-three-next
 ### Maintainers :
 
 - [`twitter 🐈‍⬛ @onirenaud`](https://twitter.com/onirenaud)
+- [`twitter @utsuboco`](https://twitter.com/utsuboco)
