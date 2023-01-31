@@ -33,3 +33,14 @@ export interface PerfPropsGui extends PerfProps {
   className?: string;
   style?: object;
 }
+
+interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
+  perfContainerRef?: any;
+  colorBlind?: boolean;
+  showGraph?: boolean;
+  antialias?: boolean;
+  chart?: chart;
+  customData?: customData;
+  minimal?: boolean;
+  matrixUpdate?: boolean;
+}

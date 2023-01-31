@@ -12,6 +12,10 @@ export default defineConfig({
       'r3f-perf': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    port: 4000,
+    open: true
+  },
   build: {
     minify: false,
     sourcemap: true,

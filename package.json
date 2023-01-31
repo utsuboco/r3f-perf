@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "7.0.0-beta.0",
+  "version": "7.0.0-beta.1",
   "description": "Easily monitor your ThreeJS performances.",
   "keywords": [
     "react",
@@ -38,6 +38,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
+    "dev:server": "node demo/server.mjs",
     "build": "vite build && tsc",
     "serve": "vite serve"
   },
@@ -48,17 +49,21 @@
     "@types/react-dom": "^17.0.14",
     "@types/three": "^0.148.1",
     "@vitejs/plugin-react": "^3.0.1",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
     "leva": "^0.9.34",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rollup-plugin-visualizer": "^5.9.0",
     "three": "^0.149.0",
     "typescript": "^4.9.4",
+    "url": "^0.11.0",
     "vite": "^4.0.4"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.0.3",
-    "@react-three/drei": "^9.56.9",
+    "@react-three/drei": "^9.56.10",
     "@stitches/react": "^1.2.8",
     "three-stdlib": "^2.20.5",
     "zustand": "~4.1.5"

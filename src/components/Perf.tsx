@@ -2,7 +2,7 @@ import React, { FC, useRef } from 'react';
 import { ChartUI } from './Graph';
 import { ActivityLogIcon, BarChartIcon, DotIcon, DropdownMenuIcon, ImageIcon, LapTimerIcon, LightningBoltIcon, MarginIcon, MinusIcon, RulerHorizontalIcon, TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons'
 
-import { Html } from './HtmlMinimal';
+import { HtmlMinimal } from './HtmlMinimal';
 import { PerfHeadless } from './PerfHeadless';
 
 import {
@@ -272,8 +272,7 @@ export const Perf: FC<PerfPropsGui> = ({
   return (
     <>
       <PerfHeadless chart={chart} overClock={overClock} deepAnalyze={deepAnalyze} matrixUpdate={matrixUpdate} />
-      {/* @ts-ignore */}
-      <Html transform={false}>
+      <HtmlMinimal>
         <PerfS
           className={
             (className ? ' '.concat(className) : ' ') +
@@ -302,7 +301,7 @@ export const Perf: FC<PerfPropsGui> = ({
             minimal={minimal}
           />
         </PerfS>
-      </Html>
+      </HtmlMinimal>
     </>
   );
 };

@@ -9,7 +9,7 @@ interface HtmlProps {
   children?: ReactNode
 }
 
-const Html = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, children, ...props }, ref) => {
+const HtmlMinimal = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, children, ...props }, ref) => {
   const gl = useThree(state => state.gl)
   const group = useRef(null)
   const rootRef = useRef<Root | null>(null)
@@ -44,4 +44,4 @@ const Html = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, childre
   return <group {...props} ref={group} />
 })
 
-export { Html }
+export { HtmlMinimal }

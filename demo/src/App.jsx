@@ -1,11 +1,10 @@
 import React, { useMemo, useEffect, useRef, useState } from 'react'
 import './index.css'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Orbit } from './sandboxes/perf-minimal/src/orbit'
 import * as THREE from 'three'
 import { useControls } from 'leva'
 
-import { Box, useTexture, Instances, Instance } from '@react-three/drei'
+import { Box, useTexture, Instances, Instance, OrbitControls } from '@react-three/drei'
 import { PerfHeadless, Perf, usePerf, setCustomData } from 'r3f-perf'
 
 const vertexShader = /* glsl */ `
@@ -58,7 +57,7 @@ const Bob = () => {
 const UpdateCustomData = () => {
   // recommended to throttle to 1sec for readability
   const { width } = useThree((s) => s.size)
-  const { noUI } = useControls({ noUI: true })
+  const { noUI } = useControls({ noUI: false })
 
   const [getReport] = usePerf((s) => [s.getReport])
 
@@ -73,7 +72,7 @@ const UpdateCustomData = () => {
       className={'override'}
       showGraph
       overClock={true}
-      deepAnalyze
+      // deepAnalyze
       chart={{
         hz: 35,
         length: 60,
@@ -167,7 +166,7 @@ export function App() {
   //   gpu:  0,
   // }
 
-  return mountCanvas ? (
+  return true ? (
     <>
       {/* frameloop={'demand'}  */}
       <Canvas
@@ -223,7 +222,7 @@ export function App() {
             <Shoes />
           </>
         )}
-        <Orbit />
+        <OrbitControls />
         {/* {enable && <UpdateCustomData />} */}
         <UpdateCustomData />
       </Canvas>
