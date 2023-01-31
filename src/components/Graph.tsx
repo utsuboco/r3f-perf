@@ -16,7 +16,7 @@ export interface graphData {
 }
 
 
-const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz: 15}}) => {
+const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 120, hz: 60}}) => {
 
   const curves: any = useMemo(() => {
     return {
@@ -36,6 +36,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   const updatePoints = (element: string, factor: number = 1, ref: any, viewport: Viewport) => {
     let maxVal = 0;
     const {width: w, height: h} = viewport
+    
     const chart = getPerf().chart.data[element];
     if (!chart || chart.length === 0) {
       return
@@ -72,7 +73,12 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
   })
   return (
     <>
-      <line>
+      {/* @ts-ignore */}
+      <line onUpdate={(self)=>{
+          self.updateMatrix()
+          matriceCount.value -= 1
+          self.matrixWorld.copy(self.matrix)
+        }}>
         <bufferGeometry ref={fpsRef}>
           <bufferAttribute
               attach={'attributes-position'}
@@ -85,7 +91,12 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
         </bufferGeometry>
         <lineBasicMaterial ref={fpsMatRef} color={`rgb(${colorsGraph(colorBlind).fps.toString()})`} transparent opacity={0.5} />
       </line>
-      <line>
+      {/* @ts-ignore */}
+      <line onUpdate={(self)=>{
+          self.updateMatrix()
+          matriceCount.value -= 1
+          self.matrixWorld.copy(self.matrix)
+        }}>
         <bufferGeometry ref={gpuRef}>
           <bufferAttribute
               attach={'attributes-position'}
@@ -98,7 +109,12 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 30, hz
         </bufferGeometry>
         <lineBasicMaterial color={`rgb(${colorsGraph(colorBlind).gpu.toString()})`} transparent opacity={0.5} />
       </line>
-      <line>
+      {/* @ts-ignore */}
+      <line onUpdate={(self)=>{
+          self.updateMatrix()
+          matriceCount.value -= 1
+          self.matrixWorld.copy(self.matrix)
+        }}>
         <bufferGeometry ref={cpuRef}>
           <bufferAttribute
             attach={'attributes-position'}

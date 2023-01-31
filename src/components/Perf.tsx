@@ -202,8 +202,6 @@ const ToggleEl = ({ tab, title, set }: any) => {
 const PerfThree: FC<PerfPropsGui> = ({ openByDefault, showGraph, deepAnalyze, matrixUpdate }) => {
   const [show, set] = React.useState(openByDefault);
 
-  // const initialDpr = useThree((state) => state.viewport.initialDpr)
-
   return (
     <span>
       <TabContainers show={show} showGraph={showGraph} matrixUpdate={matrixUpdate} />

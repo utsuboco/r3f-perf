@@ -15,10 +15,10 @@ import {
   ProgramsContainer,
 } from '../styles';
 import { usePerf } from '..';
-import { estimateBytesUsed } from 'three-stdlib';
 import { ActivityLogIcon, ButtonIcon, CubeIcon, EyeNoneIcon, EyeOpenIcon, ImageIcon, LayersIcon, RocketIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons';
 import { ProgramsPerf } from '../store';
 import { PerfProps } from '../typings';
+import { estimateBytesUsed } from '../helpers/estimateBytesUsed';
 
 const addTextureUniforms = (id: string, texture: any) => {
   const repeatType = (wrap: number) => {
