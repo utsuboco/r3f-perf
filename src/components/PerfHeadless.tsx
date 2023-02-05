@@ -6,6 +6,7 @@ import * as THREE from 'three'
 import { countGeoDrawCalls } from '../helpers/countGeoDrawCalls'
 import { getPerf, ProgramsPerfs, setPerf } from '../store'
 import { PerfProps } from '../typings'
+import { emitEvent } from '@utsubo/events'
 
 // cameras from r3f-perf scene
 
@@ -73,7 +74,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {}
 /**
  * Performance profiler component
  */
-export const PerfHeadless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, matrixUpdate }) => {
+export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, deepAnalyze, matrixUpdate }) => {
   const { gl, scene } = useThree()
   setPerf({ gl, scene })
 
@@ -83,21 +84,23 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, mat
       overClock: overClock,
       chartLen: chart ? chart.length : 120,
       chartHz: chart ? chart.hz : 60,
+      logsPerSecond: logsPerSecond || 10,
       gl: gl.getContext(),
       chartLogger: (chart: Chart) => {
         setPerf({ chart })
       },
       paramLogger: (logger: any) => {
+        const log = {
+          maxMemory: logger.maxMemory,
+          gpu: logger.gpu,
+          cpu: logger.cpu,
+          mem: logger.mem,
+          fps: logger.fps,
+          totalTime: logger.duration,
+          frameCount: logger.frameCount,
+        }
         setPerf({
-          log: {
-            maxMemory: logger.maxMemory,
-            gpu: logger.gpu,
-            cpu: logger.cpu,
-            mem: logger.mem,
-            fps: logger.fps,
-            totalTime: logger.duration,
-            frameCount: logger.frameCount,
-          },
+          log,
         })
         const { accumulated }: any = getPerf()
         const glRender: any = gl.info.render
@@ -124,13 +127,15 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, chart, deepAnalyze, mat
         for (let i = 0; i < maxLog.length; i++) {
           const key = maxLog[i]
           const value = logger[key]
-          if (value >  accumulated.max.log[key]) {
+          if (value > accumulated.max.log[key]) {
             accumulated.max.log[key] = value
           }
         }
 
         // TODO CONVERT TO OBJECT AND VALUE ALWAYS 0 THIS IS NOT CALL
         setPerf({ accumulated })
+
+        emitEvent('log', [log, gl])
       },
     })
     setPerf({ startTime: window.performance.now() })

@@ -55,6 +55,7 @@ export class GLPerf {
   glFinish: any = () => {}
   chartLogger: any = () => {}
   chartLen: number = 60
+  logsPerSecond: number = 10
   maxMemory: number = 1500
   chartHz: number = 10
   startCpuProfiling: boolean = false
@@ -202,7 +203,7 @@ export class GLPerf {
           }
         }
         // TODO 200 to settings
-        if (t >= this.paramTime + 180) {
+        if (t >= this.paramTime + 1000 / this.logsPerSecond) {
           this.paramLogger({
             cpu: average(this.logsAccums.cpu),
             gpu: average(this.logsAccums.gpu),

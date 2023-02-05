@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "description": "Easily monitor your ThreeJS performances.",
   "keywords": [
     "react",
@@ -65,6 +65,7 @@
     "@radix-ui/react-icons": "^1.0.3",
     "@react-three/drei": "^9.56.10",
     "@stitches/react": "^1.2.8",
+    "@utsubo/events": "^0.1.7",
     "zustand": "~4.1.5"
   },
   "peerDependencies": {

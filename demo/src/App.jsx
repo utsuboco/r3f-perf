@@ -78,7 +78,8 @@ const UpdateCustomData = () => {
         hz: 35,
         length: 60,
       }}
-      position='bottom-left'
+      logsPerSecond={10}
+      position="bottom-left"
       minimal={width < 712}
       style={{}}
       customData={{
