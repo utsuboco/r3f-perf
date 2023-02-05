@@ -1,6 +1,7 @@
 ![npm](https://img.shields.io/npm/v/r3f-perf) ![npm](https://img.shields.io/npm/dw/r3f-perf)
 
 # R3F-Perf
+
 **[Changelog](https://github.com/utsuboco/r3f-perf/blob/main/CHANGELOG.md)**
 
 Easily monitor the performances of your @react-three/fiber application.
@@ -49,12 +50,11 @@ position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // quickly set th
 ## Usage
 
 ```jsx
-import { Canvas } from '@react-three/fiber';
-import { Perf } from 'r3f-perf';
-
-<Canvas>
+import { Canvas } from '@react-three/fiber'
+import { Perf } from 'r3f-perf'
+;<Canvas>
   <Perf />
-</Canvas>;
+</Canvas>
 ```
 
 #### Usage without interface : PerfHeadless
@@ -62,30 +62,29 @@ import { Perf } from 'r3f-perf';
 [Codesandbox Example](https://codesandbox.io/s/perlin-cubes-r3f-perf-headless-mh1jl7?file=/src/App.js)
 
 ```jsx
-import { Canvas } from '@react-three/fiber';
-import { PerfHeadless, usePerf } from 'r3f-perf';
+import { Canvas } from '@react-three/fiber'
+import { PerfHeadless, usePerf } from 'r3f-perf'
 
 const PerfHook = () => {
   // getPerf() is also available for non-reactive way
-  const [gl, log, getReport] = usePerf(s=> s[s.gl, s.log, s.getReport]);
-  console.log(gl, log, getReport());
-  return <PerfHeadless />;
-};
+  const [gl, log, getReport] = usePerf((s) => s[(s.gl, s.log, s.getReport)])
+  console.log(gl, log, getReport())
+  return <PerfHeadless />
+}
 
 export default function App() {
   return (
     <Canvas>
       <PerfHook />
     </Canvas>
-  );
+  )
 }
 ```
-
 
 ## Custom Data
 
 ```jsx
-import { setCustomData, getCustomData } from 'r3f-perf';
+import { setCustomData, getCustomData } from 'r3f-perf'
 
 const UpdateCustomData = () => {
   // recommended to throttle to 1sec for readability
@@ -96,12 +95,10 @@ const UpdateCustomData = () => {
 }
 ```
 
-
 ## SSR
 
 The tool work with any server side rendering framework. You can try with Next and @react-three/fiber using this starter :
 https://github.com/pmndrs/react-three-next
-
 
 ### Maintainers :
 

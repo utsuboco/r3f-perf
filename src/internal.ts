@@ -302,6 +302,13 @@ export class GLPerf {
           ns = gl.getQueryParameter(this.query, gl.QUERY_RESULT)
           const ms = ns * 1e-6
 
+          if (available || disjoint) {
+            // Clean up the query object.
+            gl.deleteQuery(this.query)
+            // Don't re-enter this polling loop.
+            query = null
+          }
+
           if (available && ms > 0) {
             // update the display if it is valid
             if (!disjoint) {
