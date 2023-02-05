@@ -138,7 +138,37 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
         emitEvent('log', [log, gl])
       },
     })
-    setPerf({ startTime: window.performance.now() })
+
+    // Infos
+
+    const ctx = gl.getContext()
+    let glRenderer = null
+    let glVendor = null
+
+    const rendererInfo: any = ctx.getExtension('WEBGL_debug_renderer_info')
+    const glVersion = ctx.getParameter(ctx.VERSION)
+
+    if (rendererInfo != null) {
+      glRenderer = ctx.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL)
+      glVendor = ctx.getParameter(rendererInfo.UNMASKED_VENDOR_WEBGL)
+    }
+
+    if (!glVendor) {
+      glVendor = 'Unknown vendor'
+    }
+
+    if (!glRenderer) {
+      glRenderer = ctx.getParameter(ctx.RENDERER)
+    }
+
+    setPerf({
+      startTime: window.performance.now(),
+      infos: {
+        version: glVersion,
+        renderer: glRenderer,
+        vendor: glVendor,
+      },
+    })
 
     const callbacks = new Map()
     const callbacksAfter = new Map()
@@ -281,6 +311,7 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
             })
           }
         })
+
         if (programs.size !== getPerf().programs.size) {
           countGeoDrawCalls(programs)
           setPerf({

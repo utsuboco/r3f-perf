@@ -60,7 +60,7 @@ const UpdateCustomData = () => {
   const { noUI } = useControls({ noUI: false })
 
   const [getReport] = usePerf((s) => [s.getReport])
-  getReport()
+  console.log(getReport())
 
   useFrame(() => {
     setCustomData(30 + Math.random() * 5)
@@ -73,7 +73,7 @@ const UpdateCustomData = () => {
       className={'override'}
       showGraph
       overClock={true}
-      // deepAnalyze
+      deepAnalyze
       chart={{
         hz: 35,
         length: 60,

@@ -1,5 +1,9 @@
 # R3F-Perf
 
+## 7.1.1:
+
+- feat: `getReport()` now returns additional infos such as the vendor, WebGL renderer and version
+
 ## 7.1.0:
 
 - feat: New `logsPerSecond` parameter to specify the refresh rate of the logs
