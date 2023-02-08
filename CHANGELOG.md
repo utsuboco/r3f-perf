@@ -1,5 +1,9 @@
 # R3F-Perf
 
+## 7.1.2:
+
+- feat: name html group for easier debugging (#41) @AlaricBaraou
+
 ## 7.1.1:
 
 - feat: `getReport()` now returns additional infos such as the vendor, WebGL renderer and version
