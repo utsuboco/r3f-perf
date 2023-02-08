@@ -53,9 +53,14 @@ position?: 'top-right'|'top-left'|'bottom-right'|'bottom-left' // quickly set th
 ```jsx
 import { Canvas } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
-;<Canvas>
-  <Perf />
-</Canvas>
+
+function App() {
+  return (
+    <Canvas>
+      <Perf />
+    </Canvas>
+  )
+}
 ```
 
 #### Usage without interface : PerfHeadless
@@ -73,7 +78,7 @@ const PerfHook = () => {
   return <PerfHeadless />
 }
 
-export default function App() {
+function App() {
   return (
     <Canvas>
       <PerfHook />
