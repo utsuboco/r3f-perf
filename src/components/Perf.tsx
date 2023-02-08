@@ -279,7 +279,7 @@ export const Perf: FC<PerfPropsGui> = ({
         deepAnalyze={deepAnalyze}
         matrixUpdate={matrixUpdate}
       />
-      <HtmlMinimal>
+      <HtmlMinimal name='r3f-perf'>
         <PerfS
           className={
             (className ? ' '.concat(className) : ' ') + ` ${position ? position : ''} ${minimal ? 'minimal' : ''}`
