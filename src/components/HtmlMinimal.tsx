@@ -5,11 +5,12 @@ import { createRoot, Root } from 'react-dom/client'
 
 interface HtmlProps {
   portal?: React.MutableRefObject<HTMLElement>
-  className?: string
+  className?: string,
+  name?: string,
   children?: ReactNode
 }
 
-const HtmlMinimal = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, children, ...props }, ref) => {
+const HtmlMinimal = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, children, name, ...props }, ref) => {
   const gl = useThree(state => state.gl)
   const group = useRef(null)
   const rootRef = useRef<Root | null>(null)
@@ -41,7 +42,7 @@ const HtmlMinimal = forwardRef<HTMLDivElement, HtmlProps>(({ portal, className, 
     )
   })
 
-  return <group {...props} ref={group} />
+  return <group name={name} {...props} ref={group} />
 })
 
 export { HtmlMinimal }
