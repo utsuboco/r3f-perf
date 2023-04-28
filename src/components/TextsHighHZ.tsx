@@ -56,7 +56,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(
 
       let info = log[metric]
       if (isShadersInfo) {
-        info = gl.info.programs?.length
+        info = getPerf().programs.size
       } else if (metric === 'matriceCount') {
         info = matriceCount.value
       } else if (!isPerf && gl.info.render) {
