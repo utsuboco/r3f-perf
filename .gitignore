@@ -16,7 +16,6 @@ example/.yarn
 
 # production
 build/
-dist/
 .cache/
 .parcel-cache/
 
