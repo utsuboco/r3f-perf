@@ -155,6 +155,7 @@ export const ChartUI: FC<PerfUIProps> = ({
       <Canvas
         ref={canvas}
         orthographic
+        camera={{ rotation: [0, 0, 0] }}
         dpr={antialias ? [1,2] : 1}
         gl={{
           antialias: true,
