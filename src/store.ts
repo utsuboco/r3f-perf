@@ -1,5 +1,5 @@
-import create from 'zustand'
-import shallow from 'zustand/shallow'
+import { createWithEqualityFn } from 'zustand/traditional'
+import { shallow } from 'zustand/shallow'
 import * as THREE from 'three'
 
 type drawCount = {
@@ -87,7 +87,7 @@ const getCustomData = () => {
   return getPerf().customData
 }
 
-export const usePerfImpl = create<State>((set, get): any => {
+export const usePerfImpl = createWithEqualityFn<State>((set, get): any => {
   function getReport() {
     const { accumulated, startTime, infos } = get()
     const maxMemory = get().log?.maxMemory
