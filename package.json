@@ -1,6 +1,6 @@
 {
   "name": "r3f-perf",
-  "version": "7.1.2",
+  "version": "7.2.0",
   "description": "Easily monitor your ThreeJS performances.",
   "keywords": [
     "react",
@@ -43,27 +43,27 @@
     "serve": "vite serve"
   },
   "devDependencies": {
-    "@react-three/fiber": "^8.10.1",
-    "@types/node": "^18.11.18",
-    "@types/react": "^17.0.43",
-    "@types/react-dom": "^17.0.14",
+    "@react-three/fiber": "^8.16.1",
+    "@types/node": "^18.19.28",
+    "@types/react": "^17.0.80",
+    "@types/react-dom": "^17.0.25",
     "@types/three": "^0.148.1",
-    "@vitejs/plugin-react": "^3.0.1",
-    "express": "^4.18.2",
-    "fs": "^0.0.1-security",
-    "leva": "^0.9.34",
+    "@vitejs/plugin-react": "^3.1.0",
+    "express": "^4.19.2",
+    "fs": "0.0.1-security",
+    "leva": "^0.9.35",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rollup-plugin-visualizer": "^5.9.0",
+    "rollup-plugin-visualizer": "^5.12.0",
     "three": "^0.149.0",
-    "typescript": "^4.9.4",
-    "url": "^0.11.0",
-    "vite": "^4.0.4"
+    "typescript": "^4.9.5",
+    "url": "^0.11.3",
+    "vite": "^4.5.3"
   },
   "dependencies": {
-    "@radix-ui/react-icons": "^1.0.3",
-    "@react-three/drei": "^9.56.10",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@react-three/drei": "^9.103.0",
     "@stitches/react": "^1.2.8",
     "@utsubo/events": "^0.1.7",
     "zustand": "~4.1.5"
