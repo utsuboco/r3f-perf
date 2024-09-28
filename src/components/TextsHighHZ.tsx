@@ -7,6 +7,7 @@ import { colorsGraph } from './Perf'
 import * as THREE from 'three'
 import { customData, PerfUIProps } from '../typings'
 import { useEvent } from '@utsubo/events'
+import localFont from '../roboto.woff'
 
 interface TextHighHZProps {
   metric?: string
@@ -109,6 +110,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(
           textAlign="justify"
           matrixAutoUpdate={false}
           ref={fpsRef}
+          font={localFont}
           fontSize={fontSize}
           position={[-w / 2 + offsetX + fontSize, h / 2 - offsetY - fontSize, 0]}
           color={color}
@@ -125,6 +127,7 @@ const TextHighHZ: FC<TextHighHZProps> = memo(
             textAlign="justify"
             matrixAutoUpdate={false}
             ref={fpsInstanceRef}
+            font={localFont}
             fontSize={8}
             position={[-w / 2 + offsetX + fontSize, h / 2 - offsetY - fontSize * 1.15, 0]}
             color={'lightgrey'}
