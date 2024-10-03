@@ -1,5 +1,13 @@
 # R3F-Perf
 
+## 7.2.2:
+
+- feat: Add offline support @Alkebsi
+
+## 7.2.1:
+
+- fix: Fix TS
+
 ## 7.1.2:
 
 - feat: name html group for easier debugging (#41) @AlaricBaraou
