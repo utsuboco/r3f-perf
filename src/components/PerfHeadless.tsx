@@ -4,8 +4,8 @@ import { overLimitFps, GLPerf } from '../internal'
 
 import * as THREE from 'three'
 import { countGeoDrawCalls } from '../helpers/countGeoDrawCalls'
-import { getPerf, ProgramsPerfs, setPerf } from '../store'
-import { PerfProps } from '../typings'
+import { getPerf, type ProgramsPerfs, setPerf } from '../store'
+import type { PerfProps } from '../types'
 import { emitEvent } from '@utsubo/events'
 
 // cameras from r3f-perf scene

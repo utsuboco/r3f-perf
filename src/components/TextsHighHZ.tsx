@@ -5,7 +5,7 @@ import { Text } from '@react-three/drei'
 import { getPerf } from '..'
 import { colorsGraph } from './Perf'
 import * as THREE from 'three'
-import { customData, PerfUIProps } from '../typings'
+import type { customData, PerfUIProps } from '../types'
 import { useEvent } from '@utsubo/events'
 import localFont from '../roboto.woff'
 

@@ -16,8 +16,8 @@ import {
 } from '../styles';
 import { usePerf } from '..';
 import { ActivityLogIcon, ButtonIcon, CubeIcon, EyeNoneIcon, EyeOpenIcon, ImageIcon, LayersIcon, RocketIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons';
-import { ProgramsPerf } from '../store';
-import { PerfProps } from '../typings';
+import type { ProgramsPerf } from '../store';
+import type { PerfProps } from '../types';
 import { estimateBytesUsed } from '../helpers/estimateBytesUsed';
 
 const addTextureUniforms = (id: string, texture: any) => {

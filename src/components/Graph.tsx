@@ -6,7 +6,7 @@ import { Canvas, useFrame, Viewport } from '@react-three/fiber';
 import { getPerf, usePerf } from '..';
 import { colorsGraph } from './Perf';
 import * as THREE from 'three';
-import { PerfUIProps } from '../typings';
+import type { PerfUIProps } from '../types';
 import { TextsHighHZ } from './TextsHighHZ';
 
 export interface graphData {
