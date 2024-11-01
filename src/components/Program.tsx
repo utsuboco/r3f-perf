@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
 import {
   ProgramGeo,
@@ -14,9 +14,8 @@ import {
   ProgramsGeoLi,
   ProgramsContainer,
 } from '../styles';
-import { usePerf } from '..';
 import { ActivityLogIcon, ButtonIcon, CubeIcon, EyeNoneIcon, EyeOpenIcon, ImageIcon, LayersIcon, RocketIcon, TriangleDownIcon, TriangleUpIcon, VercelLogoIcon } from '@radix-ui/react-icons';
-import type { ProgramsPerf } from '../store';
+import { usePerf, type ProgramsPerf } from '../store';
 import type { PerfProps } from '../types';
 import { estimateBytesUsed } from '../helpers/estimateBytesUsed';
 

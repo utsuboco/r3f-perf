@@ -1,6 +1,6 @@
-import { FC, memo, Suspense, useRef } from 'react'
+import { type FC, memo, Suspense, useRef } from 'react'
 import { matriceCount, matriceWorldCount } from './PerfHeadless'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useThree } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import { getPerf } from '..'
 import { colorsGraph } from './Perf'

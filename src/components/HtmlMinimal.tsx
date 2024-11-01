@@ -1,5 +1,5 @@
 import { useThree } from '@react-three/fiber'
-import React, { forwardRef, ReactNode, useLayoutEffect, useRef } from 'react'
+import React, { forwardRef, type ReactNode, useLayoutEffect, useRef, useEffect } from 'react'
 // @ts-ignore
 import { createRoot, Root } from 'react-dom/client'
 

@@ -1,4 +1,4 @@
-import { drawCounts, ProgramsPerfs } from '../store'
+import type { drawCounts, ProgramsPerfs } from '../store'
 
 export const countGeoDrawCalls = (programs: ProgramsPerfs) => {
   programs.forEach((program, _pkey) => {

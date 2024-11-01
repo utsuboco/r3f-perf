@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, useEffect, useMemo } from 'react'
+import { type FC, type HTMLAttributes, useEffect, useMemo } from 'react'
 import { addEffect, addAfterEffect, useThree, addTail } from '@react-three/fiber'
 import { overLimitFps, GLPerf } from '../internal'
 
