@@ -178,7 +178,7 @@ export const usePerfImpl = createWithEqualityFn<State>((set, get): any => {
   }
 })
 
-const usePerf = (sel: (state: State) => unknown) => usePerfImpl(sel, shallow)
+const usePerf = <S>(sel: (state: State) => S) => usePerfImpl(sel, shallow)
 Object.assign(usePerf, usePerfImpl)
 const { getState: getPerf, setState: setPerf } = usePerfImpl
 

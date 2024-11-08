@@ -1,7 +1,4 @@
-declare module '*.css' {
-  const content: { [className: string]: string }
-  export default content
-}
+import type { HTMLAttributes } from 'react'
 
 export type chart = {
   length: number
@@ -34,7 +31,7 @@ export interface PerfPropsGui extends PerfProps {
   style?: object
 }
 
-interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
+export interface PerfUIProps extends HTMLAttributes<HTMLDivElement> {
   perfContainerRef?: any
   colorBlind?: boolean
   showGraph?: boolean

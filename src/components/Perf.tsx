@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { type FC, useRef } from 'react'
 import { ChartUI } from './Graph'
 import {
   ActivityLogIcon,
@@ -23,7 +23,7 @@ import { PerfHeadless } from './PerfHeadless'
 import { Toggle, PerfS, PerfIContainer, PerfI, PerfB, ToggleContainer, ContainerScroll, PerfSmallI } from '../styles'
 import { ProgramsUI } from './Program'
 import { setPerf, usePerf } from '../store'
-import { PerfPropsGui } from '../typings'
+import type { PerfPropsGui } from '../types'
 
 interface colors {
   [index: string]: string

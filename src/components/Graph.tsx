@@ -1,12 +1,12 @@
-import { FC, useMemo, useRef } from 'react';
+import { type FC, useMemo, useRef } from 'react';
 import { matriceCount, matriceWorldCount } from './PerfHeadless';
 import { Graph, Graphpc } from '../styles';
 import { PauseIcon } from '@radix-ui/react-icons';
-import { Canvas, useFrame, Viewport } from '@react-three/fiber';
-import { getPerf, usePerf } from '..';
+import { Canvas, useFrame, type Viewport } from '@react-three/fiber';
+import { getPerf, usePerf } from '../store';
 import { colorsGraph } from './Perf';
 import * as THREE from 'three';
-import { PerfUIProps } from '../typings';
+import type { PerfUIProps } from '../types';
 import { TextsHighHZ } from './TextsHighHZ';
 
 export interface graphData {
@@ -36,7 +36,7 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 120, h
   const updatePoints = (element: string, factor: number = 1, ref: any, viewport: Viewport) => {
     let maxVal = 0;
     const {width: w, height: h} = viewport
-    
+
     const chart = getPerf().chart.data[element];
     if (!chart || chart.length === 0) {
       return
@@ -51,17 +51,17 @@ const ChartCurve:FC<PerfUIProps> = ({colorBlind, minimal, chart= {length: 120, h
           maxVal = chart[id] * factor;
         }
         dummyVec3.set(padding + i / (len - 1) * (w - padding * 2) - w / 2, (Math.min(100, chart[id]) * factor) / 100 * (h - padding * 2 - paddingTop) - h / 2, 0)
-        
+
         dummyVec3.toArray(ref.attributes.position.array, i * 3)
       }
     }
-    
+
     ref.attributes.position.needsUpdate = true;
   };
 
   // const [supportMemory] = useState(window.performance.memory)
   useFrame(function updateChartCurve({viewport}) {
-    
+
     updatePoints('fps', 1, fpsRef.current, viewport)
     if (fpsMatRef.current) {
       fpsMatRef.current.color.set(getPerf().overclockingFps ? colorsGraph(colorBlind).overClock.toString() : `rgb(${colorsGraph(colorBlind).fps.toString()})`)
@@ -212,6 +212,6 @@ const Renderer = () =>{
     matriceCount.value = 0
   }, Infinity)
 
-  
+
   return null
 }
