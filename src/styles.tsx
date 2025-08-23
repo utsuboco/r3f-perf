@@ -1,7 +1,7 @@
 import { styled } from '@stitches/react';
 
 export const PerfS = styled('div', {
-  position: 'fixed',
+  position: 'absolute',
   top: 0,
   right: 0,
   zIndex: 9999,
