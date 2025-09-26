@@ -18,8 +18,17 @@ Easily monitor the performances of your @react-three/fiber application.
 
 ## Installation
 
+### pnpm
+```bash
+pnpm add -D r3f-perf
+```
+### Yarn
 ```bash
 yarn add --dev r3f-perf
+```
+### npm
+```bash
+npm install --save-dev r3f-perf
 ```
 
 ## Options
