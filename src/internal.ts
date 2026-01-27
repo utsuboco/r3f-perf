@@ -282,6 +282,14 @@ export class GLPerf {
         this.chartTime = t
       }
     }
+
+    // Clear marks and measures to prevent memory leak (unbounded PerformanceEntry accumulation)
+    // Must be at the end of nextFrame to ensure cleanup happens every frame regardless of conditionals
+    if (window.performance) {
+      performance.clearMarks('cpu-started')
+      performance.clearMarks('cpu-finished')
+      performance.clearMeasures('cpu-duration')
+    }
   }
 
   startGpu() {
