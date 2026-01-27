@@ -186,11 +186,6 @@ export class GLPerf {
           // fix cpuMeasure return null in ios
           this.currentCpu = cpuMeasure?.duration || 0;
 
-          // Clear marks and measures to prevent memory leak (unbounded PerformanceEntry accumulation)
-          performance.clearMarks('cpu-started')
-          performance.clearMarks('cpu-finished')
-          performance.clearMeasures('cpu-duration')
-
           this.logsAccums.cpu.push(this.currentCpu)
           // make sure the measure has started and ended
           this.startCpuProfiling = false
@@ -286,6 +281,14 @@ export class GLPerf {
         this.chartFrame = this.frameId
         this.chartTime = t
       }
+    }
+
+    // Clear marks and measures to prevent memory leak (unbounded PerformanceEntry accumulation)
+    // Must be at the end of nextFrame to ensure cleanup happens every frame regardless of conditionals
+    if (window.performance) {
+      performance.clearMarks('cpu-started')
+      performance.clearMarks('cpu-finished')
+      performance.clearMeasures('cpu-duration')
     }
   }
 
