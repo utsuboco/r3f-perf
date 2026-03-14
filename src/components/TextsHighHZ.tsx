@@ -7,7 +7,7 @@ import { colorsGraph } from './Perf'
 import * as THREE from 'three'
 import type { customData, PerfUIProps } from '../types'
 import { useEvent } from '@utsubo/events'
-import localFont from '../roboto.woff'
+import localFont from '../roboto-font'
 
 interface TextHighHZProps {
   metric?: string
