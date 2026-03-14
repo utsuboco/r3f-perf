@@ -1,7 +1,7 @@
 {
-  "name": "r3f-perf",
-  "version": "7.2.3",
-  "description": "Easily monitor your ThreeJS performances.",
+  "name": "@y4ure/r3f-perf",
+  "version": "7.2.4-hotfix",
+  "description": "r3f-perf with memory leak fix (#68) and Turbopack support (#69)",
   "keywords": [
     "react",
     "three",
@@ -13,8 +13,8 @@
     "r3f"
   ],
   "author": "Renaud ROHLINGER (https://github.com/RenaudRohlinger)",
-  "homepage": "https://github.com/utsuboco/r3f-perf",
-  "repository": "https://github.com/utsuboco/r3f-perf",
+  "homepage": "https://github.com/y4ure/r3f-perf",
+  "repository": "https://github.com/y4ure/r3f-perf",
   "license": "MIT",
   "files": [
     "dist/*",
