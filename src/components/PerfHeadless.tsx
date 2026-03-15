@@ -78,6 +78,10 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
   const { gl, scene } = useThree()
   setPerf({ gl, scene })
 
+  // Handle WebGPURenderer.getContext() returning null, while WebGLRenderer returns WebGL2RenderingContext.
+  const glContext = gl.getContext?.() as WebGL2RenderingContext | null
+  const isWebGPU = !glContext || typeof glContext.getExtension !== 'function' || typeof glContext.getParameter !== 'function'
+
   const PerfLib = useMemo(() => {
     const PerfLib = new GLPerf({
       trackGPU: true,
@@ -85,14 +89,19 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
       chartLen: chart ? chart.length : 120,
       chartHz: chart ? chart.hz : 60,
       logsPerSecond: logsPerSecond || 10,
-      gl: gl.getContext(),
+      // GPU timing via EXT_disjoint_timer_query_webgl2 is WebGL-only; not supported on WebGPU,
+      // use enableTimestamps param on WebGPURender instead.
+      gl: isWebGPU ? undefined : glContext,
       chartLogger: (chart: Chart) => {
         setPerf({ chart })
       },
       paramLogger: (logger: any) => {
+        const glRender: any = gl.info.render
+
         const log = {
           maxMemory: logger.maxMemory,
-          gpu: logger.gpu,
+          // In case of WebGPURenderer, GPU time is saved on info.render.timestamp and logger.gpu is 0
+          gpu: logger.gpu || glRender.timestamp,
           cpu: logger.cpu,
           mem: logger.mem,
           fps: logger.fps,
@@ -103,7 +112,6 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
           log,
         })
         const { accumulated }: any = getPerf()
-        const glRender: any = gl.info.render
 
         accumulated.totalFrames++
         accumulated.gl.calls += glRender.calls
@@ -140,33 +148,41 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
     })
 
     // Infos
+    let glVersion: string
+    let glRenderer: string | null = null
+    let glVendor: string | null = null
 
-    const ctx = gl.getContext()
-    let glRenderer = null
-    let glVendor = null
+    if (isWebGPU) {
+      // TODO: (await navigator.gpu.requestAdapter()).info is async; synchronous vendor/renderer info
+      // is not available in WebGPU. Displaying static fallback values for now.
+      glVersion = 'WebGPU'
+      glRenderer = 'WebGPU'
+      glVendor = 'WebGPU'
+    } else {
+      const ctx = gl.getContext()
+      const rendererInfo: any = ctx.getExtension('WEBGL_debug_renderer_info')
+      glVersion = ctx.getParameter(ctx.VERSION)
 
-    const rendererInfo: any = ctx.getExtension('WEBGL_debug_renderer_info')
-    const glVersion = ctx.getParameter(ctx.VERSION)
+      if (rendererInfo != null) {
+        glRenderer = ctx.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL)
+        glVendor = ctx.getParameter(rendererInfo.UNMASKED_VENDOR_WEBGL)
+      }
 
-    if (rendererInfo != null) {
-      glRenderer = ctx.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL)
-      glVendor = ctx.getParameter(rendererInfo.UNMASKED_VENDOR_WEBGL)
-    }
+      if (!glVendor) {
+        glVendor = 'Unknown vendor'
+      }
 
-    if (!glVendor) {
-      glVendor = 'Unknown vendor'
-    }
-
-    if (!glRenderer) {
-      glRenderer = ctx.getParameter(ctx.RENDERER)
+      if (!glRenderer) {
+        glRenderer = ctx.getParameter(ctx.RENDERER)
+      }
     }
 
     setPerf({
       startTime: window.performance.now(),
       infos: {
         version: glVersion,
-        renderer: glRenderer,
-        vendor: glVendor,
+        renderer: glRenderer ?? 'Unknown',
+        vendor: glVendor ?? 'Unknown',
       },
     })
 
@@ -266,6 +282,11 @@ export const PerfHeadless: FC<PerfProps> = ({ overClock, logsPerSecond, chart, d
     afterEffectSub = addAfterEffect(function postRafR3FPerf() {
       if (PerfLib && !PerfLib.paused) {
         PerfLib.nextFrame(window.performance.now())
+        // WebGPURenderer's GPU timing requires calling resolveTimestampsAsync after each render
+        if (isWebGPU) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(gl as any).resolveTimestampsAsync('render')
+        }
 
         if (overClock && typeof window.requestIdleCallback !== 'undefined') {
           PerfLib.idleCbId = requestIdleCallback(PerfLib.nextFps)
